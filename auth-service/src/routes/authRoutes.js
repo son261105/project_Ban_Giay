@@ -1,0 +1,10 @@
+const router = require('express').Router();
+const { authenticate, isAdmin } = require('../middleware/auth');
+const { register, login, verifyToken, getProfile, getAllUsers, deleteUser } = require('../controllers/authController');
+router.post('/register', register);
+router.post('/login', login);
+router.get('/verify', authenticate, verifyToken);
+router.get('/profile', authenticate, getProfile);
+router.get('/users', authenticate, isAdmin, getAllUsers);
+router.delete('/users/:id', authenticate, isAdmin, deleteUser);
+module.exports = router;
