@@ -250,9 +250,7 @@ const Checkout = () => {
                 onError={e => { e.target.src = 'https://via.placeholder.com/56?text=?'; }} />
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 13, fontWeight: 600 }}>{item.name}</div>
-                {item.size && <div style={{ fontSize: 12, color: '#888' }}>Size: {item.size}</div>}
-                <div style={{ fontSize: 13, color: '#888' }}>x{item.quantity}</div>
-              </div>
+{item.size && <div style={{ fontSize: 12, color: '#888' }}>Size: {item.size}</div>}              </div>
               <div style={{ fontWeight: 600, fontSize: 14, whiteSpace: 'nowrap' }}>{formatPrice(item.product_price * item.quantity)}</div>
             </div>
           ))}

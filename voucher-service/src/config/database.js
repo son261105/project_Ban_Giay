@@ -8,6 +8,7 @@ const pool = mysql.createPool({
   database: 'voucher_db',
   waitForConnections: true,
   connectionLimit: 10,
+  dateStrings: true, 
 });
 
 module.exports = pool;

@@ -12,7 +12,7 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import OrderSuccess from './pages/OrderSuccess';
 import Orders from './pages/Orders';
-import AdminDashboard from './pages/AdminDashboard';
+import OrderDetail from './pages/OrderDetail';import AdminDashboard from './pages/AdminDashboard';
 import AdminProducts from './pages/AdminProducts';
 import AdminOrders from './pages/AdminOrders';
 import AdminUsers from './pages/AdminUsers';
@@ -54,7 +54,7 @@ function AppRoutes() {
                 <Route path="/checkout" element={<><Navbar /><PrivateRoute><Checkout /></PrivateRoute></>} />
         <Route path="/order-success" element={<><Navbar /><PrivateRoute><OrderSuccess /></PrivateRoute></>} />
         <Route path="/orders" element={<><Navbar /><PrivateRoute><Orders /></PrivateRoute></>} />
-        <Route path="/profile" element={<><Navbar /><PrivateRoute><Profile /></PrivateRoute></>} />
+        <Route path="/orders/:id" element={<><Navbar /><PrivateRoute><OrderDetail /></PrivateRoute></>} />        <Route path="/profile" element={<><Navbar /><PrivateRoute><Profile /></PrivateRoute></>} />
         {/* Admin pages */}
         <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
         <Route path="/admin/products" element={<AdminRoute><AdminProducts /></AdminRoute>} />

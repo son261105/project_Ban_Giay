@@ -30,8 +30,7 @@ export const AdminLayout = ({ children }) => {
       <div style={{ width: 240, background: '#111', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, height: '100vh', zIndex: 100 }}>
         <Link to="/" style={{ display: 'block', padding: '24px 24px 16px', textDecoration: 'none' }}>
           <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 28, color: '#fff', letterSpacing: 2 }}>
-            KICK<span style={{ color: 'var(--accent)' }}>ZONE</span>
-          </div>
+            DS_<span style={{ color: 'var(--accent)' }}>Sport</span>          </div>
           <div style={{ fontSize: 11, color: '#888', marginTop: 2, letterSpacing: 1, textTransform: 'uppercase' }}>Admin Panel</div>
         </Link>
         <nav style={{ flex: 1, padding: '8px 12px' }}>

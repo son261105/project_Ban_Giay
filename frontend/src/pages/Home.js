@@ -208,11 +208,9 @@ const Home = () => {
             {/* Logo & Mô tả */}
             <div>
               <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 32, letterSpacing: 2, marginBottom: 8 }}>
-                KICK<span style={{ color: 'var(--accent)' }}>ZONE</span>
-              </div>
+                DS_<span style={{ color: 'var(--accent)' }}>Sport</span>              </div>
               <p style={{ color: '#888', fontSize: 14, lineHeight: 1.7, marginBottom: 16 }}>
-                KickZone là nền tảng mua sắm giày chính hãng hàng đầu với hàng nghìn sản phẩm từ các thương hiệu nổi tiếng thế giới.
-              </p>
+                DS_Sport là nền tảng mua sắm giày chính hãng hàng đầu với hàng nghìn sản phẩm từ các thương hiệu nổi tiếng thế giới.              </p>
               <div style={{ display: 'flex', gap: 12 }}>
                 {['Facebook', 'Instagram', 'Zalo'].map(s => (
                   <div key={s} style={{ background: 'rgba(255,255,255,0.1)', padding: '6px 14px', borderRadius: 20, fontSize: 12, cursor: 'pointer', color: '#ccc' }}>{s}</div>
@@ -230,10 +228,8 @@ const Home = () => {
               ))}
             </div>
 
-            {/* Về KickZone */}
-            <div>
-              <div style={{ fontWeight: 700, fontSize: 13, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16, color: 'var(--accent)' }}>Về KickZone</div>
-              {['Giới thiệu', 'Tuyển dụng', 'Tin tức', 'Liên hệ'].map(item => (
+            {/* Về DS_Sport */}            <div>
+              <div style={{ fontWeight: 700, fontSize: 13, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16, color: 'var(--accent)' }}>Về DS_Sport</div>              {['Giới thiệu', 'Tuyển dụng', 'Tin tức', 'Liên hệ'].map(item => (
                 <div key={item} style={{ color: '#888', fontSize: 14, marginBottom: 10, cursor: 'pointer' }}
                   onMouseEnter={e => e.target.style.color = 'white'}
                   onMouseLeave={e => e.target.style.color = '#888'}>{item}</div>
@@ -262,8 +258,7 @@ const Home = () => {
 
           {/* Bottom */}
           <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-            <div style={{ color: '#555', fontSize: 13 }}>©KickZone. All rights reserved.</div>
-         
+            <div style={{ color: '#555', fontSize: 13 }}>©DS_Sport. All rights reserved.</div>         
           </div>
         </div>
       </footer>

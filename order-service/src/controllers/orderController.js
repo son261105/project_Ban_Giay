@@ -42,22 +42,22 @@ const createOrder = async (req, res) => {
     const SHIPPING_FEE = 35000;
     const totalAmount = Math.max(0, subtotalAmount + SHIPPING_FEE - discountAmount);
 
-    const [orderResult] = await conn.query(
+        const [orderResult] = await conn.query(
       'INSERT INTO orders (user_id, user_name, user_email, subtotal_amount, discount_amount, voucher_code, total_amount, shipping_address, phone, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [req.user.id, req.user.name || '', req.user.email, subtotalAmount, discountAmount, appliedVoucherCode, totalAmount, shipping_address, phone, note]
     );
     const orderId = orderResult.insertId;
+    await conn.query('INSERT INTO order_status_history (order_id, status) VALUES (?, ?)', [orderId, 'pending']);
 
-    for (const item of cartItems) {
-      await conn.query(
+        for (const item of cartItems) {
+            await conn.query(
         'INSERT INTO order_items (order_id, product_id, product_name, product_image, quantity, size, price) VALUES (?, ?, ?, ?, ?, ?, ?)',
         [orderId, item.product_id, item.product_name, item.product_image, item.quantity, item.size, item.product_price]
       );
     }
 
     await axios.post(`${PRODUCT_URL}/api/products/decrease-stock`, {
-      items: cartItems.map(i => ({ product_id: i.product_id, size: i.size, quantity: i.quantity }))
-    });
+      items: cartItems.map(i => ({ product_id: i.product_id, size: i.size, quantity: i.quantity }))    });
 
     await axios.delete(`${CART_URL}/api/cart/internal/${req.user.id}/clear`);
 
@@ -84,6 +84,21 @@ const getUserOrders = async (req, res) => {
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 };
 
+// Khách hàng xem chi tiết 1 đơn hàng của chính mình (kèm timeline trạng thái)
+const getMyOrderById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const [rows] = await pool.query('SELECT * FROM orders WHERE id = ? AND user_id = ?', [id, req.user.id]);
+    if (rows.length === 0) return res.status(404).json({ success: false, message: 'Không tìm thấy đơn hàng.' });
+    const order = rows[0];
+    const [items] = await pool.query('SELECT * FROM order_items WHERE order_id = ?', [id]);
+    const [history] = await pool.query('SELECT status, changed_at FROM order_status_history WHERE order_id = ? ORDER BY changed_at ASC', [id]);
+    order.items = items;
+    order.history = history;
+    res.json({ success: true, order });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+};
+
 const getAllOrders = async (req, res) => {
   try {
     const [orders] = await pool.query('SELECT * FROM orders ORDER BY created_at DESC');
@@ -107,7 +122,8 @@ const cancelMyOrder = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Đơn hàng đã được xử lý, không thể hủy' });
     }
 
-    await pool.query('UPDATE orders SET status = ? WHERE id = ?', ['cancelled', id]);
+        await pool.query('UPDATE orders SET status = ? WHERE id = ?', ['cancelled', id]);
+    await pool.query('INSERT INTO order_status_history (order_id, status) VALUES (?, ?)', [id, 'cancelled']);
     res.json({ success: true, message: 'Hủy đơn hàng thành công' });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -120,7 +136,25 @@ const updateOrderStatus = async (req, res) => {
     const validStatuses = ['pending', 'confirmed', 'shipping', 'delivered', 'cancelled'];
     if (!validStatuses.includes(status)) return res.status(400).json({ success: false, message: 'Trạng thái không hợp lệ.' });
     await pool.query('UPDATE orders SET status = ? WHERE id = ?', [status, req.params.id]);
+    await pool.query('INSERT INTO order_status_history (order_id, status) VALUES (?, ?)', [req.params.id, status]);
     res.json({ success: true, message: 'Cập nhật trạng thái đơn hàng thành công!' });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+};
+
+// Admin - thống kê đơn hàng của 1 người dùng cụ thể (dùng cho modal "Chi tiết người dùng")
+const getUserOrderSummary = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const [[{ totalOrders }]] = await pool.query('SELECT COUNT(*) as totalOrders FROM orders WHERE user_id = ?', [userId]);
+    const [[{ totalSpent }]] = await pool.query(
+      "SELECT COALESCE(SUM(total_amount),0) as totalSpent FROM orders WHERE user_id = ? AND status != 'cancelled'",
+      [userId]
+    );
+    const [recentOrders] = await pool.query(
+      'SELECT id, total_amount, status, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT 5',
+      [userId]
+    );
+    res.json({ success: true, totalOrders, totalSpent, recentOrders });
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 };
 
@@ -246,4 +280,4 @@ const getTopProducts = async (req, res) => {
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 };
 
-module.exports = { createOrder, getUserOrders, getAllOrders, updateOrderStatus, cancelMyOrder, getDashboardStats, getRevenueByDay, getRevenueByMonth, getRevenueByDayRange, getRevenueByMonthRange, getTopProducts };
+module.exports = { createOrder, getUserOrders, getAllOrders, updateOrderStatus, cancelMyOrder, getDashboardStats, getRevenueByDay, getRevenueByMonth, getRevenueByDayRange, getRevenueByMonthRange, getTopProducts, getUserOrderSummary, getMyOrderById };

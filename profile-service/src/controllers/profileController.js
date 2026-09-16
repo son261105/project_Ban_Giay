@@ -1,4 +1,7 @@
+const axios = require('axios');
 const { pool } = require('../config/database');
+
+const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL || 'http://localhost:5001';
 
 const getProfile = async (req, res) => {
   try {
@@ -23,6 +26,11 @@ const updateProfile = async (req, res) => {
     } else {
       await pool.query('UPDATE profiles SET name=?, phone=?, address=?, avatar_url=? WHERE user_id=?',
         [name, phone, address, avatar_url, req.user.id]);
+    }
+    // Đồng bộ tên sang auth-service để admin thấy tên mới nhất
+    if (name) {
+      axios.put(`${AUTH_SERVICE_URL}/api/auth/internal/${req.user.id}/sync-name`, { name })
+        .catch(err => console.error('Không đồng bộ được tên sang auth-service:', err.message));
     }
     res.json({ success: true, message: 'Cập nhật hồ sơ thành công!' });
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }

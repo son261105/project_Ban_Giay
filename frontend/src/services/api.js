@@ -14,8 +14,13 @@ api.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response?.status === 401) {
-      const isLoginRequest = err.config?.url?.includes('/auth/login');
-      if (!isLoginRequest) {
+      const url = err.config?.url || '';
+
+      const isPasswordCheckRequest =
+        url.includes('/auth/login') ||
+        url.includes('/auth/change-phone') ||
+        url.includes('/auth/change-password');
+      if (!isPasswordCheckRequest) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/login';
@@ -27,8 +32,11 @@ api.interceptors.response.use(
 
 // Auth
 export const register = (data) => api.post('/auth/register', data);
+export const requestRegisterOtp = (data) => api.post('/auth/register/request-otp', data);
+export const verifyRegisterOtp = (data) => api.post('/auth/register/verify-otp', data);
 export const login = (data) => api.post('/auth/login', data);
 export const getAuthProfile = () => api.get('/auth/profile');
+export const changePhone = (data) => api.put('/auth/change-phone', data);
 
 // Profile
 export const getProfile = () => api.get('/profile');
@@ -71,6 +79,7 @@ export const clearCart = () => api.delete('/cart/clear');
 // Orders
 export const createOrder = (data) => api.post('/orders', data);
 export const getUserOrders = () => api.get('/orders/my');
+export const getMyOrderById = (id) => api.get(`/orders/my/${id}`);
 export const cancelMyOrder = (id) => api.put(`/orders/my/${id}/cancel`);
 export const getAllOrders = () => api.get('/orders/admin/all');
 export const updateOrderStatus = (id, status) => api.put(`/orders/${id}/status`, { status });
@@ -79,6 +88,8 @@ export const getDashboardStats = () => api.get('/orders/admin/stats');
 // Admin users
 export const getAllUsers = () => api.get('/auth/users');
 export const deleteUser = (id) => api.delete(`/auth/users/${id}`);
+export const toggleUserStatus = (id) => api.put(`/auth/users/${id}/status`);
+export const getUserOrderSummary = (userId) => api.get(`/orders/admin/user/${userId}/summary`);
 
 export default api;
 export const getRevenueByDay = (date) => api.get(`/orders/admin/revenue-by-day?date=${date}`);
