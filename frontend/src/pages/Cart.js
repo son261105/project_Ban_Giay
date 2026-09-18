@@ -64,12 +64,12 @@ const Cart = () => {
                   onError={e => { e.target.src = 'https://via.placeholder.com/80?text=?'; }}
                 />
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 11, color: 'var(--accent)', fontWeight: 700, textTransform: 'uppercase', marginBottom: 2 }}>
+                  <div style={{ fontSize: 11, color: 'var(--accent)', fontWeight: 500, textTransform: 'uppercase', marginBottom: 2 }}>
                     {item.brand_name}
                   </div>
-                  <div style={{ fontWeight: 600, marginBottom: 4 }}>{item.product_name}</div>
+                  <div style={{ fontWeight: 500, marginBottom: 4 }}>{item.product_name}</div>
                   {item.size && <div style={{ fontSize: 13, color: '#888' }}>Size: {item.size}</div>}
-                  <div style={{ fontWeight: 700, color: 'var(--accent)', marginTop: 4 }}>{formatPrice(item.product_price)}</div>
+                  <div style={{ fontWeight: 500, color: 'var(--accent)', marginTop: 4 }}>{formatPrice(item.product_price)}</div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 12 }}>
                   <div className="qty-control">
@@ -77,7 +77,7 @@ const Cart = () => {
                     <span>{item.quantity}</span>
                     <button onClick={() => handleQty(item, 1)}>+</button>
                   </div>
-                  <div style={{ fontWeight: 700, fontSize: 16 }}>{formatPrice(item.product_price * item.quantity)}</div>
+                  <div style={{ fontWeight: 500, fontSize: 16 }}>{formatPrice(item.product_price * item.quantity)}</div>
                   <button
                     onClick={() => handleRemove(item.id)}
                     style={{ background: 'none', border: 'none', color: '#888', fontSize: 13, cursor: 'pointer' }}>
@@ -98,8 +98,8 @@ const Cart = () => {
               </div>
             ))}
             <div style={{ borderTop: '2px solid var(--border)', margin: '16px 0', paddingTop: 16 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 18, fontWeight: 700 }}>
-                <span>Tổng cộng</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 18, fontWeight: 500 }}>
+                <span>Tạm tính</span>
                 <span style={{ color: 'var(--accent)' }}>{formatPrice(total)}</span>
               </div>
             </div>

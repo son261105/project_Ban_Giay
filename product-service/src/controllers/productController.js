@@ -6,6 +6,18 @@ const getTotalStock = async (productId) => {
   return parseInt(rows[0].total);
 };
 
+const DEFAULT_QTY = 100; // số lượng mặc định khi admin tick 1 size mới
+
+// Upload nhiều ảnh từ máy tính, trả về danh sách URL
+const uploadImages = async (req, res) => {
+  try {
+    if (!req.files || req.files.length === 0)
+      return res.status(400).json({ success: false, message: 'Chưa chọn ảnh nào.' });
+    const base = process.env.PUBLIC_URL_BASE || `http://localhost:${process.env.PORT || 5003}`;
+    res.json({ success: true, urls: req.files.map(f => `${base}/uploads/${f.filename}`) });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+};
+
 // Get all products with search, filter, pagination
 const getProducts = async (req, res) => {
   try {
@@ -47,8 +59,11 @@ const getProduct = async (req, res) => {
        WHERE p.id = ?`, [req.params.id]
     );
     if (products.length === 0) return res.status(404).json({ success: false, message: 'Không tìm thấy sản phẩm.' });
-    const [stockRows] = await pool.query('SELECT size, quantity FROM product_stock WHERE product_id = ? ORDER BY CAST(size AS UNSIGNED)', [req.params.id]);
-    res.json({ success: true, product: { ...products[0], stock_by_size: stockRows } });
+        const [stockRows] = await pool.query('SELECT size, quantity FROM product_stock WHERE product_id = ? ORDER BY CAST(size AS UNSIGNED)', [req.params.id]);
+    const [imgRows] = await pool.query('SELECT image_url FROM product_images WHERE product_id = ? ORDER BY sort_order, id', [req.params.id]);
+    let images = imgRows.map(i => i.image_url);
+    if (images.length === 0 && products[0].image_url) images = [products[0].image_url];
+    res.json({ success: true, product: { ...products[0], stock_by_size: stockRows, images } });
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 };
 
@@ -57,19 +72,19 @@ const createProduct = async (req, res) => {
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
-    const { name, description, price, brand_id, category_id, image_url, stock_by_size } = req.body;
+        const { name, description, description_detail, price, brand_id, category_id, images = [], sizes = [] } = req.body;
     if (!name || !price) return res.status(400).json({ success: false, message: 'Tên và giá là bắt buộc.' });
+    const imgList = (images || []).slice(0, 10);
     const [result] = await conn.query(
-      'INSERT INTO products (name, description, price, brand_id, category_id, image_url) VALUES (?, ?, ?, ?, ?, ?)',
-      [name, description, price, brand_id || null, category_id || null, image_url]
+      'INSERT INTO products (name, description, description_detail, price, brand_id, category_id, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [name, description, description_detail || null, price, brand_id || null, category_id || null, imgList[0] || null]
     );
     const productId = result.insertId;
-    if (stock_by_size && Array.isArray(stock_by_size)) {
-      for (const { size, quantity } of stock_by_size) {
-        if (size && quantity >= 0) {
-          await conn.query('INSERT INTO product_stock (product_id, size, quantity) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE quantity = ?', [productId, size, quantity, quantity]);
-        }
-      }
+    for (let i = 0; i < imgList.length; i++) {
+      await conn.query('INSERT INTO product_images (product_id, image_url, sort_order) VALUES (?, ?, ?)', [productId, imgList[i], i]);
+    }
+    for (const size of sizes) {
+      await conn.query('INSERT INTO product_stock (product_id, size, quantity) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE quantity = quantity', [productId, String(size), DEFAULT_QTY]);
     }
     await conn.commit();
     res.status(201).json({ success: true, message: 'Thêm sản phẩm thành công!', id: productId });
@@ -82,18 +97,25 @@ const updateProduct = async (req, res) => {
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
-    const { name, description, price, brand_id, category_id, image_url, stock_by_size } = req.body;
+        const { name, description, description_detail, price, brand_id, category_id, images = [], sizes = [] } = req.body;
     const [existing] = await conn.query('SELECT id FROM products WHERE id = ?', [req.params.id]);
     if (existing.length === 0) return res.status(404).json({ success: false, message: 'Không tìm thấy sản phẩm.' });
-    await conn.query('UPDATE products SET name=?, description=?, price=?, brand_id=?, category_id=?, image_url=? WHERE id=?',
-      [name, description, price, brand_id || null, category_id || null, image_url, req.params.id]);
-    if (stock_by_size && Array.isArray(stock_by_size)) {
-      await conn.query('DELETE FROM product_stock WHERE product_id = ?', [req.params.id]);
-      for (const { size, quantity } of stock_by_size) {
-        if (size && quantity >= 0) {
-          await conn.query('INSERT INTO product_stock (product_id, size, quantity) VALUES (?, ?, ?)', [req.params.id, size, quantity]);
-        }
-      }
+    const imgList = (images || []).slice(0, 10);
+    await conn.query('UPDATE products SET name=?, description=?, description_detail=?, price=?, brand_id=?, category_id=?, image_url=? WHERE id=?',
+      [name, description, description_detail || null, price, brand_id || null, category_id || null, imgList[0] || null, req.params.id]);
+
+    await conn.query('DELETE FROM product_images WHERE product_id = ?', [req.params.id]);
+    for (let i = 0; i < imgList.length; i++) {
+      await conn.query('INSERT INTO product_images (product_id, image_url, sort_order) VALUES (?, ?, ?)', [req.params.id, imgList[i], i]);
+    }
+
+    const [oldStock] = await conn.query('SELECT size, quantity FROM product_stock WHERE product_id = ?', [req.params.id]);
+    const oldMap = {};
+    oldStock.forEach(r => { oldMap[r.size] = r.quantity; });
+    await conn.query('DELETE FROM product_stock WHERE product_id = ?', [req.params.id]);
+    for (const size of sizes) {
+      const s = String(size);
+      await conn.query('INSERT INTO product_stock (product_id, size, quantity) VALUES (?, ?, ?)', [req.params.id, s, oldMap[s] !== undefined ? oldMap[s] : DEFAULT_QTY]);
     }
     await conn.commit();
     res.json({ success: true, message: 'Cập nhật sản phẩm thành công!' });
@@ -131,4 +153,4 @@ const decreaseStock = async (req, res) => {
   finally { conn.release(); }
 };
 
-module.exports = { getProducts, getProduct, createProduct, updateProduct, deleteProduct, decreaseStock };
+module.exports = { getProducts, getProduct, createProduct, updateProduct, deleteProduct, decreaseStock, uploadImages };

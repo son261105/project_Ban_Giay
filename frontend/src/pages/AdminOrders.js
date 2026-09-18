@@ -77,13 +77,13 @@ const AdminOrders = () => {
               {filtered.map(order => (
                 <React.Fragment key={order.id}>
                   <tr>
-                    <td style={{ fontWeight: 700 }}>#{order.id}</td>
+                    <td style={{ fontWeight: 500 }}>#{order.id}</td>
                     <td>
-                      <div style={{ fontWeight: 600 }}>{order.user_name}</div>
+                      <div style={{ fontWeight: 500 }}>{order.user_name}</div>
                       <div style={{ fontSize: 12, color: '#888' }}>{order.user_email}</div>
                     </td>
                     <td>{order.phone}</td>
-                    <td style={{ fontWeight: 700, color: 'var(--accent)' }}>{formatPrice(order.total_amount)}</td>
+                    <td style={{ fontWeight: 500, color: 'var(--accent)' }}>{formatPrice(order.total_amount)}</td>
                     <td style={{ fontSize: 13, color: '#888' }}>{formatDate(order.created_at)}</td>
                     <td><span className={`badge badge-${order.status}`}>{statusLabels[order.status]}</span></td>
                     <td>
@@ -117,7 +117,7 @@ const AdminOrders = () => {
                               <img src={item.product_image} alt={item.product_name} style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 6 }}
                                 onError={e => { e.target.src = 'https://via.placeholder.com/40?text=?'; }} />
                               <div>
-                                <div style={{ fontSize: 13, fontWeight: 600 }}>{item.name}</div>
+                                <div style={{ fontSize: 13, fontWeight: 500 }}>{item.name}</div>
                                 <div style={{ fontSize: 12, color: '#888' }}>Size {item.size} · x{item.quantity} · {formatPrice(item.price)}</div>
                               </div>
                             </div>

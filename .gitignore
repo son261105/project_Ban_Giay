@@ -8,3 +8,5 @@ logs/
 npm-debug.log*
 .DS_Store
 Thumbs.db
+product-service/uploads/
+frontend/build/

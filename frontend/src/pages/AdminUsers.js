@@ -13,7 +13,7 @@ const PAGE_SIZE = 10;
 
 const StatusBadge = ({ status }) => (
   <span style={{
-    padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 700,
+    padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 500,
     background: status === 'locked' ? '#FFEBEE' : '#E8F5E9',
     color: status === 'locked' ? '#c62828' : '#2E7D32',
   }}>
@@ -23,7 +23,7 @@ const StatusBadge = ({ status }) => (
 
 const RoleBadge = ({ role }) => (
   <span style={{
-    padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 700,
+    padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 500,
     background: role === 'admin' ? '#FFF3E0' : '#E3F2FD',
     color: role === 'admin' ? '#E65100' : '#1565C0',
   }}>
@@ -36,7 +36,7 @@ const Avatar = ({ name, role, size = 36 }) => (
     width: size, height: size, borderRadius: '50%',
     background: role === 'admin' ? 'var(--accent)' : 'var(--primary)',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
-    color: 'white', fontWeight: 700, fontSize: size * 0.4, flexShrink: 0
+    color: 'white', fontWeight: 500, fontSize: size * 0.4, flexShrink: 0
   }}>
     {name?.charAt(0)?.toUpperCase() || '?'}
   </div>
@@ -77,7 +77,7 @@ const UserDetailModal = ({ user, onClose }) => {
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <Avatar name={user.name} role={user.role} size={56} />
           <div>
-            <div style={{ fontWeight: 700, fontSize: 17 }}>{user.name}</div>
+            <div style={{ fontWeight: 500, fontSize: 17 }}>{user.name}</div>
             <div style={{ display: 'flex', gap: 8, marginTop: 6 }}>
               <RoleBadge role={user.role} />
               <StatusBadge status={user.status} />
@@ -91,22 +91,22 @@ const UserDetailModal = ({ user, onClose }) => {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
           <div>
             <div style={{ color: '#888', fontSize: 13 }}>Mã người dùng</div>
-            <div style={{ fontWeight: 600 }}>KH{String(user.id).padStart(3, '0')}</div>
+            <div style={{ fontWeight: 500 }}>KH{String(user.id).padStart(3, '0')}</div>
           </div>
           <div>
             <div style={{ color: '#888', fontSize: 13 }}>Họ và tên</div>
-            <div style={{ fontWeight: 600 }}>{user.name}</div>
+            <div style={{ fontWeight: 500 }}>{user.name}</div>
           </div>
           <div>
             <div style={{ color: '#888', fontSize: 13 }}>Email</div>
-            <div style={{ fontWeight: 600 }}>{user.email}</div>
+            <div style={{ fontWeight: 500 }}>{user.email}</div>
           </div>
           <div>
             <div style={{ color: '#888', fontSize: 13 }}>Số điện thoại</div>
-            <div style={{ fontWeight: 600 }}>{formatPhone(user.phone)}</div>          </div>
+            <div style={{ fontWeight: 500 }}>{formatPhone(user.phone)}</div>          </div>
           <div>
             <div style={{ color: '#888', fontSize: 13 }}>Ngày đăng ký</div>
-            <div style={{ fontWeight: 600 }}>{formatDate(user.created_at)}</div>
+            <div style={{ fontWeight: 500 }}>{formatDate(user.created_at)}</div>
           </div>
           <div>
             <div style={{ color: '#888', fontSize: 13 }}>Trạng thái</div>
@@ -123,11 +123,11 @@ const UserDetailModal = ({ user, onClose }) => {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
             <div>
               <div style={{ color: '#888', fontSize: 13 }}>Tổng số đơn hàng</div>
-              <div style={{ fontWeight: 700, fontSize: 18 }}>{summary.totalOrders} đơn</div>
+              <div style={{ fontWeight: 500, fontSize: 18 }}>{summary.totalOrders} đơn</div>
             </div>
             <div>
               <div style={{ color: '#888', fontSize: 13 }}>Tổng chi tiêu</div>
-              <div style={{ fontWeight: 700, fontSize: 18 }}>{formatPrice(summary.totalSpent)}</div>
+              <div style={{ fontWeight: 500, fontSize: 18 }}>{formatPrice(summary.totalSpent)}</div>
             </div>
           </div>
         )}
@@ -151,11 +151,11 @@ const UserDetailModal = ({ user, onClose }) => {
             <tbody>
               {summary.recentOrders.map(o => (
                 <tr key={o.id} style={{ borderTop: '1px solid var(--border)' }}>
-                  <td style={{ padding: '8px 0', color: '#1565C0', fontWeight: 600 }}>#DH{String(o.id).padStart(3, '0')}</td>
+                  <td style={{ padding: '8px 0', color: '#1565C0', fontWeight: 500 }}>#DH{String(o.id).padStart(3, '0')}</td>
                   <td style={{ padding: '8px 0' }}>{formatDate(o.created_at)}</td>
                   <td style={{ padding: '8px 0' }}>{formatPrice(o.total_amount)}</td>
                   <td style={{ padding: '8px 0' }}>
-                    <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{orderStatusLabels[o.status] || o.status}</span>
+                    <span style={{ color: 'var(--primary)', fontWeight: 500 }}>{orderStatusLabels[o.status] || o.status}</span>
                   </td>
                 </tr>
               ))}
@@ -226,7 +226,7 @@ const AdminUsers = () => {
     <AdminLayout>
       <div className="page-header">
         <h1 className="page-title">QUẢN LÝ NGƯỜI DÙNG</h1>
-        <span style={{ background: '#f0f0f0', padding: '6px 16px', borderRadius: 20, fontWeight: 600, fontSize: 14 }}>
+        <span style={{ background: '#f0f0f0', padding: '6px 16px', borderRadius: 20, fontWeight: 500, fontSize: 14 }}>
           Tổng: {users.length} tài khoản
         </span>
       </div>
@@ -271,7 +271,7 @@ const AdminUsers = () => {
       ) : (
         <div className="table-container">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '4px 4px 12px' }}>
-            <span style={{ fontWeight: 600 }}>Danh sách người dùng</span>
+            <span style={{ fontWeight: 500 }}>Danh sách người dùng</span>
             <span style={{ color: '#888', fontSize: 13 }}>
               Hiển thị {filtered.length === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, filtered.length)} trong {filtered.length} người dùng
             </span>
@@ -291,12 +291,12 @@ const AdminUsers = () => {
             <tbody>
               {paged.map(u => (
                 <tr key={u.id}>
-                  <td style={{ color: '#888', fontWeight: 600 }}>{String(u.id).padStart(3, '0')}</td>
+                  <td style={{ color: '#888', fontWeight: 500 }}>{String(u.id).padStart(3, '0')}</td>
                   <td>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                       <Avatar name={u.name} role={u.role} />
                       <div>
-                        <div style={{ fontWeight: 600 }}>{u.name}</div>
+                        <div style={{ fontWeight: 500 }}>{u.name}</div>
                         <div style={{ color: '#888', fontSize: 12 }}>Đăng ký {formatDate(u.created_at)}</div>
                       </div>
                     </div>

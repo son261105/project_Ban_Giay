@@ -23,7 +23,7 @@ const OrderSuccess = () => {
           </svg>
         </div>
 
-        <h1 style={{ fontSize: 24, fontWeight: 800, marginBottom: 8 }}>Đặt hàng thành công</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 500, marginBottom: 8 }}>Đặt hàng thành công</h1>
         <p style={{ color: '#666', fontSize: 15, marginBottom: 4 }}>
           Cảm ơn bạn đã mua sắm tại DS Sport.        </p>
         <p style={{ color: '#666', fontSize: 15, marginBottom: 32 }}>

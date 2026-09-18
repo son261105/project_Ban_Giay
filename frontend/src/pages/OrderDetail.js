@@ -68,13 +68,13 @@ const OrderDetail = () => {
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
           <div style={{ background: 'white', borderRadius: 16, padding: 28, maxWidth: 380, width: '90%', textAlign: 'center', boxShadow: '0 10px 40px rgba(0,0,0,0.2)' }}>
             <div style={{ fontSize: 40, marginBottom: 12 }}>⚠️</div>
-            <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>Hủy đơn hàng?</h3>
+            <h3 style={{ fontSize: 18, fontWeight: 500, marginBottom: 8 }}>Hủy đơn hàng?</h3>
             <p style={{ color: '#666', fontSize: 14, marginBottom: 24 }}>Hành động này không thể hoàn tác.</p>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
-              <button onClick={() => setConfirmOpen(false)} style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid #ddd', background: 'white', cursor: 'pointer', fontWeight: 600 }}>
+              <button onClick={() => setConfirmOpen(false)} style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid #ddd', background: 'white', cursor: 'pointer', fontWeight: 500 }}>
                 Không, giữ đơn
               </button>
-              <button onClick={handleCancel} style={{ padding: '10px 20px', borderRadius: 10, border: 'none', background: '#c62828', color: 'white', cursor: 'pointer', fontWeight: 600 }}>
+              <button onClick={handleCancel} style={{ padding: '10px 20px', borderRadius: 10, border: 'none', background: '#c62828', color: 'white', cursor: 'pointer', fontWeight: 500 }}>
                 Hủy đơn hàng
               </button>
             </div>
@@ -85,7 +85,7 @@ const OrderDetail = () => {
       <div style={{ background: 'white', borderRadius: 16, padding: 28, boxShadow: 'var(--shadow)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
-            <h1 style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>Chi tiết đơn hàng #DH{String(order.id).padStart(3, '0')}</h1>
+            <h1 style={{ fontSize: 20, fontWeight: 500, margin: 0 }}>Chi tiết đơn hàng #DH{String(order.id).padStart(3, '0')}</h1>
             <div style={{ color: '#888', fontSize: 13, marginTop: 4 }}>Đặt ngày {formatDate(order.created_at)}</div>
           </div>
           <span className={`badge badge-${order.status}`}>{statusLabels[order.status]}</span>
@@ -95,7 +95,7 @@ const OrderDetail = () => {
 
         <h3 style={{ fontSize: 14, marginBottom: 16 }}>Trạng thái đơn hàng</h3>
         {isCancelled ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#c62828', fontWeight: 600 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#c62828', fontWeight: 500 }}>
             ✕ Đơn hàng đã bị hủy
             {findStepTime('cancelled') && (
               <span style={{ color: '#888', fontWeight: 400, fontSize: 13 }}>· {formatDateTime(findStepTime('cancelled'))}</span>
@@ -112,11 +112,11 @@ const OrderDetail = () => {
                     width: 28, height: 28, borderRadius: '50%', margin: '0 auto 8px',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     background: done ? 'var(--primary)' : '#eee',
-                    color: done ? 'white' : '#aaa', fontWeight: 700, fontSize: 13
+                    color: done ? 'white' : '#aaa', fontWeight: 500, fontSize: 13
                   }}>
                     {done ? '✓' : i + 1}
                   </div>
-                  <div style={{ fontWeight: 600, fontSize: 13, color: done ? '#111' : '#aaa' }}>{step.label}</div>
+                  <div style={{ fontWeight: 500, fontSize: 13, color: done ? '#111' : '#aaa' }}>{step.label}</div>
                   <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>
                     {done ? (time ? formatDateTime(time) : '') : 'Chưa hoàn tất'}
                   </div>
@@ -130,7 +130,7 @@ const OrderDetail = () => {
 
         <h3 style={{ fontSize: 14, marginBottom: 12 }}>Thông tin nhận hàng</h3>
         <div style={{ background: '#f9f9f9', borderRadius: 10, padding: 16 }}>
-          <div style={{ fontWeight: 700 }}>{order.user_name || order.user_email}</div>
+          <div style={{ fontWeight: 500 }}>{order.user_name || order.user_email}</div>
           <div style={{ color: '#555', marginTop: 4 }}>{order.phone}</div>
           <div style={{ color: '#555', marginTop: 4 }}>{order.shipping_address}</div>
           {order.note && <div style={{ color: '#888', marginTop: 8, fontSize: 13 }}>Ghi chú: {order.note}</div>}
@@ -148,10 +148,10 @@ const OrderDetail = () => {
               onError={e => { e.target.src = 'https://via.placeholder.com/56?text=?'; }}
             />
             <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 600 }}>{item.product_name}</div>
+              <div style={{ fontWeight: 500 }}>{item.product_name}</div>
               <div style={{ color: '#888', fontSize: 13 }}>Size {item.size} · SL: {item.quantity}</div>
             </div>
-            <div style={{ fontWeight: 600 }}>{formatPrice(item.price)}</div>
+            <div style={{ fontWeight: 500 }}>{formatPrice(item.price)}</div>
           </div>
         ))}
 
@@ -169,7 +169,7 @@ const OrderDetail = () => {
             <span>Giảm giá {order.voucher_code ? `(${order.voucher_code})` : ''}</span><span>-{formatPrice(order.discount_amount)}</span>
           </div>
         )}
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, fontSize: 17, paddingTop: 10, borderTop: '1px solid var(--border)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 500, fontSize: 17, paddingTop: 10, borderTop: '1px solid var(--border)' }}>
           <span>Tổng cộng</span><span>{formatPrice(order.total_amount)}</span>
         </div>
 

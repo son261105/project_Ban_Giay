@@ -54,7 +54,7 @@ const Login = () => {
         </form>
 
         <p style={{ textAlign: 'center', marginTop: 24, fontSize: 14, color: '#888' }}>
-          Chưa có tài khoản? <Link to="/register" style={{ color: 'var(--accent)', fontWeight: 600 }}>Đăng ký ngay</Link>
+          Chưa có tài khoản? <Link to="/register" style={{ color: 'var(--accent)', fontWeight: 500 }}>Đăng ký ngay</Link>
         </p>
 
         

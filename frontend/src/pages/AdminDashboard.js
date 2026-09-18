@@ -29,7 +29,7 @@ export const AdminLayout = ({ children }) => {
       {/* Sidebar */}
       <div style={{ width: 240, background: '#111', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, height: '100vh', zIndex: 100 }}>
         <Link to="/" style={{ display: 'block', padding: '24px 24px 16px', textDecoration: 'none' }}>
-          <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 28, color: '#fff', letterSpacing: 2 }}>
+          <div style={{ fontFamily: 'Helvetica, Arial, sans-serif', fontSize: 28, color: '#fff', letterSpacing: 2 }}>
             DS_<span style={{ color: 'var(--accent)' }}>Sport</span>          </div>
           <div style={{ fontSize: 11, color: '#888', marginTop: 2, letterSpacing: 1, textTransform: 'uppercase' }}>Admin Panel</div>
         </Link>
@@ -103,7 +103,7 @@ const AdminDashboard = () => {
             ].map(card => (
               <div key={card.label} style={{ background: card.color, borderRadius: 16, padding: 24 }}>
                 <div style={{ fontSize: 32, marginBottom: 8 }}>{card.icon}</div>
-                <div style={{ fontSize: 28, fontWeight: 800, fontFamily: 'Bebas Neue, sans-serif' }}>{card.value}</div>
+                <div style={{ fontSize: 28, fontWeight: 500, fontFamily: 'Helvetica, Arial, sans-serif' }}>{card.value}</div>
                 <div style={{ fontSize: 13, color: '#666', marginTop: 4 }}>{card.label}</div>
               </div>
             ))}
@@ -116,10 +116,10 @@ const AdminDashboard = () => {
               <tbody>
                 {recentOrders.map(o => (
                   <tr key={o.id}>
-                    <td style={{ color: '#888', fontWeight: 600 }}>#{o.id}</td>
-                    <td style={{ fontWeight: 600 }}>{o.user_name || o.user_email}</td>
-                    <td style={{ fontWeight: 600, color: 'var(--accent)' }}>{formatPrice(o.total_amount)}</td>
-                    <td><span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 600,
+                    <td style={{ color: '#888', fontWeight: 500 }}>#{o.id}</td>
+                    <td style={{ fontWeight: 500 }}>{o.user_name || o.user_email}</td>
+                    <td style={{ fontWeight: 500, color: 'var(--accent)' }}>{formatPrice(o.total_amount)}</td>
+                    <td><span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 500,
                       background: statusColors[o.status] || '#f0f0f0' }}>{statusLabels[o.status] || o.status}</span></td>
                     <td style={{ color: '#888', fontSize: 13 }}>{new Date(o.created_at).toLocaleDateString('vi-VN')}</td>
                   </tr>

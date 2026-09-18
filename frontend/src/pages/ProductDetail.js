@@ -13,7 +13,8 @@ const ProductDetail = () => {
   const [selectedSize, setSelectedSize] = useState('');
   const [qty, setQty] = useState(1);
   const [msg, setMsg] = useState('');
-  const [adding, setAdding] = useState(false);
+    const [adding, setAdding] = useState(false);
+  const [activeImg, setActiveImg] = useState(0);
   const { user } = useAuth();
   const { refreshCart } = useCart();
   const navigate = useNavigate();
@@ -55,22 +56,46 @@ const ProductDetail = () => {
       </button>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'start' }}>
-        {/* Image */}
-        <div style={{ borderRadius: 20, overflow: 'hidden', background: '#f5f5f5', boxShadow: '0 8px 40px rgba(0,0,0,0.12)' }}>
-          <img src={product.image_url} alt={product.name}
-            style={{ width: '100%', aspectRatio: '1', objectFit: 'cover' }}
-            onError={e => { e.target.src = 'https://via.placeholder.com/600x600?text=No+Image'; }} />
+                {/* Gallery ảnh */}
+        <div>
+          <div style={{ borderRadius: 20, overflow: 'hidden', background: '#f5f5f5', boxShadow: '0 8px 40px rgba(0,0,0,0.12)' }}>
+            <img src={(product.images && product.images[activeImg]) || product.image_url} alt={product.name}
+              style={{ width: '100%', aspectRatio: '1', objectFit: 'cover' }}
+              onError={e => { e.target.src = 'https://via.placeholder.com/600x600?text=No+Image'; }} />
+          </div>
+                    {product.images && product.images.length > 1 && (
+            <div style={{ display: 'flex', gap: 10, marginTop: 14, flexWrap: 'wrap' }}>
+              {product.images.map((url, idx) => (
+                <img key={url + idx} src={url} alt={`${product.name} ${idx + 1}`}
+                  onClick={() => setActiveImg(idx)}
+                  style={{ width: 72, height: 72, objectFit: 'cover', borderRadius: 10, cursor: 'pointer',
+                    border: idx === activeImg ? '2px solid var(--accent)' : '2px solid transparent',
+                    opacity: idx === activeImg ? 1 : 0.7 }} />
+              ))}
+            </div>
+          )}
+
+                    {/* Mô tả chi tiết - nằm ngay dưới ảnh, cột trái */}
+          {product.description_detail && (
+            <div style={{ marginTop: 32 }}>
+              <h2 style={{ fontFamily: 'Helvetica, Arial, sans-serif', fontWeight: 500, fontSize: 22, letterSpacing: 1, marginBottom: 12, textTransform: 'uppercase' }}>Mô tả chi tiết</h2>
+              <div
+                className="product-rich-text"
+                dangerouslySetInnerHTML={{ __html: product.description_detail }}
+              />
+            </div>
+          )}
         </div>
 
         {/* Info */}
         <div>
-          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 8 }}>
+          <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 8 }}>
             {product.brand_name}
           </div>
-          <h1 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 48, lineHeight: 1.1, marginBottom: 16 }}>
+          <h1 style={{ fontFamily: 'Helvetica, Arial, sans-serif', fontSize: 48, lineHeight: 1.1, marginBottom: 16 }}>
             {product.name}
           </h1>
-          <div style={{ fontSize: 36, fontWeight: 700, color: 'var(--accent)', marginBottom: 20 }}>
+          <div style={{ fontSize: 36, fontWeight: 500, color: 'var(--accent)', marginBottom: 20 }}>
             {formatPrice(product.price)}
           </div>
 
@@ -81,7 +106,7 @@ const ProductDetail = () => {
           {/* Overall stock badge */}
           <div style={{ marginBottom: 24 }}>
             <span style={{
-              padding: '6px 14px', borderRadius: 20, fontSize: 13, fontWeight: 600,
+              padding: '6px 14px', borderRadius: 20, fontSize: 13, fontWeight: 500,
               background: totalStock > 0 ? '#E8F5E9' : '#FFEBEE',
               color: totalStock > 0 ? '#2E7D32' : '#c62828'
             }}>
@@ -92,7 +117,7 @@ const ProductDetail = () => {
           {/* Size picker with stock per size */}
           {stockBySize.length > 0 && (
             <div style={{ marginBottom: 28 }}>
-              <div style={{ fontWeight: 600, marginBottom: 12 }}>Chọn size:</div>
+              <div style={{ fontWeight: 500, marginBottom: 12 }}>Chọn size:</div>
               <div className="size-grid">
                 {stockBySize.map(({ size, quantity }) => (
                   <button
@@ -109,7 +134,7 @@ const ProductDetail = () => {
                         position: 'absolute', top: -6, right: -6,
                         background: '#FF5722', color: '#fff',
                         borderRadius: '50%', width: 16, height: 16,
-                        fontSize: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700
+                        fontSize: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 500
                       }}>{quantity}</span>
                     )}
                   </button>
@@ -125,7 +150,7 @@ const ProductDetail = () => {
 
           {/* Quantity */}
           <div style={{ marginBottom: 28 }}>
-            <div style={{ fontWeight: 600, marginBottom: 12 }}>Số lượng:</div>
+            <div style={{ fontWeight: 500, marginBottom: 12 }}>Số lượng:</div>
             <div className="qty-control">
               <button onClick={() => setQty(q => Math.max(1, q - 1))}>−</button>
               <span>{qty}</span>
@@ -151,7 +176,7 @@ const ProductDetail = () => {
             </button>
           </div>
 
-          <div style={{ marginTop: 24, padding: 20, background: '#f9f9f9', borderRadius: 12, fontSize: 13, color: '#666' }}>
+                                        <div style={{ marginTop: 24, padding: 20, background: '#f9f9f9', borderRadius: 12, fontSize: 13, color: '#666' }}>
             <div style={{ marginBottom: 8 }}>🚚 Giao hàng miễn phí từ 2.000.000đ</div>
             <div style={{ marginBottom: 8 }}>🔄 Đổi trả trong 30 ngày</div>
             <div>✅ Hàng chính hãng 100%</div>

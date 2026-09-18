@@ -28,12 +28,12 @@ const formatCompact = (p) => {
 
 const KpiCard = ({ title, value, sub, trend, color }) => (
   <div style={{ background: 'white', borderRadius: 16, padding: 24, boxShadow: 'var(--shadow)', flex: 1, minWidth: 200 }}>
-    <div style={{ fontSize: 13, fontWeight: 600, textTransform: 'uppercase', color: '#888', marginBottom: 10 }}>{title}</div>
-    <div style={{ fontSize: 28, fontWeight: 800, color: color || DARK, marginBottom: 6 }}>{value}</div>
+    <div style={{ fontSize: 13, fontWeight: 500, textTransform: 'uppercase', color: '#888', marginBottom: 10 }}>{title}</div>
+    <div style={{ fontSize: 28, fontWeight: 500, color: color || DARK, marginBottom: 6 }}>{value}</div>
     <div style={{ display: 'flex', alignItems: 'center', gap: 8, minHeight: 18 }}>
       {trend != null && Number.isFinite(trend) && (
         <span style={{
-          fontSize: 12, fontWeight: 700,
+          fontSize: 12, fontWeight: 500,
           color: trend >= 0 ? '#16a34a' : '#dc2626',
           background: trend >= 0 ? '#dcfce7' : '#fee2e2',
           borderRadius: 20, padding: '2px 8px', display: 'inline-flex', alignItems: 'center', gap: 4
@@ -54,7 +54,7 @@ const SegmentedControl = ({ options, value, onChange }) => (
         onClick={() => onChange(opt.value)}
         style={{
           border: 'none', cursor: 'pointer', borderRadius: 8, padding: '7px 16px',
-          fontSize: 13, fontWeight: 700, transition: 'all .2s',
+          fontSize: 13, fontWeight: 500, transition: 'all .2s',
           background: value === opt.value ? DARK : 'transparent',
           color: value === opt.value ? 'white' : '#666'
         }}
@@ -70,7 +70,7 @@ const ChartTooltip = ({ active, payload, label, unitLabel }) => {
   const d = payload[0].payload;
   return (
     <div style={{ background: DARK, color: 'white', borderRadius: 10, padding: '10px 14px', fontSize: 13, boxShadow: 'var(--shadow-hover)' }}>
-      <div style={{ fontWeight: 700, marginBottom: 4 }}>{label}</div>
+      <div style={{ fontWeight: 500, marginBottom: 4 }}>{label}</div>
       <div>Doanh thu: <b style={{ color: ACCENT2 }}>{formatPrice(d.revenue)}</b></div>
       <div style={{ color: '#bbb' }}>{d.totalOrders} {unitLabel || 'đơn'} (không tính đã hủy)</div>
     </div>
@@ -80,7 +80,7 @@ const ChartTooltip = ({ active, payload, label, unitLabel }) => {
 const ChartCard = ({ title, headerExtra, children, empty, emptyText }) => (
   <div style={{ background: 'white', borderRadius: 16, padding: 28, boxShadow: 'var(--shadow)', marginBottom: 24 }}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
-      <h2 style={{ fontWeight: 700, fontSize: 18, margin: 0 }}>{title}</h2>
+      <h2 style={{ fontWeight: 500, fontSize: 18, margin: 0 }}>{title}</h2>
       {headerExtra}
     </div>
     {empty ? (
@@ -292,7 +292,7 @@ const AdminReports = () => {
                 <YAxis
                   type="category"
                   dataKey="shortName"
-                  tick={{ fontSize: 13, fill: '#333', fontWeight: 600 }}
+                  tick={{ fontSize: 13, fill: '#333', fontWeight: 500 }}
                   axisLine={false}
                   tickLine={false}
                   width={150}
@@ -304,7 +304,7 @@ const AdminReports = () => {
                     const d = payload[0].payload;
                     return (
                       <div style={{ background: DARK, color: 'white', borderRadius: 10, padding: '10px 14px', fontSize: 13, boxShadow: 'var(--shadow-hover)' }}>
-                        <div style={{ fontWeight: 700, marginBottom: 4 }}>{d.product_name}</div>
+                        <div style={{ fontWeight: 500, marginBottom: 4 }}>{d.product_name}</div>
                         <div>Đã bán: <b style={{ color: ACCENT2 }}>{d.total_quantity} đôi</b></div>
                         <div style={{ color: '#bbb' }}>Doanh thu: {formatPrice(d.total_revenue)}</div>
                       </div>
@@ -323,7 +323,7 @@ const AdminReports = () => {
                     dataKey={topProductMetric === 'quantity' ? 'total_quantity' : 'total_revenue'}
                     position="right"
                     formatter={topProductMetric === 'quantity' ? (v) => `${v} đôi` : formatCompact}
-                    style={{ fontSize: 12, fontWeight: 700, fill: DARK }}
+                    style={{ fontSize: 12, fontWeight: 500, fill: DARK }}
                   />
                 </Bar>
               </BarChart>

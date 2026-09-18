@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
 :root {
   --primary: #111111;
   --accent: #FF3D00;
@@ -20,21 +18,21 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
 }
 
-h1, h2, h3 { font-family: 'Inter', sans-serif; letter-spacing: normal; }
+h1, h2, h3 { font-family: Helvetica, Arial, sans-serif; letter-spacing: normal; }
 
 
 a { text-decoration: none; color: inherit; }
 
-button { cursor: pointer; font-family: 'Inter', sans-serif; }
+button { cursor: pointer; font-family: Helvetica, Arial, sans-serif; }
 
 input, select, textarea {
-  font-family: 'Inter', sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   outline: none;
 }
 
@@ -53,7 +51,7 @@ input, select, textarea {
 }
 
 .navbar-logo {
-  font-family: 'Inter', sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 28px;
   color: white;
   letter-spacing: 2px;
@@ -95,7 +93,7 @@ input, select, textarea {
   background: var(--accent);
   color: white;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
   width: 18px;
   height: 18px;
   border-radius: 50%;
@@ -117,7 +115,7 @@ input, select, textarea {
   padding: 12px 24px;
   border-radius: 10px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   transition: all 0.2s;
   border: 2px solid transparent;
   white-space: nowrap;
@@ -160,7 +158,7 @@ input, select, textarea {
 .form-group label {
   display: block;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   margin-bottom: 6px;
   color: #555;
   text-transform: uppercase;
@@ -211,7 +209,7 @@ input, select, textarea {
 
 .product-card-brand {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--accent);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -220,7 +218,7 @@ input, select, textarea {
 
 .product-card-name {
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
   margin-bottom: 8px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -230,7 +228,7 @@ input, select, textarea {
 
 .product-card-price {
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--accent);
 }
 
@@ -260,7 +258,7 @@ input, select, textarea {
 }
 
 .auth-title {
-  font-family: 'Inter', sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 36px;
   margin-bottom: 8px;
 }
@@ -272,7 +270,7 @@ input, select, textarea {
 table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
 thead { background: var(--primary); color: white; }
 th, td { padding: 14px 16px; text-align: left; font-size: 14px; }
-th { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+th { font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
 tbody tr { border-bottom: 1px solid var(--border); }
 tbody tr:hover { background: #f9f9f9; }
 
@@ -283,7 +281,7 @@ tbody tr:hover { background: #f9f9f9; }
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -401,9 +399,9 @@ tbody tr:hover { background: #f9f9f9; }
 }
 
 .stat-card h3 {
-  font-family: 'Inter', sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -411,7 +409,7 @@ tbody tr:hover { background: #f9f9f9; }
 }
 
 .stat-card .stat-value {
-  font-family: 'Inter', sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 40px;
   color: var(--primary);
   line-height: 1;
@@ -434,7 +432,7 @@ tbody tr:hover { background: #f9f9f9; }
   padding: 12px 24px;
   color: rgba(255,255,255,0.7);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   transition: all 0.2s;
 }
 
@@ -455,7 +453,7 @@ tbody tr:hover { background: #f9f9f9; }
   border: 2px solid var(--border);
   background: white;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   transition: all 0.2s;
 }
 .pagination button.active { background: var(--primary); color: white; border-color: var(--primary); }
@@ -526,14 +524,14 @@ tbody tr:hover { background: #f9f9f9; }
   border: 2px solid var(--border);
   background: white;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
 }
 .qty-control button:hover { border-color: var(--primary); }
-.qty-control span { font-size: 16px; font-weight: 600; min-width: 24px; text-align: center; }
+.qty-control span { font-size: 16px; font-weight: 500; min-width: 24px; text-align: center; }
 
 /* Size grid */
 .size-grid { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -543,7 +541,7 @@ tbody tr:hover { background: #f9f9f9; }
   border-radius: 8px;
   background: white;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   transition: all 0.2s;
 }
 .size-btn:hover { border-color: var(--primary); }
@@ -553,7 +551,7 @@ tbody tr:hover { background: #f9f9f9; }
 .admin-nav-title {
   padding: 8px 24px;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
   color: rgba(255,255,255,0.3);
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -572,3 +570,10 @@ tbody tr:hover { background: #f9f9f9; }
 div:hover > button {
   opacity: 1 !important;
 }
+.product-rich-text { color: #444; font-size: 15px; line-height: 1.8; }
+.product-rich-text h3 { font-size: 18px; font-weight: 500; margin: 16px 0 8px; color: #111; }
+.product-rich-text p { margin-bottom: 10px; }
+.product-rich-text ul, .product-rich-text ol { margin: 10px 0 10px 22px; }
+.product-rich-text li { margin-bottom: 6px; }
+.product-rich-text b, .product-rich-text strong { font-weight: 500; color: #111; }
+.product-rich-text img { max-width: 100%; border-radius: 10px; }

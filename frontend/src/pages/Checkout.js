@@ -208,7 +208,7 @@ const Checkout = () => {
             </div>
 
             <div style={{ marginBottom: 24 }}>
-              <label style={{ fontWeight: 600, fontSize: 13, textTransform: 'uppercase', letterSpacing: 0.5, display: 'block', marginBottom: 8 }}>Mã giảm giá</label>
+              <label style={{ fontWeight: 500, fontSize: 13, textTransform: 'uppercase', letterSpacing: 0.5, display: 'block', marginBottom: 8 }}>Mã giảm giá</label>
               <div style={{ display: 'flex', gap: 8 }}>
                 <input
                   placeholder="Nhập mã voucher..."
@@ -229,7 +229,7 @@ const Checkout = () => {
             </div>
 
             <div style={{ padding: 16, background: '#f9f9f9', borderRadius: 12, marginBottom: 24, fontSize: 14 }}>
-              <div style={{ fontWeight: 600, marginBottom: 8 }}>💳 Phương thức thanh toán</div>
+              <div style={{ fontWeight: 500, marginBottom: 8 }}>💳 Phương thức thanh toán</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#555' }}>
                 <input type="radio" checked readOnly /> Thanh toán khi nhận hàng (COD)
               </div>
@@ -249,9 +249,9 @@ const Checkout = () => {
                 style={{ width: 56, height: 56, objectFit: 'cover', borderRadius: 8, background: '#f0f0f0' }}
                 onError={e => { e.target.src = 'https://via.placeholder.com/56?text=?'; }} />
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 13, fontWeight: 600 }}>{item.name}</div>
+                <div style={{ fontSize: 13, fontWeight: 500 }}>{item.name}</div>
 {item.size && <div style={{ fontSize: 12, color: '#888' }}>Size: {item.size}</div>}              </div>
-              <div style={{ fontWeight: 600, fontSize: 14, whiteSpace: 'nowrap' }}>{formatPrice(item.product_price * item.quantity)}</div>
+              <div style={{ fontWeight: 500, fontSize: 14, whiteSpace: 'nowrap' }}>{formatPrice(item.product_price * item.quantity)}</div>
             </div>
           ))}
           <div style={{ borderTop: '2px solid var(--border)', paddingTop: 16, marginTop: 8 }}>
@@ -263,7 +263,7 @@ const Checkout = () => {
               {shippingFee === 0 ? (
                 <span>
                   <span style={{ textDecoration: 'line-through', color: '#aaa', marginRight: 6 }}>{formatPrice(SHIPPING_FEE)}</span>
-                  <span style={{ color: 'green', fontWeight: 600 }}>Miễn phí</span>
+                  <span style={{ color: 'green', fontWeight: 500 }}>Miễn phí</span>
                 </span>
               ) : (
                 <span>{formatPrice(SHIPPING_FEE)}</span>
@@ -275,7 +275,7 @@ const Checkout = () => {
                 <span>-{formatPrice(percentDiscount)}</span>
               </div>
             )}
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 18, fontWeight: 700 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 18, fontWeight: 500 }}>
               <span>Tổng cộng</span>
               <span style={{ color: 'var(--accent)' }}>{formatPrice(grandTotal)}</span>
             </div>

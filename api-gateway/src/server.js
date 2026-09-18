@@ -53,8 +53,8 @@ app.get('/api/products/:id', proxy(PRODUCT_SERVICE_URL));
 app.get('/api/brands', proxy(PRODUCT_SERVICE_URL));
 app.get('/api/categories', proxy(PRODUCT_SERVICE_URL));
 
-app.post('/api/products', authenticate, isAdmin, proxy(PRODUCT_SERVICE_URL));
-app.put('/api/products/:id', authenticate, isAdmin, proxy(PRODUCT_SERVICE_URL));
+app.post('/api/products/upload-images', authenticate, isAdmin, proxy(PRODUCT_SERVICE_URL));
+app.post('/api/products', authenticate, isAdmin, proxy(PRODUCT_SERVICE_URL));app.put('/api/products/:id', authenticate, isAdmin, proxy(PRODUCT_SERVICE_URL));
 app.delete('/api/products/:id', authenticate, isAdmin, proxy(PRODUCT_SERVICE_URL));
 app.post('/api/brands', authenticate, isAdmin, proxy(PRODUCT_SERVICE_URL));
 app.put('/api/brands/:id', authenticate, isAdmin, proxy(PRODUCT_SERVICE_URL));

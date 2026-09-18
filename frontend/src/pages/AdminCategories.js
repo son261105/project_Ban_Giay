@@ -87,8 +87,8 @@ const AdminCategories = () => {
             <tbody>
               {categories.map(c => (
                 <tr key={c.id}>
-                  <td style={{ color: '#888', fontWeight: 600 }}>#{c.id}</td>
-                  <td style={{ fontWeight: 600 }}>{c.name}</td>
+                  <td style={{ color: '#888', fontWeight: 500 }}>#{c.id}</td>
+                  <td style={{ fontWeight: 500 }}>{c.name}</td>
                   <td style={{ color: '#666', fontSize: 13 }}>{c.description || '—'}</td>
                   <td style={{ color: '#888', fontSize: 13 }}>{new Date(c.created_at).toLocaleDateString('vi-VN')}</td>
                   <td>
@@ -108,11 +108,11 @@ const AdminCategories = () => {
       {showModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
           <div style={{ background: 'white', borderRadius: 16, padding: 32, width: 440, boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}>
-            <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 24, marginBottom: 24 }}>
+            <h2 style={{ fontFamily: 'Helvetica, Arial, sans-serif', fontSize: 24, marginBottom: 24 }}>
               {editCategory ? 'SỬA DANH MỤC' : 'THÊM DANH MỤC'}
             </h2>
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 6, textTransform: 'uppercase' }}>Tên danh mục *</label>
+              <label style={{ display: 'block', fontWeight: 500, fontSize: 13, marginBottom: 6, textTransform: 'uppercase' }}>Tên danh mục *</label>
               <input
                 className="form-input"
                 value={form.name}
@@ -122,7 +122,7 @@ const AdminCategories = () => {
               />
             </div>
             <div style={{ marginBottom: 24 }}>
-              <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 6, textTransform: 'uppercase' }}>Mô tả</label>
+              <label style={{ display: 'block', fontWeight: 500, fontSize: 13, marginBottom: 6, textTransform: 'uppercase' }}>Mô tả</label>
               <textarea
                 className="form-input"
                 value={form.description}

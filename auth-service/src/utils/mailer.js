@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 
 const sendOtpEmail = async (toEmail, otp) => {
   await transporter.sendMail({
-        from: `"DS_Sport" <${process.env.GMAIL_USER}>`,
+        from: `"DS Sport" <${process.env.GMAIL_USER}>`,
     to: toEmail,
     subject: 'Mã xác thực đăng ký tài khoản KICKZONE',
     html: `

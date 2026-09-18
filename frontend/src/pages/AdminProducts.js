@@ -1,13 +1,50 @@
 import React, { useEffect, useState } from 'react';
 import { AdminLayout } from './AdminDashboard';
-import { getProducts, getBrands, getCategories, createProduct, updateProduct, deleteProduct } from '../services/api';
-
+import { getProducts, getBrands, getCategories, createProduct, updateProduct, deleteProduct, uploadProductImages } from '../services/api';
 const formatPrice = (p) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(p);
 
 const SIZES = ['35','36','37','38','39','40','41','42','43','44','45','46'];
 
-const defaultForm = { name: '', description: '', price: '', brand_id: '', category_id: '', image_url: '' };
+const defaultForm = { name: '', description: '', description_detail: '', price: '', brand_id: '', category_id: '' };
+const MAX_IMAGES = 10;
 
+// Trình soạn thảo văn bản (không cần cài thêm thư viện)
+const RichTextEditor = ({ value, onChange }) => {
+  const ref = React.useRef(null);
+  useEffect(() => {
+    if (ref.current && ref.current.innerHTML !== (value || '')) ref.current.innerHTML = value || '';
+  }, [value]);
+  const exec = (cmd, arg) => {
+    document.execCommand(cmd, false, arg);
+    ref.current.focus();
+    onChange(ref.current.innerHTML);
+  };
+  const Btn = ({ cmd, arg, title, children }) => (
+    <button type="button" title={title} onMouseDown={e => e.preventDefault()} onClick={() => exec(cmd, arg)}
+      style={{ minWidth: 34, height: 32, border: '1px solid var(--border)', background: '#fff',
+        borderRadius: 6, cursor: 'pointer', fontSize: 14 }}>{children}</button>
+  );
+  return (
+    <div style={{ border: '2px solid var(--border)', borderRadius: 10, overflow: 'hidden' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, padding: 8, background: '#fafafa', borderBottom: '1px solid var(--border)' }}>
+        <Btn cmd="bold" title="In đậm"><b>B</b></Btn>
+        <Btn cmd="italic" title="In nghiêng"><i>I</i></Btn>
+        <Btn cmd="underline" title="Gạch chân"><u>U</u></Btn>
+        <Btn cmd="formatBlock" arg="<h3>" title="Tiêu đề">H3</Btn>
+        <Btn cmd="formatBlock" arg="<p>" title="Đoạn văn">P</Btn>
+        <Btn cmd="insertUnorderedList" title="Danh sách chấm">• List</Btn>
+        <Btn cmd="insertOrderedList" title="Danh sách số">1. List</Btn>
+        <Btn cmd="justifyLeft" title="Căn trái">⬅</Btn>
+        <Btn cmd="justifyCenter" title="Căn giữa">↔</Btn>
+        <Btn cmd="justifyRight" title="Căn phải">➡</Btn>
+        <Btn cmd="removeFormat" title="Xóa định dạng">✕</Btn>
+      </div>
+      <div ref={ref} contentEditable suppressContentEditableWarning
+        onInput={e => onChange(e.currentTarget.innerHTML)}
+        style={{ minHeight: 180, padding: 14, fontSize: 14, lineHeight: 1.7, outline: 'none', background: '#fff' }} />
+    </div>
+  );
+};
 const AdminProducts = () => {
   const [products, setProducts] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -16,8 +53,9 @@ const AdminProducts = () => {
   const [showModal, setShowModal] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const [form, setForm] = useState(defaultForm);
-  const [stockBySize, setStockBySize] = useState({}); // { size: quantity }
-  const [search, setSearch] = useState('');
+  const [sizes, setSizes] = useState([]);     // ['38','39',...]
+  const [images, setImages] = useState([]);   // danh sách URL ảnh
+  const [uploading, setUploading] = useState(false);  const [search, setSearch] = useState('');
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState('');
 
@@ -40,47 +78,57 @@ const AdminProducts = () => {
   const openCreate = () => {
     setEditProduct(null);
     setForm(defaultForm);
-    setStockBySize({});
-    setShowModal(true);
+    setSizes([]);
+    setImages([]);    setShowModal(true);
   };
 
-  const openEdit = async (p) => {
+    const openEdit = async (p) => {
     setEditProduct(p);
     setForm({
-      name: p.name, description: p.description || '',
-      price: p.price, brand_id: p.brand_id || '',
-      category_id: p.category_id || '', image_url: p.image_url || ''
+      name: p.name, description: p.description || '', description_detail: '',
+      price: p.price, brand_id: p.brand_id || '', category_id: p.category_id || ''
     });
-    // Load full product with stock_by_size
     try {
       const { getProduct } = await import('../services/api');
       const res = await getProduct(p.id);
-      const sbs = {};
-      (res.data.product.stock_by_size || []).forEach(s => { sbs[s.size] = s.quantity; });
-      setStockBySize(sbs);
-    } catch { setStockBySize({}); }
+      setSizes((res.data.product.stock_by_size || []).map(s => String(s.size)));
+      setImages(res.data.product.images || []);
+      setForm(f => ({ ...f, description_detail: res.data.product.description_detail || '' }));
+    } catch { setSizes([]); setImages([]); }
     setShowModal(true);
   };
 
-  const toggleSize = (size) => {
-    setStockBySize(prev => {
-      const next = { ...prev };
-      if (next[size] !== undefined) delete next[size];
-      else next[size] = 0;
-      return next;
-    });
+    const toggleSize = (size) => {
+    setSizes(prev => prev.includes(size) ? prev.filter(s => s !== size) : [...prev, size]);
   };
 
-  const setQtyForSize = (size, qty) => {
-    setStockBySize(prev => ({ ...prev, [size]: parseInt(qty) || 0 }));
+  const handleSelectFiles = async (e) => {
+    const files = Array.from(e.target.files || []);
+    e.target.value = '';
+    if (files.length === 0) return;
+    if (images.length + files.length > MAX_IMAGES) {
+      setMsg(`❌ Tối đa ${MAX_IMAGES} ảnh cho 1 sản phẩm`);
+      setTimeout(() => setMsg(''), 3000);
+      return;
+    }
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      files.forEach(f => fd.append('images', f));
+      const res = await uploadProductImages(fd);
+      setImages(prev => [...prev, ...res.data.urls]);
+    } catch (err) {
+      setMsg('❌ ' + (err.response?.data?.message || 'Lỗi tải ảnh'));
+    } finally { setUploading(false); }
   };
+
+  const removeImage = (idx) => setImages(prev => prev.filter((_, i) => i !== idx));
 
   const handleSave = async (e) => {
     e.preventDefault();
     setSaving(true);
     try {
-      const stock_by_size = Object.entries(stockBySize).map(([size, quantity]) => ({ size, quantity }));
-      const data = { ...form, price: parseFloat(form.price), brand_id: form.brand_id || null, category_id: form.category_id || null, stock_by_size };
+            const data = { ...form, price: parseFloat(form.price), brand_id: form.brand_id || null, category_id: form.category_id || null, images, sizes };
       if (editProduct) await updateProduct(editProduct.id, data);
       else await createProduct(data);
       setShowModal(false);
@@ -134,17 +182,17 @@ const AdminProducts = () => {
             <tbody>
               {filtered.map(p => (
                 <tr key={p.id}>
-                  <td style={{ color: '#888', fontWeight: 600 }}>#{p.id}</td>
+                  <td style={{ color: '#888', fontWeight: 500 }}>#{p.id}</td>
                   <td>
                     <img src={p.image_url} alt={p.name}
                       style={{ width: 52, height: 52, objectFit: 'cover', borderRadius: 8 }}
                       onError={e => { e.target.src = 'https://via.placeholder.com/52?text=?'; }} />
                   </td>
-                  <td style={{ fontWeight: 600, maxWidth: 200 }}>{p.name}</td>
+                  <td style={{ fontWeight: 500, maxWidth: 200 }}>{p.name}</td>
                   <td>{p.brand_name}</td>
-                  <td style={{ fontWeight: 600, color: 'var(--accent)' }}>{formatPrice(p.price)}</td>
+                  <td style={{ fontWeight: 500, color: 'var(--accent)' }}>{formatPrice(p.price)}</td>
                   <td>
-                    <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 600,
+                    <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 500,
                       background: p.stock > 0 ? '#E8F5E9' : '#FFEBEE',
                       color: p.stock > 0 ? '#2E7D32' : '#c62828' }}>{p.stock}</span>
                   </td>
@@ -189,48 +237,73 @@ const AdminProducts = () => {
                   </select>
                 </div>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                <div className="form-group">
-                  <label>Danh mục</label>
-                  <select value={form.category_id} onChange={e => setForm({ ...form, category_id: e.target.value })}>
-                    <option value="">Chọn danh mục</option>
-                    {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>URL hình ảnh</label>
-                  <input value={form.image_url} onChange={e => setForm({ ...form, image_url: e.target.value })} placeholder="https://..." />
-                </div>
+                            <div className="form-group">
+                <label>Danh mục</label>
+                <select value={form.category_id} onChange={e => setForm({ ...form, category_id: e.target.value })}>
+                  <option value="">Chọn danh mục</option>
+                  {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                </select>
               </div>
               <div className="form-group">
-                <label>Mô tả</label>
+                <label>Mô tả ngắn</label>
                 <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} rows={2} />
               </div>
 
-              {/* Stock per size */}
+              {/* Thêm hình ảnh */}
               <div className="form-group">
-                <label style={{ fontWeight: 700 }}>Tồn kho theo size</label>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
-                  {SIZES.map(size => (
-                    <button key={size} type="button"
-                      className={`size-btn ${stockBySize[size] !== undefined ? 'selected' : ''}`}
-                      onClick={() => toggleSize(size)}>{size}</button>
-                  ))}
-                </div>
-                {Object.keys(stockBySize).sort((a,b) => parseInt(a)-parseInt(b)).length > 0 && (
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                    {Object.keys(stockBySize).sort((a,b) => parseInt(a)-parseInt(b)).map(size => (
-                      <div key={size} style={{ display: 'flex', alignItems: 'center', gap: 4,
-                        background: '#f5f5f5', borderRadius: 8, padding: '4px 10px', fontSize: 13 }}>
-                        <span style={{ fontWeight: 600 }}>Size {size}:</span>
-                        <input type="number" min="0" value={stockBySize[size]}
-                          onChange={e => setQtyForSize(size, e.target.value)}
-                          style={{ width: 60, border: '1px solid #ddd', borderRadius: 4, padding: '2px 6px' }} />
-                        <span>đôi</span>
+                <label style={{ fontWeight: 500, fontSize: 16 }}>Thêm hình ảnh (tối đa {MAX_IMAGES} ảnh)</label>
+                <label htmlFor="product-images-input"
+                  style={{ display: 'block', width: '100%', padding: '28px 16px', marginTop: 8,
+                    border: '2px dashed var(--border)', borderRadius: 12, textAlign: 'center',
+                    cursor: 'pointer', background: '#fafafa' }}>
+                  <div style={{ fontSize: 34, marginBottom: 6 }}>📷</div>
+                  <div style={{ fontSize: 16, fontWeight: 500 }}>
+                    {uploading ? 'Đang tải ảnh lên...' : 'Chọn tệp ảnh từ máy tính'}
+                  </div>
+                  <div style={{ fontSize: 13, color: '#888', marginTop: 4 }}>
+                    Đã chọn {images.length}/{MAX_IMAGES} ảnh · JPG, PNG · tối đa 5MB mỗi ảnh
+                  </div>
+                </label>
+                <input id="product-images-input" type="file" accept="image/*" multiple
+                  onChange={handleSelectFiles} disabled={uploading || images.length >= MAX_IMAGES}
+                  style={{ display: 'none' }} />
+
+                {images.length > 0 && (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 14 }}>
+                    {images.map((url, idx) => (
+                      <div key={url + idx} style={{ position: 'relative', width: 96, height: 96 }}>
+                        <img src={url} alt={`Ảnh ${idx + 1}`}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10, border: '1px solid var(--border)' }} />
+                        <button type="button" onClick={() => removeImage(idx)} title="Xóa ảnh"
+                          style={{ position: 'absolute', top: -8, right: -8, width: 24, height: 24, borderRadius: '50%',
+                            border: 'none', background: '#c62828', color: '#fff', cursor: 'pointer', fontSize: 14, lineHeight: '24px' }}>×</button>
+                        {idx === 0 && (
+                          <span style={{ position: 'absolute', bottom: 4, left: 4, background: 'rgba(0,0,0,.65)',
+                            color: '#fff', fontSize: 10, padding: '2px 6px', borderRadius: 4 }}>Ảnh chính</span>
+                        )}
                       </div>
                     ))}
                   </div>
                 )}
+              </div>
+
+                            {/* Chọn size bán */}
+              <div className="form-group">
+                <label style={{ fontWeight: 500 }}>Size sản phẩm có bán</label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                  {SIZES.map(size => (
+                    <button key={size} type="button"
+                      className={`size-btn ${sizes.includes(size) ? 'selected' : ''}`}
+                      onClick={() => toggleSize(size)}>{size}</button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Mô tả chi tiết */}
+              <div className="form-group">
+                <label style={{ fontWeight: 500 }}>Mô tả sản phẩm chi tiết</label>
+                <RichTextEditor value={form.description_detail}
+                  onChange={html => setForm(f => ({ ...f, description_detail: html }))} />
               </div>
 
               <div style={{ display: 'flex', gap: 12 }}>

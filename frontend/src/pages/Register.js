@@ -154,7 +154,7 @@ const Register = () => {
 
             <p style={{ textAlign: 'center', marginTop: 16, fontSize: 14 }}>
               {secondsLeft <= 0 ? (
-                <span onClick={handleResend} style={{ color: 'var(--accent)', fontWeight: 600, cursor: 'pointer' }}>Gửi lại mã</span>
+                <span onClick={handleResend} style={{ color: 'var(--accent)', fontWeight: 500, cursor: 'pointer' }}>Gửi lại mã</span>
               ) : (
                 <span style={{ color: '#aaa' }}>Chưa nhận được mã? Chờ hết thời gian để gửi lại</span>
               )}
@@ -166,7 +166,7 @@ const Register = () => {
         )}
 
         <p style={{ textAlign: 'center', marginTop: 24, fontSize: 14, color: '#888' }}>
-          Đã có tài khoản? <Link to="/login" style={{ color: 'var(--accent)', fontWeight: 600 }}>Đăng nhập</Link>
+          Đã có tài khoản? <Link to="/login" style={{ color: 'var(--accent)', fontWeight: 500 }}>Đăng nhập</Link>
         </p>
       </div>
     </div>

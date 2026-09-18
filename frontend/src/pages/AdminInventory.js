@@ -123,12 +123,12 @@ const AdminInventory = () => {
                           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                             <img src={p.image_url} alt="" style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 6 }}
                               onError={e => { e.target.src = 'https://via.placeholder.com/40?text=?'; }} />
-                            <span style={{ fontWeight: 600 }}>{p.name}</span>
+                            <span style={{ fontWeight: 500 }}>{p.name}</span>
                           </div>
                         </td>
                         <td>{p.brand_name}</td>
                         <td>
-                          <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 700,
+                          <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 500,
                             background: p.total_stock > 10 ? '#E8F5E9' : p.total_stock > 0 ? '#FFF8E1' : '#FFEBEE',
                             color: p.total_stock > 10 ? '#2E7D32' : p.total_stock > 0 ? '#F57F17' : '#c62828' }}>
                             {p.total_stock}
@@ -164,13 +164,13 @@ const AdminInventory = () => {
                   <tbody>
                     {lowStock.map(item => (
                       <tr key={item.id}>
-                        <td style={{ fontWeight: 600 }}>{item.product_name}</td>
+                        <td style={{ fontWeight: 500 }}>{item.product_name}</td>
                         <td>{item.brand_name}</td>
-                        <td><span style={{ background: '#FFF8E1', padding: '3px 10px', borderRadius: 20, fontWeight: 600 }}>Size {item.size}</span></td>
+                        <td><span style={{ background: '#FFF8E1', padding: '3px 10px', borderRadius: 20, fontWeight: 500 }}>Size {item.size}</span></td>
                         <td>
                           <span style={{ background: item.quantity === 0 ? '#FFEBEE' : '#FFF8E1',
                             color: item.quantity === 0 ? '#c62828' : '#F57F17',
-                            padding: '3px 10px', borderRadius: 20, fontWeight: 700 }}>
+                            padding: '3px 10px', borderRadius: 20, fontWeight: 500 }}>
                             {item.quantity === 0 ? 'HẾT HÀNG' : `${item.quantity} đôi`}
                           </span>
                         </td>
@@ -190,7 +190,7 @@ const AdminInventory = () => {
                 <tbody>
                   {suppliers.map(s => (
                     <tr key={s.id}>
-                      <td style={{ fontWeight: 600 }}>{s.name}</td>
+                      <td style={{ fontWeight: 500 }}>{s.name}</td>
                       <td>{s.email}</td><td>{s.phone}</td><td>{s.address}</td>
                     </tr>
                   ))}
@@ -206,11 +206,11 @@ const AdminInventory = () => {
               {receipts.map(r => (
                 <div key={r.id} style={{ border: '1px solid var(--border)', borderRadius: 12, padding: 16, marginBottom: 16 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                    <div style={{ fontWeight: 700 }}>Phiếu #{r.id} — {r.supplier_name || 'Không có NCC'}</div>
+                    <div style={{ fontWeight: 500 }}>Phiếu #{r.id} — {r.supplier_name || 'Không có NCC'}</div>
                     <div style={{ color: '#888', fontSize: 13 }}>{new Date(r.created_at).toLocaleString('vi-VN')}</div>
                   </div>
                   {r.note && <div style={{ color: '#666', marginBottom: 8, fontSize: 13 }}>Ghi chú: {r.note}</div>}
-                  <div style={{ fontWeight: 700, color: 'var(--accent)', marginBottom: 8 }}>Tổng: {formatPrice(r.total_cost)}</div>
+                  <div style={{ fontWeight: 500, color: 'var(--accent)', marginBottom: 8 }}>Tổng: {formatPrice(r.total_cost)}</div>
                   <table style={{ width: '100%', fontSize: 13 }}>
                     <thead><tr style={{ background: '#222', color: 'white' }}><th style={{ padding: '8px 12px', textAlign: 'left' }}>Sản phẩm</th><th style={{ padding: '8px 12px', textAlign: 'center' }}>Size</th><th style={{ padding: '8px 12px', textAlign: 'center' }}>SL</th><th style={{ padding: '8px 12px', textAlign: 'right' }}>Giá nhập</th></tr></thead>
                     <tbody>
@@ -264,7 +264,7 @@ const AdminInventory = () => {
                 </div>
                 <div className="form-group"><label>Ghi chú</label><input value={receiptForm.note} onChange={e => setReceiptForm({...receiptForm, note: e.target.value})} /></div>
               </div>
-              <div style={{ fontWeight: 700, marginBottom: 12 }}>Chi tiết hàng nhập:</div>
+              <div style={{ fontWeight: 500, marginBottom: 12 }}>Chi tiết hàng nhập:</div>
               {receiptItems.map((item, i) => (
                 <div key={i} style={{ display: 'grid', gridTemplateColumns: '3fr 1fr 1fr 1fr auto', gap: 8, marginBottom: 8, alignItems: 'end' }}>
                   <div className="form-group" style={{ margin: 0 }}>

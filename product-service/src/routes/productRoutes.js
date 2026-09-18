@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { authenticate, isAdmin } = require('../middleware/auth');
-const { getProducts, getProduct, createProduct, updateProduct, deleteProduct, decreaseStock } = require('../controllers/productController');
-const { getBrands, createBrand, updateBrand, deleteBrand } = require('../controllers/brandController');
+const { getProducts, getProduct, createProduct, updateProduct, deleteProduct, decreaseStock, uploadImages } = require('../controllers/productController');
+const upload = require('../middleware/upload');const { getBrands, createBrand, updateBrand, deleteBrand } = require('../controllers/brandController');
 const { getCategories, createCategory, updateCategory, deleteCategory } = require('../controllers/categoryController');
 const { getSuppliers, createSupplier, getImportReceipts, createImportReceipt, getLowStock, getStockOverview } = require('../controllers/inventoryController');
 
@@ -12,7 +12,7 @@ router.post('/products', authenticate, isAdmin, createProduct);
 router.put('/products/:id', authenticate, isAdmin, updateProduct);
 router.delete('/products/:id', authenticate, isAdmin, deleteProduct);
 router.post('/products/decrease-stock', decreaseStock); // internal
-
+router.post('/products/upload-images', authenticate, isAdmin, upload.array('images', 10), uploadImages);
 // Brands
 router.get('/brands', getBrands);
 router.post('/brands', authenticate, isAdmin, createBrand);

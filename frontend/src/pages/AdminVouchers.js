@@ -83,9 +83,9 @@ const AdminVouchers = () => {
             <tbody>
               {vouchers.map(v => (
                 <tr key={v.id}>
-                  <td style={{ fontWeight: 700, fontFamily: 'monospace', fontSize: 15 }}>{v.code}</td>
+                  <td style={{ fontWeight: 500, fontFamily: 'Helvetica, Arial, sans-serif', fontSize: 15 }}>{v.code}</td>
                   <td>
-                    <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 600,
+                    <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 500,
                       background: v.type === 'percent' ? '#E3F2FD' : '#E8F5E9',
                       color: v.type === 'percent' ? '#1565C0' : '#2E7D32' }}>
                       {v.type === 'percent' ? `Giảm ${v.value}%` : 'Freeship'}
@@ -96,7 +96,7 @@ const AdminVouchers = () => {
                   <td>{v.used_count} / {v.max_uses || '∞'}</td>
                   <td style={{ fontSize: 13, color: '#888' }}>{formatDate(v.start_date)} — {formatDate(v.end_date)}</td>
                   <td>
-                    <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 600,
+                    <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 500,
                       background: v.is_active ? '#E8F5E9' : '#FFEBEE',
                       color: v.is_active ? '#2E7D32' : '#c62828' }}>
                       {v.is_active ? 'Hoạt động' : 'Tắt'}
