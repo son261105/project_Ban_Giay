@@ -81,7 +81,7 @@ const Register = () => {
             <p className="auth-subtitle">Tạo tài khoản để bắt đầu mua sắm!</p>
 
             {error && (
-              <div style={{ background: '#FFEBEE', color: '#c62828', padding: '12px 16px', borderRadius: 10, marginBottom: 20, fontSize: 14 }}>
+              <div style={{ background: '#FFEBEE', color: '#c62828', padding: '12px 16px', borderRadius: 10, marginBottom: 20, fontSize: 15 }}>
                 ⚠️ {error}
               </div>
             )}
@@ -113,7 +113,7 @@ const Register = () => {
                   onChange={e => setConfirmPassword(e.target.value)} required />
               </div>
 
-              <button type="submit" className="btn btn-accent" style={{ width: '100%', padding: '14px', fontSize: 15, marginTop: 8 }} disabled={loading}>
+              <button type="submit" className="btn btn-accent" style={{ width: '100%', padding: '14px', fontSize: 16, marginTop: 8 }} disabled={loading}>
                 {loading ? 'Đang gửi mã...' : 'Tạo tài khoản'}
               </button>
             </form>
@@ -129,7 +129,7 @@ const Register = () => {
             </p>
 
             {error && (
-              <div style={{ background: '#FFEBEE', color: '#c62828', padding: '12px 16px', borderRadius: 10, marginBottom: 20, fontSize: 14 }}>
+              <div style={{ background: '#FFEBEE', color: '#c62828', padding: '12px 16px', borderRadius: 10, marginBottom: 20, fontSize: 15 }}>
                 ⚠️ {error}
               </div>
             )}
@@ -141,32 +141,32 @@ const Register = () => {
                   placeholder="------"
                   value={otp}
                   maxLength={6}
-                  style={{ textAlign: 'center', fontSize: 24, letterSpacing: 8 }}
+                  style={{ textAlign: 'center', fontSize: 25, letterSpacing: 8 }}
                   onChange={e => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
                   required
                 />
               </div>
 
-              <button type="submit" className="btn btn-accent" style={{ width: '100%', padding: '14px', fontSize: 15, marginTop: 8 }} disabled={loading || secondsLeft <= 0}>
+              <button type="submit" className="btn btn-accent" style={{ width: '100%', padding: '14px', fontSize: 16, marginTop: 8 }} disabled={loading || secondsLeft <= 0}>
                 {loading ? 'Đang xác thực...' : 'Xác nhận'}
               </button>
             </form>
 
-            <p style={{ textAlign: 'center', marginTop: 16, fontSize: 14 }}>
+            <p style={{ textAlign: 'center', marginTop: 16, fontSize: 15 }}>
               {secondsLeft <= 0 ? (
-                <span onClick={handleResend} style={{ color: 'var(--accent)', fontWeight: 500, cursor: 'pointer' }}>Gửi lại mã</span>
+                <span onClick={handleResend} style={{ color: 'var(--accent)', fontWeight: 600, cursor: 'pointer' }}>Gửi lại mã</span>
               ) : (
                 <span style={{ color: '#aaa' }}>Chưa nhận được mã? Chờ hết thời gian để gửi lại</span>
               )}
             </p>
             <p style={{ textAlign: 'center', marginTop: 8 }}>
-              <span onClick={() => setStep('form')} style={{ color: '#888', fontSize: 13, cursor: 'pointer' }}>← Quay lại chỉnh sửa thông tin</span>
+              <span onClick={() => setStep('form')} style={{ color: '#888', fontSize: 14, cursor: 'pointer' }}>← Quay lại chỉnh sửa thông tin</span>
             </p>
           </>
         )}
 
-        <p style={{ textAlign: 'center', marginTop: 24, fontSize: 14, color: '#888' }}>
-          Đã có tài khoản? <Link to="/login" style={{ color: 'var(--accent)', fontWeight: 500 }}>Đăng nhập</Link>
+        <p style={{ textAlign: 'center', marginTop: 24, fontSize: 15, color: '#888' }}>
+          Đã có tài khoản? <Link to="/login" style={{ color: 'var(--accent)', fontWeight: 600 }}>Đăng nhập</Link>
         </p>
       </div>
     </div>

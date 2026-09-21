@@ -23,10 +23,10 @@ const OrderSuccess = () => {
           </svg>
         </div>
 
-        <h1 style={{ fontSize: 24, fontWeight: 500, marginBottom: 8 }}>Đặt hàng thành công</h1>
-        <p style={{ color: '#666', fontSize: 15, marginBottom: 4 }}>
+        <h1 style={{ fontSize: 25, fontWeight: 600, marginBottom: 8 }}>Đặt hàng thành công</h1>
+        <p style={{ color: '#666', fontSize: 16, marginBottom: 4 }}>
           Cảm ơn bạn đã mua sắm tại DS Sport.        </p>
-        <p style={{ color: '#666', fontSize: 15, marginBottom: 32 }}>
+        <p style={{ color: '#666', fontSize: 16, marginBottom: 32 }}>
           Mã đơn hàng: <strong style={{ color: '#111' }}>#{orderId}</strong>
         </p>
 

@@ -22,7 +22,7 @@ const RichTextEditor = ({ value, onChange }) => {
   const Btn = ({ cmd, arg, title, children }) => (
     <button type="button" title={title} onMouseDown={e => e.preventDefault()} onClick={() => exec(cmd, arg)}
       style={{ minWidth: 34, height: 32, border: '1px solid var(--border)', background: '#fff',
-        borderRadius: 6, cursor: 'pointer', fontSize: 14 }}>{children}</button>
+        borderRadius: 6, cursor: 'pointer', fontSize: 15 }}>{children}</button>
   );
   return (
     <div style={{ border: '2px solid var(--border)', borderRadius: 10, overflow: 'hidden' }}>
@@ -41,7 +41,7 @@ const RichTextEditor = ({ value, onChange }) => {
       </div>
       <div ref={ref} contentEditable suppressContentEditableWarning
         onInput={e => onChange(e.currentTarget.innerHTML)}
-        style={{ minHeight: 180, padding: 14, fontSize: 14, lineHeight: 1.7, outline: 'none', background: '#fff' }} />
+        style={{ minHeight: 180, padding: 14, fontSize: 15, lineHeight: 1.7, outline: 'none', background: '#fff' }} />
     </div>
   );
 };
@@ -160,14 +160,14 @@ const AdminProducts = () => {
       </div>
 
       {msg && (
-        <div style={{ padding: '12px 16px', borderRadius: 10, marginBottom: 20, fontSize: 14,
+        <div style={{ padding: '12px 16px', borderRadius: 10, marginBottom: 20, fontSize: 15,
           background: msg.startsWith('✅') ? '#E8F5E9' : '#FFEBEE',
           color: msg.startsWith('✅') ? '#2E7D32' : '#c62828' }}>{msg}</div>
       )}
 
       <div style={{ marginBottom: 20 }}>
         <input placeholder="🔍 Tìm sản phẩm..." value={search} onChange={e => setSearch(e.target.value)}
-          style={{ padding: '10px 16px', border: '2px solid var(--border)', borderRadius: 10, fontSize: 14, width: 300 }} />
+          style={{ padding: '10px 16px', border: '2px solid var(--border)', borderRadius: 10, fontSize: 15, width: 300 }} />
       </div>
 
       {loading ? <div className="loading"><div className="spinner"></div></div> : (
@@ -182,21 +182,21 @@ const AdminProducts = () => {
             <tbody>
               {filtered.map(p => (
                 <tr key={p.id}>
-                  <td style={{ color: '#888', fontWeight: 500 }}>#{p.id}</td>
+                  <td style={{ color: '#888', fontWeight: 600 }}>#{p.id}</td>
                   <td>
                     <img src={p.image_url} alt={p.name}
                       style={{ width: 52, height: 52, objectFit: 'cover', borderRadius: 8 }}
                       onError={e => { e.target.src = 'https://via.placeholder.com/52?text=?'; }} />
                   </td>
-                  <td style={{ fontWeight: 500, maxWidth: 200 }}>{p.name}</td>
+                  <td style={{ fontWeight: 600, maxWidth: 200 }}>{p.name}</td>
                   <td>{p.brand_name}</td>
-                  <td style={{ fontWeight: 500, color: 'var(--accent)' }}>{formatPrice(p.price)}</td>
+                  <td style={{ fontWeight: 600, color: 'var(--accent)' }}>{formatPrice(p.price)}</td>
                   <td>
-                    <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 500,
+                    <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 13, fontWeight: 600,
                       background: p.stock > 0 ? '#E8F5E9' : '#FFEBEE',
                       color: p.stock > 0 ? '#2E7D32' : '#c62828' }}>{p.stock}</span>
                   </td>
-                  <td style={{ fontSize: 13, color: '#888' }}>{p.category_name || p.category_slug}</td>
+                  <td style={{ fontSize: 14, color: '#888' }}>{p.category_name || p.category_slug}</td>
                   <td>
                     <div style={{ display: 'flex', gap: 8 }}>
                       <button className="btn btn-outline btn-sm" onClick={() => openEdit(p)}> Sửa</button>
@@ -251,16 +251,16 @@ const AdminProducts = () => {
 
               {/* Thêm hình ảnh */}
               <div className="form-group">
-                <label style={{ fontWeight: 500, fontSize: 16 }}>Thêm hình ảnh (tối đa {MAX_IMAGES} ảnh)</label>
+                <label style={{ fontWeight: 600, fontSize: 17 }}>Thêm hình ảnh (tối đa {MAX_IMAGES} ảnh)</label>
                 <label htmlFor="product-images-input"
                   style={{ display: 'block', width: '100%', padding: '28px 16px', marginTop: 8,
                     border: '2px dashed var(--border)', borderRadius: 12, textAlign: 'center',
                     cursor: 'pointer', background: '#fafafa' }}>
-                  <div style={{ fontSize: 34, marginBottom: 6 }}>📷</div>
-                  <div style={{ fontSize: 16, fontWeight: 500 }}>
+                  <div style={{ fontSize: 35, marginBottom: 6 }}>📷</div>
+                  <div style={{ fontSize: 17, fontWeight: 600 }}>
                     {uploading ? 'Đang tải ảnh lên...' : 'Chọn tệp ảnh từ máy tính'}
                   </div>
-                  <div style={{ fontSize: 13, color: '#888', marginTop: 4 }}>
+                  <div style={{ fontSize: 14, color: '#888', marginTop: 4 }}>
                     Đã chọn {images.length}/{MAX_IMAGES} ảnh · JPG, PNG · tối đa 5MB mỗi ảnh
                   </div>
                 </label>
@@ -276,10 +276,10 @@ const AdminProducts = () => {
                           style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10, border: '1px solid var(--border)' }} />
                         <button type="button" onClick={() => removeImage(idx)} title="Xóa ảnh"
                           style={{ position: 'absolute', top: -8, right: -8, width: 24, height: 24, borderRadius: '50%',
-                            border: 'none', background: '#c62828', color: '#fff', cursor: 'pointer', fontSize: 14, lineHeight: '24px' }}>×</button>
+                            border: 'none', background: '#c62828', color: '#fff', cursor: 'pointer', fontSize: 15, lineHeight: '24px' }}>×</button>
                         {idx === 0 && (
                           <span style={{ position: 'absolute', bottom: 4, left: 4, background: 'rgba(0,0,0,.65)',
-                            color: '#fff', fontSize: 10, padding: '2px 6px', borderRadius: 4 }}>Ảnh chính</span>
+                            color: '#fff', fontSize: 11, padding: '2px 6px', borderRadius: 4 }}>Ảnh chính</span>
                         )}
                       </div>
                     ))}
@@ -289,7 +289,7 @@ const AdminProducts = () => {
 
                             {/* Chọn size bán */}
               <div className="form-group">
-                <label style={{ fontWeight: 500 }}>Size sản phẩm có bán</label>
+                <label style={{ fontWeight: 600 }}>Size sản phẩm có bán</label>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                   {SIZES.map(size => (
                     <button key={size} type="button"
@@ -301,7 +301,7 @@ const AdminProducts = () => {
 
               {/* Mô tả chi tiết */}
               <div className="form-group">
-                <label style={{ fontWeight: 500 }}>Mô tả sản phẩm chi tiết</label>
+                <label style={{ fontWeight: 600 }}>Mô tả sản phẩm chi tiết</label>
                 <RichTextEditor value={form.description_detail}
                   onChange={html => setForm(f => ({ ...f, description_detail: html }))} />
               </div>

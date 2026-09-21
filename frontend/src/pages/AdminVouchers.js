@@ -83,9 +83,9 @@ const AdminVouchers = () => {
             <tbody>
               {vouchers.map(v => (
                 <tr key={v.id}>
-                  <td style={{ fontWeight: 500, fontFamily: 'Helvetica, Arial, sans-serif', fontSize: 15 }}>{v.code}</td>
+                  <td style={{ fontWeight: 600, fontFamily: 'Helvetica, Arial, sans-serif', fontSize: 16 }}>{v.code}</td>
                   <td>
-                    <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 500,
+                    <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 13, fontWeight: 600,
                       background: v.type === 'percent' ? '#E3F2FD' : '#E8F5E9',
                       color: v.type === 'percent' ? '#1565C0' : '#2E7D32' }}>
                       {v.type === 'percent' ? `Giảm ${v.value}%` : 'Freeship'}
@@ -94,9 +94,9 @@ const AdminVouchers = () => {
                   <td>{v.type === 'percent' ? `${v.value}%` : 'Miễn phí vận chuyển'}</td>
                   <td>{formatPrice(v.min_order_amount)}</td>
                   <td>{v.used_count} / {v.max_uses || '∞'}</td>
-                  <td style={{ fontSize: 13, color: '#888' }}>{formatDate(v.start_date)} — {formatDate(v.end_date)}</td>
+                  <td style={{ fontSize: 14, color: '#888' }}>{formatDate(v.start_date)} — {formatDate(v.end_date)}</td>
                   <td>
-                    <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 500,
+                    <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 13, fontWeight: 600,
                       background: v.is_active ? '#E8F5E9' : '#FFEBEE',
                       color: v.is_active ? '#2E7D32' : '#c62828' }}>
                       {v.is_active ? 'Hoạt động' : 'Tắt'}
@@ -106,11 +106,11 @@ const AdminVouchers = () => {
                     <div style={{ display: 'flex', gap: 8 }}>
                       <button className="btn btn-outline btn-sm" onClick={() => openEdit(v)}>Sửa</button>
                       <button className="btn btn-sm" onClick={() => handleToggle(v.id)}
-                        style={{ background: v.is_active ? '#FFF8E1' : '#E8F5E9', color: v.is_active ? '#F57F17' : '#2E7D32', border: 'none', borderRadius: 8, cursor: 'pointer', padding: '6px 12px', fontSize: 13 }}>
+                        style={{ background: v.is_active ? '#FFF8E1' : '#E8F5E9', color: v.is_active ? '#F57F17' : '#2E7D32', border: 'none', borderRadius: 8, cursor: 'pointer', padding: '6px 12px', fontSize: 14 }}>
                         {v.is_active ? 'Tắt' : 'Bật'}
                       </button>
                       <button className="btn btn-sm" onClick={() => handleDelete(v.id)}
-                        style={{ background: '#FFEBEE', color: '#c62828', border: 'none', borderRadius: 8, cursor: 'pointer', padding: '6px 12px', fontSize: 13 }}>
+                        style={{ background: '#FFEBEE', color: '#c62828', border: 'none', borderRadius: 8, cursor: 'pointer', padding: '6px 12px', fontSize: 14 }}>
                         Xóa
                       </button>
                     </div>
@@ -129,7 +129,7 @@ const AdminVouchers = () => {
           <div style={{ background: 'white', borderRadius: 16, padding: 32, width: 520, maxHeight: '90vh', overflowY: 'auto' }}>
             <h2 style={{ marginBottom: 24 }}>{editing ? 'Sửa voucher' : 'Thêm voucher mới'}</h2>
 
-            {error && <div style={{ background: '#FFEBEE', color: '#c62828', padding: '10px 14px', borderRadius: 8, marginBottom: 16, fontSize: 14 }}>⚠️ {error}</div>}
+            {error && <div style={{ background: '#FFEBEE', color: '#c62828', padding: '10px 14px', borderRadius: 8, marginBottom: 16, fontSize: 15 }}>⚠️ {error}</div>}
 
             <div className="form-group">
               <label>Mã voucher *</label>

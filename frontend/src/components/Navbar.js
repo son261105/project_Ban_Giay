@@ -73,7 +73,7 @@ const Navbar = () => {
                 }}>
                   <div
                     onClick={() => navigate('/profile')}
-                    style={{ padding: '12px 16px', color: '#333', fontSize: 14, cursor: 'pointer', whiteSpace: 'nowrap' }}
+                    style={{ padding: '12px 16px', color: '#333', fontSize: 15, cursor: 'pointer', whiteSpace: 'nowrap' }}
                     onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'}
                     onMouseLeave={e => e.currentTarget.style.background = 'white'}
                   >
@@ -81,7 +81,7 @@ const Navbar = () => {
                   </div>
                                     <div
                     onClick={handleLogout}
-                    style={{ padding: '12px 16px', color: '#c62828', fontSize: 14, cursor: 'pointer', whiteSpace: 'nowrap', borderTop: '1px solid #f0f0f0' }}
+                    style={{ padding: '12px 16px', color: '#c62828', fontSize: 15, cursor: 'pointer', whiteSpace: 'nowrap', borderTop: '1px solid #f0f0f0' }}
                     onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'}
                     onMouseLeave={e => e.currentTarget.style.background = 'white'}
                   >

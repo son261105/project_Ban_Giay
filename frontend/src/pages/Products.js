@@ -135,7 +135,7 @@ const Products = () => {
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
                     <div className="product-card-price">{formatPrice(product.price)}</div>
                     <span style={{
-                      fontSize: 11, fontWeight: 500, padding: '3px 8px', borderRadius: 20,
+                      fontSize: 12, fontWeight: 600, padding: '3px 8px', borderRadius: 20,
                       background: product.stock > 0 ? '#E8F5E9' : '#FFEBEE',
                       color: product.stock > 0 ? '#2E7D32' : '#c62828'
                     }}>

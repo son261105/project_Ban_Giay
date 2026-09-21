@@ -43,10 +43,10 @@ const Home = () => {
               position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)',
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center',
             }}>
-              <div style={{ color: 'var(--accent)', fontSize: 14, fontWeight: 500, letterSpacing: 4, marginBottom: 8 }}>{slide.brand}</div>
-              <h1 style={{ color: 'white', fontSize: 52, fontWeight: 500, marginBottom: 12 }}>{slide.title}</h1>
-              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 16, marginBottom: 24 }}>{slide.sub}</p>
-              <Link to="/products" className="btn btn-accent" style={{ fontSize: 16, padding: '14px 40px' }}>Xem ngay</Link>
+              <div style={{ color: 'var(--accent)', fontSize: 15, fontWeight: 600, letterSpacing: 4, marginBottom: 8 }}>{slide.brand}</div>
+              <h1 style={{ color: 'white', fontSize: 53, fontWeight: 600, marginBottom: 12 }}>{slide.title}</h1>
+              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 17, marginBottom: 24 }}>{slide.sub}</p>
+              <Link to="/products" className="btn btn-accent" style={{ fontSize: 17, padding: '14px 40px' }}>Xem ngay</Link>
             </div>
           </div>
         ))}
@@ -69,7 +69,7 @@ const Home = () => {
           }} style={{
             position: 'absolute', top: '50%', transform: 'translateY(-50%)', ...side,
             background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white',
-            fontSize: 32, width: 48, height: 48, borderRadius: '50%', cursor: 'pointer', zIndex: 10,
+            fontSize: 33, width: 48, height: 48, borderRadius: '50%', cursor: 'pointer', zIndex: 10,
             opacity: 0, transition: 'opacity 0.3s',
           }}>{label}</button>
         ))}
@@ -92,8 +92,8 @@ const Home = () => {
   <div className="container">
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
       <div>
-        <div style={{ fontSize: 12, fontWeight: 500, color: 'var(--accent)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4 }}>Ưu đãi hôm nay</div>
-        <h2 style={{ fontSize: 28, fontWeight: 500, margin: 0 }}>MÃ GIẢM GIÁ</h2>
+        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--accent)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4 }}>Ưu đãi hôm nay</div>
+        <h2 style={{ fontSize: 29, fontWeight: 600, margin: 0 }}>MÃ GIẢM GIÁ</h2>
       </div>
     </div>
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
@@ -117,27 +117,27 @@ const Home = () => {
             minWidth: 90, background: v.color, display: 'flex', flexDirection: 'column',
             alignItems: 'center', justifyContent: 'center', padding: '20px 10px', gap: 6
           }}>
-            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', fontWeight: 500, letterSpacing: 1, textTransform: 'uppercase', textAlign: 'center' }}>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', textAlign: 'center' }}>
               {v.type === 'freeship' ? 'FREESHIP' : 'DISCOUNT'}
             </div>
           </div>
           <div style={{ width: 1, background: 'repeating-linear-gradient(to bottom, #e0e0e0 0px, #e0e0e0 6px, transparent 6px, transparent 12px)' }} />
           <div style={{ flex: 1, padding: '20px 20px' }}>
-            <div style={{ fontWeight: 500, fontSize: 18, marginBottom: 4, color: '#1F2937' }}>{v.title}</div>
-            <div style={{ fontSize: 13, color: '#888', marginBottom: 12 }}>{v.desc}</div>
+            <div style={{ fontWeight: 600, fontSize: 19, marginBottom: 4, color: '#1F2937' }}>{v.title}</div>
+            <div style={{ fontSize: 14, color: '#888', marginBottom: 12 }}>{v.desc}</div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
-                <div style={{ fontSize: 12, color: '#aaa', marginBottom: 2 }}>HSD: {v.end}</div>
+                <div style={{ fontSize: 13, color: '#aaa', marginBottom: 2 }}>HSD: {v.end}</div>
                 <div style={{
                   display: 'inline-block', background: '#f5f5f5', borderRadius: 6,
-                  padding: '4px 10px', fontSize: 13, fontWeight: 500, letterSpacing: 1, color: '#333'
+                  padding: '4px 10px', fontSize: 14, fontWeight: 600, letterSpacing: 1, color: '#333'
                 }}>{v.code}</div>
               </div>
               <button
                 onClick={() => { navigator.clipboard.writeText(v.code); alert(`Đã sao chép: ${v.code}`); }}
                 style={{
                   background: v.color, color: 'white', border: 'none', borderRadius: 8,
-                  padding: '8px 14px', fontSize: 12, fontWeight: 500, cursor: 'pointer', whiteSpace: 'nowrap'
+                  padding: '8px 14px', fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap'
                 }}>
                 Sao chép
               </button>
@@ -184,7 +184,7 @@ const Home = () => {
                 <div className="product-card-name">{product.name}</div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
                   <div className="product-card-price">{formatPrice(product.price)}</div>
-                  <span style={{ fontSize: 12, color: '#888' }}>Còn: {product.stock}</span>
+                  <span style={{ fontSize: 13, color: '#888' }}>Còn: {product.stock}</span>
                 </div>
               </div>
             </div>
@@ -195,8 +195,8 @@ const Home = () => {
       {/* Banner */}
       <div style={{ background: 'var(--primary)', color: 'white', padding: '60px 0', textAlign: 'center' }}>
         <div className="container">
-          <h2 style={{ fontSize: 48, fontWeight: 500, marginBottom: 16 }}>MIỄN PHÍ VẬN CHUYỂN</h2>
-          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 16, marginBottom: 24 }}>Cho đơn hàng từ 2.000.000đ trở lên</p>
+          <h2 style={{ fontSize: 49, fontWeight: 600, marginBottom: 16 }}>MIỄN PHÍ VẬN CHUYỂN</h2>
+          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 17, marginBottom: 24 }}>Cho đơn hàng từ 2.000.000đ trở lên</p>
           <Link to="/products" className="btn btn-accent">Mua ngay</Link>
         </div>
       </div>
@@ -207,30 +207,30 @@ const Home = () => {
 
             {/* Logo & Mô tả */}
             <div>
-              <div style={{ fontFamily: 'Helvetica, Arial, sans-serif', fontSize: 32, letterSpacing: 2, marginBottom: 8 }}>
+              <div style={{ fontFamily: 'Helvetica, Arial, sans-serif', fontSize: 33, letterSpacing: 2, marginBottom: 8 }}>
                 DS_<span style={{ color: 'var(--accent)' }}>Sport</span>              </div>
-              <p style={{ color: '#888', fontSize: 14, lineHeight: 1.7, marginBottom: 16 }}>
+              <p style={{ color: '#888', fontSize: 15, lineHeight: 1.7, marginBottom: 16 }}>
                 DS_Sport là nền tảng mua sắm giày chính hãng hàng đầu với hàng nghìn sản phẩm từ các thương hiệu nổi tiếng thế giới.              </p>
               <div style={{ display: 'flex', gap: 12 }}>
                 {['Facebook', 'Instagram', 'Zalo'].map(s => (
-                  <div key={s} style={{ background: 'rgba(255,255,255,0.1)', padding: '6px 14px', borderRadius: 20, fontSize: 12, cursor: 'pointer', color: '#ccc' }}>{s}</div>
+                  <div key={s} style={{ background: 'rgba(255,255,255,0.1)', padding: '6px 14px', borderRadius: 20, fontSize: 13, cursor: 'pointer', color: '#ccc' }}>{s}</div>
                 ))}
               </div>
             </div>
 
             {/* Chính sách */}
             <div>
-              <div style={{ fontWeight: 500, fontSize: 13, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16, color: 'var(--accent)' }}>Chính sách</div>
+              <div style={{ fontWeight: 600, fontSize: 14, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16, color: 'var(--accent)' }}>Chính sách</div>
               {['Thanh toán & giao hàng', 'Chính sách bảo mật', 'Điều khoản sử dụng', 'Chính sách đổi trả'].map(item => (
-                <div key={item} style={{ color: '#888', fontSize: 14, marginBottom: 10, cursor: 'pointer' }}
+                <div key={item} style={{ color: '#888', fontSize: 15, marginBottom: 10, cursor: 'pointer' }}
                   onMouseEnter={e => e.target.style.color = 'white'}
                   onMouseLeave={e => e.target.style.color = '#888'}>{item}</div>
               ))}
             </div>
 
             {/* Về DS_Sport */}            <div>
-              <div style={{ fontWeight: 500, fontSize: 13, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16, color: 'var(--accent)' }}>Về DS_Sport</div>              {['Giới thiệu', 'Tuyển dụng', 'Tin tức', 'Liên hệ'].map(item => (
-                <div key={item} style={{ color: '#888', fontSize: 14, marginBottom: 10, cursor: 'pointer' }}
+              <div style={{ fontWeight: 600, fontSize: 14, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16, color: 'var(--accent)' }}>Về DS_Sport</div>              {['Giới thiệu', 'Tuyển dụng', 'Tin tức', 'Liên hệ'].map(item => (
+                <div key={item} style={{ color: '#888', fontSize: 15, marginBottom: 10, cursor: 'pointer' }}
                   onMouseEnter={e => e.target.style.color = 'white'}
                   onMouseLeave={e => e.target.style.color = '#888'}>{item}</div>
               ))}
@@ -238,17 +238,17 @@ const Home = () => {
 
             {/* Hotline */}
             <div>
-              <div style={{ fontWeight: 500, fontSize: 13, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16, color: 'var(--accent)' }}>Người hỗ trợ</div>
+              <div style={{ fontWeight: 600, fontSize: 14, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16, color: 'var(--accent)' }}>Người hỗ trợ</div>
               <div style={{ marginBottom: 12 }}>
-                <div style={{ fontSize: 12, color: '#888', marginBottom: 4 }}>Mua hàng (9:00 - 21:00)</div>
-                <div style={{ fontSize: 20, fontWeight: 500, color: 'var(--accent)' }}>📞 0353950356</div>
+                <div style={{ fontSize: 13, color: '#888', marginBottom: 4 }}>Mua hàng (9:00 - 21:00)</div>
+                <div style={{ fontSize: 21, fontWeight: 600, color: 'var(--accent)' }}>📞 0353950356</div>
               </div>
               <div style={{ marginBottom: 20 }}>
-                <div style={{ fontSize: 12, color: '#888', marginBottom: 4 }}>CSKH (9:00 - 21:00)</div>
-                <div style={{ fontSize: 20, fontWeight: 500, color: 'var(--accent)' }}>📞 0353950356</div>
+                <div style={{ fontSize: 13, color: '#888', marginBottom: 4 }}>CSKH (9:00 - 21:00)</div>
+                <div style={{ fontSize: 21, fontWeight: 600, color: 'var(--accent)' }}>📞 0353950356</div>
               </div>
               <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 10, padding: '12px 16px' }}>
-                <div style={{ fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8, color: '#ccc' }}>Thanh toán an toàn</div>
+                <div style={{ fontSize: 13, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8, color: '#ccc' }}>Thanh toán an toàn</div>
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                  
                 </div>
@@ -258,7 +258,7 @@ const Home = () => {
 
           {/* Bottom */}
           <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-            <div style={{ color: '#555', fontSize: 13 }}>©DS_Sport. All rights reserved.</div>         
+            <div style={{ color: '#555', fontSize: 14 }}>©DS_Sport. All rights reserved.</div>         
           </div>
         </div>
       </footer>

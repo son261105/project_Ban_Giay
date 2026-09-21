@@ -9,4 +9,4 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 product-service/uploads/
-frontend/build/
+frontend/build/git rm -r --cached frontend/build

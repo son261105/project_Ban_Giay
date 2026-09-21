@@ -57,7 +57,7 @@ const AdminBrands = () => {
 
       {msg && (
         <div style={{
-          padding: '12px 16px', borderRadius: 10, marginBottom: 20, fontSize: 14,
+          padding: '12px 16px', borderRadius: 10, marginBottom: 20, fontSize: 15,
           background: msg.startsWith('✅') ? '#E8F5E9' : '#FFEBEE',
           color: msg.startsWith('✅') ? '#2E7D32' : '#c62828'
         }}>{msg}</div>
@@ -80,14 +80,14 @@ const AdminBrands = () => {
             <tbody>
               {brands.map(b => (
                 <tr key={b.id}>
-                  <td style={{ color: '#888', fontWeight: 500 }}>#{b.id}</td>
+                  <td style={{ color: '#888', fontWeight: 600 }}>#{b.id}</td>
                   <td>
                     {b.logo_url
                       ? <img src={b.logo_url} alt={b.name} style={{ width: 40, height: 40, objectFit: 'contain' }} onError={e => { e.target.style.display = 'none'; }} />
-                      : <span style={{ color: '#ccc', fontSize: 13 }}>—</span>}
+                      : <span style={{ color: '#ccc', fontSize: 14 }}>—</span>}
                   </td>
-                  <td style={{ fontWeight: 500 }}>{b.name}</td>
-                  <td style={{ color: '#888', fontSize: 13 }}>{new Date(b.created_at).toLocaleDateString('vi-VN')}</td>
+                  <td style={{ fontWeight: 600 }}>{b.name}</td>
+                  <td style={{ color: '#888', fontSize: 14 }}>{new Date(b.created_at).toLocaleDateString('vi-VN')}</td>
                   <td>
                     <div style={{ display: 'flex', gap: 8 }}>
                       <button className="btn btn-outline btn-sm" onClick={() => openEdit(b)}> Sửa</button>
@@ -106,11 +106,11 @@ const AdminBrands = () => {
       {showModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
           <div style={{ background: 'white', borderRadius: 16, padding: 32, width: 440, boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}>
-            <h2 style={{ fontFamily: 'Helvetica, Arial, sans-serif', fontSize: 24, marginBottom: 24 }}>
+            <h2 style={{ fontFamily: 'Helvetica, Arial, sans-serif', fontSize: 25, marginBottom: 24 }}>
               {editBrand ? 'SỬA THƯƠNG HIỆU' : 'THÊM THƯƠNG HIỆU'}
             </h2>
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: 'block', fontWeight: 500, fontSize: 13, marginBottom: 6, textTransform: 'uppercase' }}>Tên thương hiệu *</label>
+              <label style={{ display: 'block', fontWeight: 600, fontSize: 14, marginBottom: 6, textTransform: 'uppercase' }}>Tên thương hiệu *</label>
               <input
                 className="form-input"
                 value={form.name}
@@ -120,7 +120,7 @@ const AdminBrands = () => {
               />
             </div>
             <div style={{ marginBottom: 24 }}>
-              <label style={{ display: 'block', fontWeight: 500, fontSize: 13, marginBottom: 6, textTransform: 'uppercase' }}>URL Logo</label>
+              <label style={{ display: 'block', fontWeight: 600, fontSize: 14, marginBottom: 6, textTransform: 'uppercase' }}>URL Logo</label>
               <input
                 className="form-input"
                 value={form.logo_url}

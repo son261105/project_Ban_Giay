@@ -51,7 +51,7 @@ const ProductDetail = () => {
   return (
     <div className="container page">
       <button onClick={() => navigate(-1)}
-        style={{ background: 'none', border: 'none', fontSize: 14, color: '#888', marginBottom: 24, cursor: 'pointer' }}>
+        style={{ background: 'none', border: 'none', fontSize: 15, color: '#888', marginBottom: 24, cursor: 'pointer' }}>
         ← Quay lại
       </button>
 
@@ -78,7 +78,7 @@ const ProductDetail = () => {
                     {/* Mô tả chi tiết - nằm ngay dưới ảnh, cột trái */}
           {product.description_detail && (
             <div style={{ marginTop: 32 }}>
-              <h2 style={{ fontFamily: 'Helvetica, Arial, sans-serif', fontWeight: 500, fontSize: 22, letterSpacing: 1, marginBottom: 12, textTransform: 'uppercase' }}>Mô tả chi tiết</h2>
+              <h2 style={{ fontFamily: 'Helvetica, Arial, sans-serif', fontWeight: 600, fontSize: 23, letterSpacing: 1, marginBottom: 12, textTransform: 'uppercase' }}>Mô tả chi tiết</h2>
               <div
                 className="product-rich-text"
                 dangerouslySetInnerHTML={{ __html: product.description_detail }}
@@ -89,24 +89,24 @@ const ProductDetail = () => {
 
         {/* Info */}
         <div>
-          <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 8 }}>
+          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 8 }}>
             {product.brand_name}
           </div>
-          <h1 style={{ fontFamily: 'Helvetica, Arial, sans-serif', fontSize: 48, lineHeight: 1.1, marginBottom: 16 }}>
+          <h1 style={{ fontFamily: 'Helvetica, Arial, sans-serif', fontSize: 49, lineHeight: 1.1, marginBottom: 16 }}>
             {product.name}
           </h1>
-          <div style={{ fontSize: 36, fontWeight: 500, color: 'var(--accent)', marginBottom: 20 }}>
+          <div style={{ fontSize: 37, fontWeight: 600, color: 'var(--accent)', marginBottom: 20 }}>
             {formatPrice(product.price)}
           </div>
 
           {product.description && (
-            <p style={{ color: '#555', lineHeight: 1.7, marginBottom: 28, fontSize: 15 }}>{product.description}</p>
+            <p style={{ color: '#555', lineHeight: 1.7, marginBottom: 28, fontSize: 16 }}>{product.description}</p>
           )}
 
           {/* Overall stock badge */}
           <div style={{ marginBottom: 24 }}>
             <span style={{
-              padding: '6px 14px', borderRadius: 20, fontSize: 13, fontWeight: 500,
+              padding: '6px 14px', borderRadius: 20, fontSize: 14, fontWeight: 600,
               background: totalStock > 0 ? '#E8F5E9' : '#FFEBEE',
               color: totalStock > 0 ? '#2E7D32' : '#c62828'
             }}>
@@ -117,7 +117,7 @@ const ProductDetail = () => {
           {/* Size picker with stock per size */}
           {stockBySize.length > 0 && (
             <div style={{ marginBottom: 28 }}>
-              <div style={{ fontWeight: 500, marginBottom: 12 }}>Chọn size:</div>
+              <div style={{ fontWeight: 600, marginBottom: 12 }}>Chọn size:</div>
               <div className="size-grid">
                 {stockBySize.map(({ size, quantity }) => (
                   <button
@@ -134,14 +134,14 @@ const ProductDetail = () => {
                         position: 'absolute', top: -6, right: -6,
                         background: '#FF5722', color: '#fff',
                         borderRadius: '50%', width: 16, height: 16,
-                        fontSize: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 500
+                        fontSize: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600
                       }}>{quantity}</span>
                     )}
                   </button>
                 ))}
               </div>
               {selectedSize && (
-                <div style={{ marginTop: 8, fontSize: 13, color: stockOfSelected <= 3 ? '#FF5722' : '#2E7D32' }}>
+                <div style={{ marginTop: 8, fontSize: 14, color: stockOfSelected <= 3 ? '#FF5722' : '#2E7D32' }}>
                   {stockOfSelected > 0 ? `Còn ${stockOfSelected} đôi size ${selectedSize}` : `Hết hàng size ${selectedSize}`}
                 </div>
               )}
@@ -150,7 +150,7 @@ const ProductDetail = () => {
 
           {/* Quantity */}
           <div style={{ marginBottom: 28 }}>
-            <div style={{ fontWeight: 500, marginBottom: 12 }}>Số lượng:</div>
+            <div style={{ fontWeight: 600, marginBottom: 12 }}>Số lượng:</div>
             <div className="qty-control">
               <button onClick={() => setQty(q => Math.max(1, q - 1))}>−</button>
               <span>{qty}</span>
@@ -160,14 +160,14 @@ const ProductDetail = () => {
 
           {msg && (
             <div style={{
-              padding: '12px 16px', borderRadius: 10, marginBottom: 16, fontSize: 14,
+              padding: '12px 16px', borderRadius: 10, marginBottom: 16, fontSize: 15,
               background: msg.startsWith('✅') ? '#E8F5E9' : '#FFEBEE',
               color: msg.startsWith('✅') ? '#2E7D32' : '#c62828'
             }}>{msg}</div>
           )}
 
           <div style={{ display: 'flex', gap: 12 }}>
-            <button className="btn btn-accent" style={{ flex: 1, fontSize: 16, padding: '16px' }}
+            <button className="btn btn-accent" style={{ flex: 1, fontSize: 17, padding: '16px' }}
               onClick={handleAddToCart} disabled={adding || totalStock === 0}>
               {adding ? 'Đang thêm...' : '🛒 Thêm vào giỏ hàng'}
             </button>
@@ -176,7 +176,7 @@ const ProductDetail = () => {
             </button>
           </div>
 
-                                        <div style={{ marginTop: 24, padding: 20, background: '#f9f9f9', borderRadius: 12, fontSize: 13, color: '#666' }}>
+                                        <div style={{ marginTop: 24, padding: 20, background: '#f9f9f9', borderRadius: 12, fontSize: 14, color: '#666' }}>
             <div style={{ marginBottom: 8 }}>🚚 Giao hàng miễn phí từ 2.000.000đ</div>
             <div style={{ marginBottom: 8 }}>🔄 Đổi trả trong 30 ngày</div>
             <div>✅ Hàng chính hãng 100%</div>

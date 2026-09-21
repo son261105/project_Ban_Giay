@@ -124,10 +124,10 @@ const Checkout = () => {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: 40, alignItems: 'start' }}>
         {/* Form */}
         <div style={{ background: 'white', borderRadius: 16, padding: 32, boxShadow: 'var(--shadow)' }}>
-          <h2 style={{ fontSize: 24, marginBottom: 24 }}>THÔNG TIN GIAO HÀNG</h2>
+          <h2 style={{ fontSize: 25, marginBottom: 24 }}>THÔNG TIN GIAO HÀNG</h2>
 
           {error && (
-            <div style={{ background: '#FFEBEE', color: '#c62828', padding: '12px 16px', borderRadius: 10, marginBottom: 20, fontSize: 14 }}>
+            <div style={{ background: '#FFEBEE', color: '#c62828', padding: '12px 16px', borderRadius: 10, marginBottom: 20, fontSize: 15 }}>
               ⚠️ {error}
             </div>
           )}
@@ -156,7 +156,7 @@ const Checkout = () => {
                   {filteredProvinces.map(p => (
                     <div key={p.code}
                       onMouseDown={() => selectProvince(p)}
-                      style={{ padding: '8px 12px', cursor: 'pointer', fontSize: 14 }}
+                      style={{ padding: '8px 12px', cursor: 'pointer', fontSize: 15 }}
                       onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'}
                       onMouseLeave={e => e.currentTarget.style.background = 'white'}>
                       {p.name}
@@ -181,7 +181,7 @@ const Checkout = () => {
                   {filteredWards.map(w => (
                     <div key={w.code}
                       onMouseDown={() => selectWard(w)}
-                      style={{ padding: '8px 12px', cursor: 'pointer', fontSize: 14 }}
+                      style={{ padding: '8px 12px', cursor: 'pointer', fontSize: 15 }}
                       onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'}
                       onMouseLeave={e => e.currentTarget.style.background = 'white'}>
                       {w.name}
@@ -208,7 +208,7 @@ const Checkout = () => {
             </div>
 
             <div style={{ marginBottom: 24 }}>
-              <label style={{ fontWeight: 500, fontSize: 13, textTransform: 'uppercase', letterSpacing: 0.5, display: 'block', marginBottom: 8 }}>Mã giảm giá</label>
+              <label style={{ fontWeight: 600, fontSize: 14, textTransform: 'uppercase', letterSpacing: 0.5, display: 'block', marginBottom: 8 }}>Mã giảm giá</label>
               <div style={{ display: 'flex', gap: 8 }}>
                 <input
                   placeholder="Nhập mã voucher..."
@@ -220,62 +220,62 @@ const Checkout = () => {
                   {voucherLoading ? '...' : 'Áp dụng'}
                 </button>
               </div>
-              {voucherError && <div style={{ color: '#c62828', fontSize: 13, marginTop: 6 }}>⚠️ {voucherError}</div>}
+              {voucherError && <div style={{ color: '#c62828', fontSize: 14, marginTop: 6 }}>⚠️ {voucherError}</div>}
               {voucher && (
-                <div style={{ background: '#E8F5E9', color: '#2E7D32', padding: '10px 14px', borderRadius: 8, marginTop: 8, fontSize: 14 }}>
+                <div style={{ background: '#E8F5E9', color: '#2E7D32', padding: '10px 14px', borderRadius: 8, marginTop: 8, fontSize: 15 }}>
                   ✅ {voucher.description || `Áp dụng thành công: ${voucher.code}`}
                 </div>
               )}
             </div>
 
-            <div style={{ padding: 16, background: '#f9f9f9', borderRadius: 12, marginBottom: 24, fontSize: 14 }}>
-              <div style={{ fontWeight: 500, marginBottom: 8 }}>💳 Phương thức thanh toán</div>
+            <div style={{ padding: 16, background: '#f9f9f9', borderRadius: 12, marginBottom: 24, fontSize: 15 }}>
+              <div style={{ fontWeight: 600, marginBottom: 8 }}>💳 Phương thức thanh toán</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#555' }}>
                 <input type="radio" checked readOnly /> Thanh toán khi nhận hàng (COD)
               </div>
             </div>
 
-            <button type="submit" className="btn btn-accent" style={{ width: '100%', padding: '16px', fontSize: 16 }} disabled={placing}>
+            <button type="submit" className="btn btn-accent" style={{ width: '100%', padding: '16px', fontSize: 17 }} disabled={placing}>
               {placing ? 'Đang đặt hàng...' : `Đặt hàng - ${formatPrice(grandTotal)}`}            </button>
           </form>
         </div>
 
         {/* Order summary */}
         <div style={{ background: 'white', borderRadius: 16, padding: 28, boxShadow: 'var(--shadow)', position: 'sticky', top: 80 }}>
-          <h2 style={{ fontSize: 24, marginBottom: 20 }}>ĐƠN HÀNG ({cart.length})</h2>
+          <h2 style={{ fontSize: 25, marginBottom: 20 }}>ĐƠN HÀNG ({cart.length})</h2>
           {cart.map(item => (
             <div key={item.id} style={{ display: 'flex', gap: 12, marginBottom: 16, alignItems: 'center' }}>
               <img src={item.product_image} alt={item.product_name}
                 style={{ width: 56, height: 56, objectFit: 'cover', borderRadius: 8, background: '#f0f0f0' }}
                 onError={e => { e.target.src = 'https://via.placeholder.com/56?text=?'; }} />
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 13, fontWeight: 500 }}>{item.name}</div>
-{item.size && <div style={{ fontSize: 12, color: '#888' }}>Size: {item.size}</div>}              </div>
-              <div style={{ fontWeight: 500, fontSize: 14, whiteSpace: 'nowrap' }}>{formatPrice(item.product_price * item.quantity)}</div>
+                <div style={{ fontSize: 14, fontWeight: 600 }}>{item.name}</div>
+{item.size && <div style={{ fontSize: 13, color: '#888' }}>Size: {item.size}</div>}              </div>
+              <div style={{ fontWeight: 600, fontSize: 15, whiteSpace: 'nowrap' }}>{formatPrice(item.product_price * item.quantity)}</div>
             </div>
           ))}
           <div style={{ borderTop: '2px solid var(--border)', paddingTop: 16, marginTop: 8 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontSize: 14 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontSize: 15 }}>
               <span>Tạm tính</span><span>{formatPrice(total)}</span>
             </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontSize: 14 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontSize: 15 }}>
               <span>Vận chuyển</span>
               {shippingFee === 0 ? (
                 <span>
                   <span style={{ textDecoration: 'line-through', color: '#aaa', marginRight: 6 }}>{formatPrice(SHIPPING_FEE)}</span>
-                  <span style={{ color: 'green', fontWeight: 500 }}>Miễn phí</span>
+                  <span style={{ color: 'green', fontWeight: 600 }}>Miễn phí</span>
                 </span>
               ) : (
                 <span>{formatPrice(SHIPPING_FEE)}</span>
               )}
             </div>
             {voucher && voucher.type === 'percent' && (
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontSize: 14, color: '#2E7D32' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontSize: 15, color: '#2E7D32' }}>
                 <span>Giảm {voucher.value}%</span>
                 <span>-{formatPrice(percentDiscount)}</span>
               </div>
             )}
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 18, fontWeight: 500 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 19, fontWeight: 600 }}>
               <span>Tổng cộng</span>
               <span style={{ color: 'var(--accent)' }}>{formatPrice(grandTotal)}</span>
             </div>

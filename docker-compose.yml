@@ -1,0 +1,121 @@
+x-db-service: &db-service
+  restart: unless-stopped
+  depends_on:
+    mysql:
+      condition: service_healthy
+
+services:
+  mysql:
+    image: mysql:8
+    restart: unless-stopped
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+
+  auth-service:
+    <<: *db-service
+    build:
+      context: ./auth-service
+      dockerfile: ../Dockerfile.node
+    env_file: ./auth-service/.env
+    environment:
+      DB_HOST: mysql
+
+  profile-service:
+    <<: *db-service
+    build:
+      context: ./profile-service
+      dockerfile: ../Dockerfile.node
+    env_file: ./profile-service/.env
+    environment:
+      DB_HOST: mysql
+      AUTH_SERVICE_URL: http://auth-service:5001
+
+  product-service:
+    <<: *db-service
+    build:
+      context: ./product-service
+      dockerfile: ../Dockerfile.node
+    env_file: ./product-service/.env
+    environment:
+      DB_HOST: mysql
+    ports:
+      - "5003:5003"
+    volumes:
+      - ./product-service/uploads:/app/uploads
+
+  cart-service:
+    <<: *db-service
+    build:
+      context: ./cart-service
+      dockerfile: ../Dockerfile.node
+    env_file: ./cart-service/.env
+    environment:
+      DB_HOST: mysql
+      PRODUCT_SERVICE_URL: http://product-service:5003
+
+  order-service:
+    <<: *db-service
+    build:
+      context: ./order-service
+      dockerfile: ../Dockerfile.node
+    env_file: ./order-service/.env
+    environment:
+      DB_HOST: mysql
+      CART_SERVICE_URL: http://cart-service:5004
+      PRODUCT_SERVICE_URL: http://product-service:5003
+      VOUCHER_SERVICE_URL: http://voucher-service:3006
+
+  voucher-service:
+    <<: *db-service
+    build:
+      context: ./voucher-service
+      dockerfile: ../Dockerfile.node
+    env_file: ./voucher-service/.env
+    environment:
+      DB_HOST: mysql
+
+  api-gateway:
+    restart: unless-stopped
+    build:
+      context: ./api-gateway
+      dockerfile: ../Dockerfile.node
+    env_file: ./api-gateway/.env
+    environment:
+      AUTH_SERVICE_URL: http://auth-service:5001
+      PROFILE_SERVICE_URL: http://profile-service:5002
+      PRODUCT_SERVICE_URL: http://product-service:5003
+      CART_SERVICE_URL: http://cart-service:5004
+      ORDER_SERVICE_URL: http://order-service:5005
+      VOUCHER_SERVICE_URL: http://voucher-service:3006
+    ports:
+      - "8000:8000"
+    depends_on:
+      - auth-service
+      - profile-service
+      - product-service
+      - cart-service
+      - order-service
+      - voucher-service
+
+  frontend:
+    restart: unless-stopped
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-gateway
+
+volumes:
+  mysql-data:

@@ -50,7 +50,7 @@ const AdminOrders = () => {
 
       {msg && (
         <div style={{
-          padding: '12px 16px', borderRadius: 10, marginBottom: 20, fontSize: 14,
+          padding: '12px 16px', borderRadius: 10, marginBottom: 20, fontSize: 15,
           background: msg.startsWith('✅') ? '#E8F5E9' : '#FFEBEE',
           color: msg.startsWith('✅') ? '#2E7D32' : '#c62828'
         }}>{msg}</div>
@@ -77,20 +77,20 @@ const AdminOrders = () => {
               {filtered.map(order => (
                 <React.Fragment key={order.id}>
                   <tr>
-                    <td style={{ fontWeight: 500 }}>#{order.id}</td>
+                    <td style={{ fontWeight: 600 }}>#{order.id}</td>
                     <td>
-                      <div style={{ fontWeight: 500 }}>{order.user_name}</div>
-                      <div style={{ fontSize: 12, color: '#888' }}>{order.user_email}</div>
+                      <div style={{ fontWeight: 600 }}>{order.user_name}</div>
+                      <div style={{ fontSize: 13, color: '#888' }}>{order.user_email}</div>
                     </td>
                     <td>{order.phone}</td>
-                    <td style={{ fontWeight: 500, color: 'var(--accent)' }}>{formatPrice(order.total_amount)}</td>
-                    <td style={{ fontSize: 13, color: '#888' }}>{formatDate(order.created_at)}</td>
+                    <td style={{ fontWeight: 600, color: 'var(--accent)' }}>{formatPrice(order.total_amount)}</td>
+                    <td style={{ fontSize: 14, color: '#888' }}>{formatDate(order.created_at)}</td>
                     <td><span className={`badge badge-${order.status}`}>{statusLabels[order.status]}</span></td>
                     <td>
                       <select
                         value={order.status}
                         onChange={e => handleStatus(order.id, e.target.value)}
-                        style={{ padding: '6px 10px', border: '2px solid var(--border)', borderRadius: 8, fontSize: 13, cursor: 'pointer' }}>
+                        style={{ padding: '6px 10px', border: '2px solid var(--border)', borderRadius: 8, fontSize: 14, cursor: 'pointer' }}>
                         {Object.entries(statusLabels).map(([k, v]) => (
                           <option key={k} value={k}>{v}</option>
                         ))}
@@ -107,18 +107,18 @@ const AdminOrders = () => {
                   {expanded === order.id && (
                     <tr>
                       <td colSpan={8} style={{ background: '#f9f9f9', padding: '16px 20px' }}>
-                        <div style={{ fontSize: 13, marginBottom: 8, color: '#555' }}>
+                        <div style={{ fontSize: 14, marginBottom: 8, color: '#555' }}>
                           <strong>Địa chỉ:</strong> {order.shipping_address}
                         </div>
-                        {order.note && <div style={{ fontSize: 13, marginBottom: 8, color: '#555' }}><strong>Ghi chú:</strong> {order.note}</div>}
+                        {order.note && <div style={{ fontSize: 14, marginBottom: 8, color: '#555' }}><strong>Ghi chú:</strong> {order.note}</div>}
                         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                           {(order.items || []).map(item => (
                             <div key={item.id} style={{ display: 'flex', gap: 10, alignItems: 'center', background: 'white', borderRadius: 10, padding: '8px 12px', border: '1px solid var(--border)' }}>
                               <img src={item.product_image} alt={item.product_name} style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 6 }}
                                 onError={e => { e.target.src = 'https://via.placeholder.com/40?text=?'; }} />
                               <div>
-                                <div style={{ fontSize: 13, fontWeight: 500 }}>{item.name}</div>
-                                <div style={{ fontSize: 12, color: '#888' }}>Size {item.size} · x{item.quantity} · {formatPrice(item.price)}</div>
+                                <div style={{ fontSize: 14, fontWeight: 600 }}>{item.name}</div>
+                                <div style={{ fontSize: 13, color: '#888' }}>Size {item.size} · x{item.quantity} · {formatPrice(item.price)}</div>
                               </div>
                             </div>
                           ))}

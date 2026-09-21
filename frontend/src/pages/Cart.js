@@ -64,12 +64,12 @@ const Cart = () => {
                   onError={e => { e.target.src = 'https://via.placeholder.com/80?text=?'; }}
                 />
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 11, color: 'var(--accent)', fontWeight: 500, textTransform: 'uppercase', marginBottom: 2 }}>
+                  <div style={{ fontSize: 12, color: 'var(--accent)', fontWeight: 600, textTransform: 'uppercase', marginBottom: 2 }}>
                     {item.brand_name}
                   </div>
-                  <div style={{ fontWeight: 500, marginBottom: 4 }}>{item.product_name}</div>
-                  {item.size && <div style={{ fontSize: 13, color: '#888' }}>Size: {item.size}</div>}
-                  <div style={{ fontWeight: 500, color: 'var(--accent)', marginTop: 4 }}>{formatPrice(item.product_price)}</div>
+                  <div style={{ fontWeight: 600, marginBottom: 4 }}>{item.product_name}</div>
+                  {item.size && <div style={{ fontSize: 14, color: '#888' }}>Size: {item.size}</div>}
+                  <div style={{ fontWeight: 600, color: 'var(--accent)', marginTop: 4 }}>{formatPrice(item.product_price)}</div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 12 }}>
                   <div className="qty-control">
@@ -77,10 +77,10 @@ const Cart = () => {
                     <span>{item.quantity}</span>
                     <button onClick={() => handleQty(item, 1)}>+</button>
                   </div>
-                  <div style={{ fontWeight: 500, fontSize: 16 }}>{formatPrice(item.product_price * item.quantity)}</div>
+                  <div style={{ fontWeight: 600, fontSize: 17 }}>{formatPrice(item.product_price * item.quantity)}</div>
                   <button
                     onClick={() => handleRemove(item.id)}
-                    style={{ background: 'none', border: 'none', color: '#888', fontSize: 13, cursor: 'pointer' }}>
+                    style={{ background: 'none', border: 'none', color: '#888', fontSize: 14, cursor: 'pointer' }}>
                     🗑 Xóa
                   </button>
                 </div>
@@ -90,22 +90,22 @@ const Cart = () => {
 
           {/* Summary */}
           <div style={{ background: 'white', borderRadius: 16, padding: 28, boxShadow: 'var(--shadow)', position: 'sticky', top: 80 }}>
-            <h2 style={{ fontSize: 24, marginBottom: 20 }}>TỔNG ĐƠN HÀNG</h2>
+            <h2 style={{ fontSize: 25, marginBottom: 20 }}>TỔNG ĐƠN HÀNG</h2>
             {cart.map(item => (
-              <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, color: '#555', marginBottom: 8 }}>
+              <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 15, color: '#555', marginBottom: 8 }}>
                 <span>{item.product_name} x{item.quantity}</span>
                 <span>{formatPrice(item.product_price * item.quantity)}</span>
               </div>
             ))}
             <div style={{ borderTop: '2px solid var(--border)', margin: '16px 0', paddingTop: 16 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 18, fontWeight: 500 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 19, fontWeight: 600 }}>
                 <span>Tạm tính</span>
                 <span style={{ color: 'var(--accent)' }}>{formatPrice(total)}</span>
               </div>
             </div>
             <button
               className="btn btn-accent"
-              style={{ width: '100%', padding: '16px', fontSize: 16, marginBottom: 12 }}
+              style={{ width: '100%', padding: '16px', fontSize: 17, marginBottom: 12 }}
               onClick={() => navigate('/checkout')}>
               Đặt hàng ngay →
             </button>

@@ -32,7 +32,7 @@ const Login = () => {
         <p className="auth-subtitle">Chào mừng trở lại! Hãy đăng nhập để tiếp tục.</p>
 
         {error && (
-          <div style={{ background: '#FFEBEE', color: '#c62828', padding: '12px 16px', borderRadius: 10, marginBottom: 20, fontSize: 14 }}>
+          <div style={{ background: '#FFEBEE', color: '#c62828', padding: '12px 16px', borderRadius: 10, marginBottom: 20, fontSize: 15 }}>
             ⚠️ {error}
           </div>
         )}
@@ -48,13 +48,13 @@ const Login = () => {
             <input type="password" placeholder="Nhập mật khẩu" value={form.password}
               onChange={e => setForm({ ...form, password: e.target.value })} required />
           </div>
-          <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '14px', fontSize: 15, marginTop: 8 }} disabled={loading}>
+          <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '14px', fontSize: 16, marginTop: 8 }} disabled={loading}>
             {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
           </button>
         </form>
 
-        <p style={{ textAlign: 'center', marginTop: 24, fontSize: 14, color: '#888' }}>
-          Chưa có tài khoản? <Link to="/register" style={{ color: 'var(--accent)', fontWeight: 500 }}>Đăng ký ngay</Link>
+        <p style={{ textAlign: 'center', marginTop: 24, fontSize: 15, color: '#888' }}>
+          Chưa có tài khoản? <Link to="/register" style={{ color: 'var(--accent)', fontWeight: 600 }}>Đăng ký ngay</Link>
         </p>
 
         

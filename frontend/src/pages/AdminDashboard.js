@@ -29,9 +29,9 @@ export const AdminLayout = ({ children }) => {
       {/* Sidebar */}
       <div style={{ width: 240, background: '#111', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, height: '100vh', zIndex: 100 }}>
         <Link to="/" style={{ display: 'block', padding: '24px 24px 16px', textDecoration: 'none' }}>
-          <div style={{ fontFamily: 'Helvetica, Arial, sans-serif', fontSize: 28, color: '#fff', letterSpacing: 2 }}>
+          <div style={{ fontFamily: 'Helvetica, Arial, sans-serif', fontSize: 29, color: '#fff', letterSpacing: 2 }}>
             DS_<span style={{ color: 'var(--accent)' }}>Sport</span>          </div>
-          <div style={{ fontSize: 11, color: '#888', marginTop: 2, letterSpacing: 1, textTransform: 'uppercase' }}>Admin Panel</div>
+          <div style={{ fontSize: 12, color: '#888', marginTop: 2, letterSpacing: 1, textTransform: 'uppercase' }}>Admin Panel</div>
         </Link>
         <nav style={{ flex: 1, padding: '8px 12px' }}>
           {navItems.map(item => {
@@ -39,7 +39,7 @@ export const AdminLayout = ({ children }) => {
             return (
               <Link key={item.path} to={item.path} style={{
                 display: 'block', padding: '12px 16px', borderRadius: 10, marginBottom: 4,
-                textDecoration: 'none', fontSize: 14, fontWeight: active ? 700 : 400,
+                textDecoration: 'none', fontSize: 15, fontWeight: active ? 700 : 500,
                 background: active ? 'var(--accent)' : 'transparent',
                 color: active ? '#fff' : '#aaa',
                 transition: 'all 0.2s',
@@ -48,11 +48,11 @@ export const AdminLayout = ({ children }) => {
           })}
         </nav>
         <div style={{ padding: 16 }}>
-          <Link to="/" style={{ display: 'block', padding: '10px 16px', color: '#aaa', fontSize: 13, textDecoration: 'none', marginBottom: 8, border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, textAlign: 'center' }}>
+          <Link to="/" style={{ display: 'block', padding: '10px 16px', color: '#aaa', fontSize: 14, textDecoration: 'none', marginBottom: 8, border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, textAlign: 'center' }}>
   Về trang chủ
 </Link>
           <button onClick={handleLogout} style={{ width: '100%', padding: '10px 16px', background: 'rgba(255,255,255,0.05)',
-            color: '#aaa', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, cursor: 'pointer', fontSize: 13 }}>
+            color: '#aaa', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, cursor: 'pointer', fontSize: 14 }}>
              Đăng xuất
           </button>
         </div>
@@ -102,26 +102,26 @@ const AdminDashboard = () => {
               { label: 'Đơn chờ', value: stats?.pendingOrders || 0, icon: '', color: '#FFF8E1' },
             ].map(card => (
               <div key={card.label} style={{ background: card.color, borderRadius: 16, padding: 24 }}>
-                <div style={{ fontSize: 32, marginBottom: 8 }}>{card.icon}</div>
-                <div style={{ fontSize: 28, fontWeight: 500, fontFamily: 'Helvetica, Arial, sans-serif' }}>{card.value}</div>
-                <div style={{ fontSize: 13, color: '#666', marginTop: 4 }}>{card.label}</div>
+                <div style={{ fontSize: 33, marginBottom: 8 }}>{card.icon}</div>
+                <div style={{ fontSize: 29, fontWeight: 600, fontFamily: 'Helvetica, Arial, sans-serif' }}>{card.value}</div>
+                <div style={{ fontSize: 14, color: '#666', marginTop: 4 }}>{card.label}</div>
               </div>
             ))}
           </div>
 
-          <h2 style={{ fontSize: 22, marginBottom: 16 }}>ĐƠN HÀNG GẦN ĐÂY</h2>
+          <h2 style={{ fontSize: 23, marginBottom: 16 }}>ĐƠN HÀNG GẦN ĐÂY</h2>
           <div className="table-container">
             <table>
               <thead><tr><th>ID</th><th>Khách hàng</th><th>Tổng tiền</th><th>Trạng thái</th><th>Ngày tạo</th></tr></thead>
               <tbody>
                 {recentOrders.map(o => (
                   <tr key={o.id}>
-                    <td style={{ color: '#888', fontWeight: 500 }}>#{o.id}</td>
-                    <td style={{ fontWeight: 500 }}>{o.user_name || o.user_email}</td>
-                    <td style={{ fontWeight: 500, color: 'var(--accent)' }}>{formatPrice(o.total_amount)}</td>
-                    <td><span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 500,
+                    <td style={{ color: '#888', fontWeight: 600 }}>#{o.id}</td>
+                    <td style={{ fontWeight: 600 }}>{o.user_name || o.user_email}</td>
+                    <td style={{ fontWeight: 600, color: 'var(--accent)' }}>{formatPrice(o.total_amount)}</td>
+                    <td><span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 13, fontWeight: 600,
                       background: statusColors[o.status] || '#f0f0f0' }}>{statusLabels[o.status] || o.status}</span></td>
-                    <td style={{ color: '#888', fontSize: 13 }}>{new Date(o.created_at).toLocaleDateString('vi-VN')}</td>
+                    <td style={{ color: '#888', fontSize: 14 }}>{new Date(o.created_at).toLocaleDateString('vi-VN')}</td>
                   </tr>
                 ))}
               </tbody>

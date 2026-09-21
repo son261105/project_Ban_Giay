@@ -65,16 +65,16 @@ const Orders = () => {
       {confirmId && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
           <div style={{ background: 'white', borderRadius: 16, padding: 28, maxWidth: 380, width: '90%', textAlign: 'center', boxShadow: '0 10px 40px rgba(0,0,0,0.2)' }}>
-            <div style={{ fontSize: 40, marginBottom: 12 }}>⚠️</div>
-            <h3 style={{ fontSize: 18, fontWeight: 500, marginBottom: 8 }}>Hủy đơn hàng?</h3>
-            <p style={{ color: '#666', fontSize: 14, marginBottom: 24 }}>
+            <div style={{ fontSize: 41, marginBottom: 12 }}>⚠️</div>
+            <h3 style={{ fontSize: 19, fontWeight: 600, marginBottom: 8 }}>Hủy đơn hàng?</h3>
+            <p style={{ color: '#666', fontSize: 15, marginBottom: 24 }}>
               Bạn chắc chắn muốn hủy đơn hàng #{confirmId} này? Hành động này không thể hoàn tác.
             </p>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
-              <button onClick={() => setConfirmId(null)} style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid #ddd', background: 'white', cursor: 'pointer', fontWeight: 500 }}>
+              <button onClick={() => setConfirmId(null)} style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid #ddd', background: 'white', cursor: 'pointer', fontWeight: 600 }}>
                 Không, giữ đơn
               </button>
-              <button onClick={confirmCancel} style={{ padding: '10px 20px', borderRadius: 10, border: 'none', background: '#c62828', color: 'white', cursor: 'pointer', fontWeight: 500 }}>
+              <button onClick={confirmCancel} style={{ padding: '10px 20px', borderRadius: 10, border: 'none', background: '#c62828', color: 'white', cursor: 'pointer', fontWeight: 600 }}>
                 Hủy đơn hàng
               </button>
             </div>
@@ -83,7 +83,7 @@ const Orders = () => {
       )}
 
       <div className="container page">
-        <h1 style={{ fontSize: 26, fontWeight: 500, marginBottom: 4 }}>Đơn hàng của tôi</h1>
+        <h1 style={{ fontSize: 27, fontWeight: 600, marginBottom: 4 }}>Đơn hàng của tôi</h1>
         <p style={{ color: '#888', marginBottom: 24 }}>Quản lý và theo dõi các đơn hàng bạn đã đặt</p>
 
         <div style={{ display: 'flex', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
@@ -92,7 +92,7 @@ const Orders = () => {
               key={t.key}
               onClick={() => setTab(t.key)}
               style={{
-                padding: '8px 16px', borderRadius: 20, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 500,
+                padding: '8px 16px', borderRadius: 20, border: 'none', cursor: 'pointer', fontSize: 15, fontWeight: 600,
                 background: tab === t.key ? '#eee' : 'transparent',
                 color: tab === t.key ? '#111' : '#888'
               }}
@@ -118,12 +118,12 @@ const Orders = () => {
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <span style={{ fontWeight: 500, fontSize: 16 }}>Đơn hàng #DH{String(order.id).padStart(3, '0')}</span>
+                        <span style={{ fontWeight: 600, fontSize: 17 }}>Đơn hàng #DH{String(order.id).padStart(3, '0')}</span>
                         <span className={`badge badge-${order.status}`}>{statusLabels[order.status]}</span>
                       </div>
-                      <div style={{ color: '#888', fontSize: 13, marginTop: 4 }}>Đặt ngày {formatDate(order.created_at)}</div>
+                      <div style={{ color: '#888', fontSize: 14, marginTop: 4 }}>Đặt ngày {formatDate(order.created_at)}</div>
                     </div>
-                    <div style={{ fontWeight: 500, fontSize: 18 }}>{formatPrice(order.total_amount)}</div>
+                    <div style={{ fontWeight: 600, fontSize: 19 }}>{formatPrice(order.total_amount)}</div>
                   </div>
 
                   {firstItem && (
@@ -135,20 +135,20 @@ const Orders = () => {
                         onError={e => { e.target.src = 'https://via.placeholder.com/64?text=?'; }}
                       />
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 500 }}>{firstItem.product_name}</div>
-                        <div style={{ color: '#888', fontSize: 13 }}>
+                        <div style={{ fontWeight: 600 }}>{firstItem.product_name}</div>
+                        <div style={{ color: '#888', fontSize: 14 }}>
                           Size {firstItem.size} · SL: {firstItem.quantity}
                         </div>
-                        <div style={{ color: '#555', fontSize: 13 }}>{formatPrice(firstItem.price)}</div>
+                        <div style={{ color: '#555', fontSize: 14 }}>{formatPrice(firstItem.price)}</div>
                       </div>
                       {extraCount > 0 && (
-                        <div style={{ color: '#1565C0', fontSize: 13, fontWeight: 500 }}>+{extraCount} sản phẩm</div>
+                        <div style={{ color: '#1565C0', fontSize: 14, fontWeight: 600 }}>+{extraCount} sản phẩm</div>
                       )}
                     </div>
                   )}
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 16, borderTop: '1px solid var(--border)', flexWrap: 'wrap', gap: 10 }}>
-                    <div style={{ fontSize: 13, color: '#666' }}>Thanh toán: COD</div>
+                    <div style={{ fontSize: 14, color: '#666' }}>Thanh toán: COD</div>
                     <div style={{ display: 'flex', gap: 10 }}>
                       {order.status === 'pending' && (
                         <button
