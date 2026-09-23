@@ -1,29 +1,9 @@
-CREATE DATABASE  IF NOT EXISTS `db_order` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE  IF NOT EXISTS `db_order` ;
 USE `db_order`;
--- MySQL dump 10.13  Distrib 8.0.42, for Win64 (x86_64)
---
--- Host: 127.0.0.1    Database: db_order
--- ------------------------------------------------------
--- Server version	9.3.0
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `order_items`
---
 
 DROP TABLE IF EXISTS `order_items`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+
 CREATE TABLE `order_items` (
   `id` int NOT NULL AUTO_INCREMENT,
   `order_id` int NOT NULL,
@@ -37,25 +17,18 @@ CREATE TABLE `order_items` (
   KEY `order_id` (`order_id`),
   CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `order_items`
---
 
 LOCK TABLES `order_items` WRITE;
-/*!40000 ALTER TABLE `order_items` DISABLE KEYS */;
+
 INSERT INTO `order_items` VALUES (1,1,3,'Adidas Ultraboost 22','https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/fbaf991a78bc4896a3e9ad7800abcec6_9366/Ultraboost_22_Shoes_Black_GZ0127_01_standard.jpg',1,'44',3200000.00),(2,2,1,'Nike Air Max 270','https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/skwgyqrbfzhu6uyeh0gg/air-max-270-shoes-2V5C4p.png',2,'44',2500000.00),(3,3,1,'Nike Air Max 270','https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/skwgyqrbfzhu6uyeh0gg/air-max-270-shoes-2V5C4p.png',1,'41',2500000.00),(4,4,1,'Nike Air Max 270','https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/skwgyqrbfzhu6uyeh0gg/air-max-270-shoes-2V5C4p.png',1,'40',2500000.00),(5,4,1,'Nike Air Max 270','https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/skwgyqrbfzhu6uyeh0gg/air-max-270-shoes-2V5C4p.png',1,'42',2500000.00),(6,4,3,'Adidas Ultraboost 22','https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/fbaf991a78bc4896a3e9ad7800abcec6_9366/Ultraboost_22_Shoes_Black_GZ0127_01_standard.jpg',1,'41',3200000.00),(7,5,10,'Puma Suede Classic XXI','https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_600,h_600/global/374915/01/sv01/fnd/PNA/fmt/png/Suede-Classic-XXI-Sneakers',1,'40',1600000.00),(8,6,6,'Converse Chuck Taylor All Star','https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dwa2af1a7a/images/a_107/M9160_A_107X1.jpg',1,'39',1200000.00),(9,7,5,'Puma RS-X3','https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_600,h_600/global/380176/03/sv01/fnd/PNA/fmt/png/RS-X3-Twill-AirMesh-Sneakers',1,'42',1900000.00),(10,8,1,'Nike Air Max 270','https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/skwgyqrbfzhu6uyeh0gg/air-max-270-shoes-2V5C4p.png',2,'39',2500000.00),(11,8,3,'Adidas Ultraboost 22','https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/fbaf991a78bc4896a3e9ad7800abcec6_9366/Ultraboost_22_Shoes_Black_GZ0127_01_standard.jpg',1,'40',3200000.00),(12,9,10,'Puma Suede Classic XXI','https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_600,h_600/global/374915/01/sv01/fnd/PNA/fmt/png/Suede-Classic-XXI-Sneakers',1,'41',1600000.00),(13,10,12,'conver1970s','https://cf.shopee.vn/file/b2e447c0d28af870aae68d0ce6f173db',3,'42',3000000.00),(14,11,11,'Puma Serve Pro','https://cdn.vuahanghieu.com/unsafe/0x900/left/top/smart/filters:quality(90)/https://admin.vuahanghieu.com/upload/product/2022/11/giay-the-thao-puma-serve-pro-wide-mau-trang-size-40-638706127ba7a-30112022142818.jpg',2,'37',2000000.00),(15,11,12,'conver1970s','https://cf.shopee.vn/file/b2e447c0d28af870aae68d0ce6f173db',2,'42',3000000.00),(16,12,11,'Puma Serve Pro','https://cdn.vuahanghieu.com/unsafe/0x900/left/top/smart/filters:quality(90)/https://admin.vuahanghieu.com/upload/product/2022/11/giay-the-thao-puma-serve-pro-wide-mau-trang-size-40-638706127ba7a-30112022142818.jpg',2,'37',2000000.00),(17,12,12,'conver1970s','https://thfvnext.bing.com/th/id/OIP.YbfzwP_J58Yb5kGjXOH68wHaHa?w=199&h=199&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3',2,'41',3000000.00),(18,13,3,'Adidas Ultraboost 22','https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/fbaf991a78bc4896a3e9ad7800abcec6_9366/Ultraboost_22_Shoes_Black_GZ0127_01_standard.jpg',1,'41',3200000.00),(19,14,13,'Nike AF1','https://thfvnext.bing.com/th/id/OIP.rxwVxtaWWZ2bgy1kaotAYgHaHa?w=183&h=184&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3',1,'35',2000000.00),(20,15,13,'Nike AF1','https://thfvnext.bing.com/th/id/OIP.rxwVxtaWWZ2bgy1kaotAYgHaHa?w=183&h=184&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3',2,'36',2000000.00),(21,16,13,'Nike AF1','https://thfvnext.bing.com/th/id/OIP.rxwVxtaWWZ2bgy1kaotAYgHaHa?w=183&h=184&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3',3,'36',2000000.00),(22,17,13,'Nike AF1','https://thfvnext.bing.com/th/id/OIP.rxwVxtaWWZ2bgy1kaotAYgHaHa?w=183&h=184&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3',2,'36',2000000.00),(23,18,12,'conver1970s','https://thfvnext.bing.com/th/id/OIP.YbfzwP_J58Yb5kGjXOH68wHaHa?w=199&h=199&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3',1,'35',3000000.00),(24,19,12,'conver1970s','https://thfvnext.bing.com/th/id/OIP.YbfzwP_J58Yb5kGjXOH68wHaHa?w=199&h=199&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3',1,'35',3000000.00);
-/*!40000 ALTER TABLE `order_items` ENABLE KEYS */;
+
 UNLOCK TABLES;
 
---
--- Table structure for table `order_status_history`
---
+
 
 DROP TABLE IF EXISTS `order_status_history`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+
 CREATE TABLE `order_status_history` (
   `id` int NOT NULL AUTO_INCREMENT,
   `order_id` int NOT NULL,
@@ -65,25 +38,18 @@ CREATE TABLE `order_status_history` (
   KEY `order_id` (`order_id`),
   CONSTRAINT `order_status_history_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `order_status_history`
---
 
 LOCK TABLES `order_status_history` WRITE;
-/*!40000 ALTER TABLE `order_status_history` DISABLE KEYS */;
+
 INSERT INTO `order_status_history` VALUES (1,18,'pending','2026-09-16 03:53:14'),(2,19,'pending','2026-09-16 03:54:32'),(3,18,'confirmed','2026-09-16 03:54:48'),(4,19,'cancelled','2026-09-16 03:55:24');
-/*!40000 ALTER TABLE `order_status_history` ENABLE KEYS */;
+
 UNLOCK TABLES;
 
---
--- Table structure for table `orders`
---
+
 
 DROP TABLE IF EXISTS `orders`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+
 CREATE TABLE `orders` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
@@ -101,54 +67,20 @@ CREATE TABLE `orders` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `orders`
---
 
 LOCK TABLES `orders` WRITE;
-/*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+
 INSERT INTO `orders` VALUES (1,4,'','abc@gmail.com',0.00,0.00,NULL,3200000.00,'delivered','hanoi','035395036','abcd','2026-06-05 02:31:32','2026-06-10 04:38:21'),(2,4,'','abc@gmail.com',0.00,0.00,NULL,5000000.00,'delivered','SN12,ĐƯỜNG LÊ TRỌNG TẤN,HÀ ĐÔNG,HÀ NỘI','0353950356','GIAO TẬN CỬA','2026-06-05 03:58:55','2026-06-10 04:38:18'),(3,4,'','abc@gmail.com',0.00,0.00,NULL,2500000.00,'delivered','SN12,Ha Dong ,HaNoi','0353950356','giao tan cua ','2026-06-10 04:38:02','2026-06-10 04:55:59'),(4,4,'','abc@gmail.com',0.00,0.00,NULL,8200000.00,'confirmed','HaNoi','0353950356','','2026-06-18 07:07:43','2026-06-18 07:08:01'),(5,4,'','abc@gmail.com',0.00,0.00,NULL,1600000.00,'confirmed','HaNoi','0353950356','','2026-06-18 07:08:40','2026-06-19 04:40:47'),(6,4,'','abc@gmail.com',0.00,0.00,NULL,1200000.00,'confirmed','HaNoi','0353950356','','2026-06-18 07:09:04','2026-06-19 04:40:42'),(7,4,'','abc@gmail.com',0.00,0.00,NULL,1900000.00,'confirmed','HaNoi','0353950356','','2026-06-18 07:09:26','2026-06-19 04:40:41'),(8,4,'','abc@gmail.com',0.00,0.00,NULL,8200000.00,'confirmed','Ha Noi ,Yen Nghia','0353950356','giao tận cửa','2026-06-19 04:40:01','2026-06-19 04:40:36'),(9,4,'','abc@gmail.com',0.00,0.00,NULL,1600000.00,'confirmed','HaNoi, văn quán , số nhà 19','0353950356','giao tận của ','2026-06-19 04:41:29','2026-06-19 05:43:40'),(10,4,'','abc@gmail.com',0.00,0.00,NULL,9000000.00,'confirmed','Sn19 , Phường Văn Quán , Quận Hà Nội','0353950356','giao tận cửa','2026-06-28 05:47:54','2026-06-30 15:09:34'),(11,4,'','abc@gmail.com',0.00,0.00,NULL,10000000.00,'confirmed','SN19, yên nghĩa , hà Đông','0353950356','abc','2026-06-30 15:08:56','2026-06-30 15:09:29'),(12,4,'','abc@gmail.com',0.00,0.00,NULL,10000000.00,'confirmed','SN19,dương nội , ha dong ha noi','0353950356','giao tận cửa','2026-06-30 16:45:04','2026-06-30 16:45:49'),(13,3,'','son261105@gmail.com',3200000.00,35000.00,'FREESHIP',3200000.00,'delivered','khu đô thị yên nghĩa số nhà 5A, Phường Yên Nghĩa, Thành phố Hà Nội','0353950356','abc','2026-09-12 10:32:54','2026-09-12 10:37:52'),(14,4,'','abc@gmail.com',2000000.00,0.00,NULL,2035000.00,'cancelled','số nhà 5B khu đô thị đô nghĩa, Phường Yên Nghĩa, Thành phố Hà Nội','0353950356','abc','2026-09-12 10:54:50','2026-09-12 11:05:48'),(15,4,'','abc@gmail.com',4000000.00,35000.00,'FREESHIP',4000000.00,'cancelled','số nhà 5A, Phường Dương Nội, Thành phố Hà Nội','0353950356','giao tận cửa','2026-09-12 11:14:41','2026-09-12 11:14:55'),(16,4,'','abc@gmail.com',6000000.00,0.00,NULL,6035000.00,'cancelled','nhà 5a, Phường Dương Nội, Thành phố Hà Nội','0353950356','1','2026-09-12 11:19:12','2026-09-12 11:19:17'),(17,7,'','truongdinhthuy00@gmail.com',4000000.00,0.00,NULL,4035000.00,'cancelled','số nhà 5A khu đô thị đô nghĩa, Phường Yên Nghĩa, Thành phố Hà Nội','0969628746','abc','2026-09-16 03:27:36','2026-09-16 03:30:05'),(18,7,'','truongdinhthuy00@gmail.com',3000000.00,0.00,NULL,3035000.00,'confirmed','số nhà 5A , khu đô thị đô nghĩa, Phường Yên Nghĩa, Thành phố Hà Nội','0969628746','để hàng vào trong nhà ','2026-09-16 03:53:14','2026-09-16 03:54:48'),(19,7,'','truongdinhthuy00@gmail.com',3000000.00,35000.00,'FREESHIP',3000000.00,'cancelled','Số nhà 5B khu đô thị đô nghĩa, Phường Yên Nghĩa, Thành phố Hà Nội','0969628746','để hàng vào trong nhà ','2026-09-16 03:54:32','2026-09-16 03:55:24');
-/*!40000 ALTER TABLE `orders` ENABLE KEYS */;
+
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2026-09-21 11:51:36
-CREATE DATABASE  IF NOT EXISTS `db_cart` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE  IF NOT EXISTS `db_cart` ;
 USE `db_cart`;
--- MySQL dump 10.13  Distrib 8.0.42, for Win64 (x86_64)
---
--- Host: 127.0.0.1    Database: db_cart
--- ------------------------------------------------------
--- Server version	9.3.0
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `cart_items`
---
 
 DROP TABLE IF EXISTS `cart_items`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+
 CREATE TABLE `cart_items` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
@@ -164,54 +96,23 @@ CREATE TABLE `cart_items` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uq_user_product_size` (`user_id`,`product_id`,`size`)
 ) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `cart_items`
---
 
 LOCK TABLES `cart_items` WRITE;
-/*!40000 ALTER TABLE `cart_items` DISABLE KEYS */;
+
 INSERT INTO `cart_items` VALUES (38,8,12,'conver1970s',3000000.00,'https://thfvnext.bing.com/th/id/OIP.YbfzwP_J58Yb5kGjXOH68wHaHa?w=199&h=199&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3','Converse',1,'41','2026-09-14 09:41:38','2026-09-14 09:41:38'),(42,3,12,'conver1970s',3000000.00,'https://thfvnext.bing.com/th/id/OIP.YbfzwP_J58Yb5kGjXOH68wHaHa?w=199&h=199&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3','Converse',1,'35','2026-09-16 06:46:33','2026-09-16 06:46:33');
-/*!40000 ALTER TABLE `cart_items` ENABLE KEYS */;
+
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-09-21 11:51:36
-CREATE DATABASE  IF NOT EXISTS `voucher_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+
+
+
+CREATE DATABASE  IF NOT EXISTS `voucher_db` ;
 USE `voucher_db`;
--- MySQL dump 10.13  Distrib 8.0.42, for Win64 (x86_64)
---
--- Host: 127.0.0.1    Database: voucher_db
--- ------------------------------------------------------
--- Server version	9.3.0
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `vouchers`
---
 
 DROP TABLE IF EXISTS `vouchers`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+
 CREATE TABLE `vouchers` (
   `id` int NOT NULL AUTO_INCREMENT,
   `code` varchar(50) NOT NULL,
@@ -228,54 +129,22 @@ CREATE TABLE `vouchers` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `vouchers`
---
 
 LOCK TABLES `vouchers` WRITE;
-/*!40000 ALTER TABLE `vouchers` DISABLE KEYS */;
+
 INSERT INTO `vouchers` VALUES (8,'FREESHIP','freeship',0.00,2000000.00,NULL,1,'2026-09-16','2026-09-30',1,'Free ship cho đơn hàng từ 3 triệu ','2026-09-16 03:47:51');
-/*!40000 ALTER TABLE `vouchers` ENABLE KEYS */;
+
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-09-21 11:51:36
+
 CREATE DATABASE  IF NOT EXISTS `db_auth` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `db_auth`;
--- MySQL dump 10.13  Distrib 8.0.42, for Win64 (x86_64)
---
--- Host: 127.0.0.1    Database: db_auth
--- ------------------------------------------------------
--- Server version	9.3.0
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `otp_verifications`
---
 
 DROP TABLE IF EXISTS `otp_verifications`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+
 CREATE TABLE `otp_verifications` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,

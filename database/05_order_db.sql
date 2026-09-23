@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS orders (
   user_email VARCHAR(100),
   subtotal_amount DECIMAL(10, 2) NOT NULL DEFAULT 0,
   discount_amount DECIMAL(10, 2) NOT NULL DEFAULT 0,
-  voucher_code VARCHAR(50) DEFAULT NULL,
+    voucher_code VARCHAR(255) DEFAULT NULL, 
   total_amount DECIMAL(10, 2) NOT NULL,
   status ENUM('pending','confirmed','shipping','delivered','cancelled') DEFAULT 'pending',
   shipping_address TEXT NOT NULL,

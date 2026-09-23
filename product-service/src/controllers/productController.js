@@ -43,8 +43,8 @@ const getProducts = async (req, res) => {
       [...params, parseInt(limit), parseInt(offset)]
     );
     const [[{ total }]] = await pool.query(`SELECT COUNT(*) as total FROM products p LEFT JOIN brands b ON p.brand_id = b.id LEFT JOIN categories c ON p.category_id = c.id ${w}`, params);
-    res.json({ success: true, products, total, page: parseInt(page), totalPages: Math.ceil(total / limit) });
-  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+    const productsClean = products.map(p => ({ ...p, price: parseFloat(p.price) }));
+    res.json({ success: true, products: productsClean, total, page: parseInt(page), totalPages: Math.ceil(total / limit) });  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 };
 
 // Get single product with stock per size
@@ -63,8 +63,7 @@ const getProduct = async (req, res) => {
     const [imgRows] = await pool.query('SELECT image_url FROM product_images WHERE product_id = ? ORDER BY sort_order, id', [req.params.id]);
     let images = imgRows.map(i => i.image_url);
     if (images.length === 0 && products[0].image_url) images = [products[0].image_url];
-    res.json({ success: true, product: { ...products[0], stock_by_size: stockRows, images } });
-  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+    res.json({ success: true, product: { ...products[0], price: parseFloat(products[0].price), stock_by_size: stockRows, images } });  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 };
 
 // Create product

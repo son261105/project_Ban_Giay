@@ -10,7 +10,7 @@ const createOrder = async (req, res) => {
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
-    const { shipping_address, phone, note, voucher_code } = req.body;
+    const { shipping_address, phone, note, voucher_code, voucher_codes } = req.body;
     if (!shipping_address) return res.status(400).json({ success: false, message: 'Vui lòng nhập địa chỉ giao hàng.' });
 
     const cartRes = await axios.get(`${CART_URL}/api/cart/internal/${req.user.id}`);
@@ -22,22 +22,30 @@ const createOrder = async (req, res) => {
 
     const subtotalAmount = cartItems.reduce((sum, item) => sum + parseFloat(item.product_price) * item.quantity, 0);
 
+    const codeList = Array.isArray(voucher_codes) ? voucher_codes.filter(Boolean) : (voucher_code ? [voucher_code] : []);
+
     let discountAmount = 0;
-    let appliedVoucherCode = null;
-    if (voucher_code) {
+    let appliedVoucherCodes = [];
+    if (codeList.length > 0) {
       try {
         const voucherRes = await axios.post(`${VOUCHER_URL}/api/vouchers/validate`, {
-          code: voucher_code,
+          codes: codeList,
           order_amount: subtotalAmount
         });
-        discountAmount = voucherRes.data.voucher.discount || 0;
-        appliedVoucherCode = voucherRes.data.voucher.code;
+        const { vouchers = [], invalid = [] } = voucherRes.data;
+        if (vouchers.length === 0) {
+          await conn.rollback();
+          return res.status(400).json({ success: false, message: invalid[0]?.message || 'Mã voucher không hợp lệ' });
+        }
+        discountAmount = voucherRes.data.totalDiscount || 0;
+        appliedVoucherCodes = vouchers.map(v => v.code);
       } catch (voucherErr) {
         await conn.rollback();
         const msg = voucherErr.response?.data?.message || 'Mã voucher không hợp lệ';
         return res.status(400).json({ success: false, message: msg });
       }
     }
+    const appliedVoucherCode = appliedVoucherCodes.length > 0 ? appliedVoucherCodes.join(',') : null;
 
     const SHIPPING_FEE = 35000;
     const totalAmount = Math.max(0, subtotalAmount + SHIPPING_FEE - discountAmount);
@@ -61,8 +69,8 @@ const createOrder = async (req, res) => {
 
     await axios.delete(`${CART_URL}/api/cart/internal/${req.user.id}/clear`);
 
-    if (appliedVoucherCode) {
-      await axios.post(`${VOUCHER_URL}/api/vouchers/use`, { code: appliedVoucherCode }).catch(() => {});
+        if (appliedVoucherCodes.length > 0) {
+      await axios.post(`${VOUCHER_URL}/api/vouchers/use`, { codes: appliedVoucherCodes }).catch(() => {});
     }
 
     await conn.commit();

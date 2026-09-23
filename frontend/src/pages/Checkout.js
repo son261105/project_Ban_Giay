@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getCart, createOrder, validateVoucher, useVoucher } from '../services/api';
+import { getCart, createOrder, validateVoucher, getPublicVouchers } from '../services/api';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -12,10 +12,21 @@ const Checkout = () => {
   const [placing, setPlacing] = useState(false);
   const [form, setForm] = useState({ shipping_address: '', phone: '', note: '' });
   const [error, setError] = useState('');
-  const [voucherCode, setVoucherCode] = useState('');
-  const [voucher, setVoucher] = useState(null);
+  const [availableVouchers, setAvailableVouchers] = useState([]);
+  const [selectedCodes, setSelectedCodes] = useState([]);
+  const [appliedVouchers, setAppliedVouchers] = useState([]);
   const [voucherError, setVoucherError] = useState('');
   const [voucherLoading, setVoucherLoading] = useState(false);
+    const [showVoucherDropdown, setShowVoucherDropdown] = useState(false);
+  const voucherHoverTimeout = useRef(null);
+
+  const openVoucherDropdown = () => {
+    clearTimeout(voucherHoverTimeout.current);
+    setShowVoucherDropdown(true);
+  };
+  const closeVoucherDropdownDelayed = () => {
+    voucherHoverTimeout.current = setTimeout(() => setShowVoucherDropdown(false), 350);
+  };
   const { refreshCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -39,10 +50,12 @@ const Checkout = () => {
       setForm(f => ({ ...f, phone: user.phone || '' }));
     }
 
-    fetch('https://provinces.open-api.vn/api/v2/p/')
+        fetch('https://provinces.open-api.vn/api/v2/p/')
       .then(r => r.json())
       .then(setProvinces)
       .catch(() => {});
+
+    getPublicVouchers().then(r => setAvailableVouchers(r.data.vouchers || [])).catch(() => {});
   }, []);
 
   const normalize = (str) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
@@ -81,24 +94,45 @@ const Checkout = () => {
     setForm(f => ({ ...f, shipping_address: full }));
   }, [addressDetail, wardCode, provinceCode, provinces, wards]);
 
-  const SHIPPING_FEE = 35000;
+    const SHIPPING_FEE = 35000;
   const total = cart.reduce((sum, i) => sum + i.product_price * i.quantity, 0);
-  const shippingFee = voucher && voucher.type === 'freeship' ? 0 : SHIPPING_FEE;
-  const percentDiscount = voucher && voucher.type === 'percent' ? Math.round(total * voucher.value / 100) : 0;
+  const hasFreeship = appliedVouchers.some(v => v.type === 'freeship' && v.discount > 0);
+  const shippingFee = hasFreeship ? 0 : SHIPPING_FEE;
+  const percentDiscount = Math.min(
+    appliedVouchers.filter(v => v.type === 'percent').reduce((sum, v) => sum + v.discount, 0),
+    total
+  );
   const grandTotal = total + shippingFee - percentDiscount;
 
-  const handleApplyVoucher = async () => {
-    if (!voucherCode.trim()) return;
-    setVoucherLoading(true);
-    setVoucherError('');
-    setVoucher(null);
-    try {
-      const res = await validateVoucher({ code: voucherCode, order_amount: total });
-      setVoucher(res.data.voucher);
-    } catch (err) {
-      setVoucherError(err.response?.data?.message || 'Mã voucher không hợp lệ');
-    } finally { setVoucherLoading(false); }
+  const toggleVoucher = (code) => {
+    setSelectedCodes(prev => prev.includes(code) ? prev.filter(c => c !== code) : [...prev, code]);
   };
+
+  useEffect(() => {
+    if (selectedCodes.length === 0) {
+      setAppliedVouchers([]);
+      setVoucherError('');
+      return;
+    }
+    if (total <= 0) return;
+    let cancelled = false;
+    setVoucherLoading(true);
+    validateVoucher({ codes: selectedCodes, order_amount: total })
+      .then(res => {
+        if (cancelled) return;
+        const { vouchers = [], invalid = [] } = res.data;
+        setAppliedVouchers(vouchers);
+        if (invalid.length > 0) {
+          setVoucherError(invalid.map(i => i.message).join(' • '));
+          setSelectedCodes(prev => prev.filter(c => !invalid.some(i => i.code === c)));
+        } else {
+          setVoucherError('');
+        }
+      })
+      .catch(() => { if (!cancelled) setVoucherError('Không thể kiểm tra mã voucher'); })
+      .finally(() => { if (!cancelled) setVoucherLoading(false); });
+    return () => { cancelled = true; };
+  }, [selectedCodes, total]);
 
   const handleOrder = async (e) => {
     e.preventDefault();
@@ -107,7 +141,7 @@ const Checkout = () => {
     setPlacing(true);
     setError('');
     try {
-      const res = await createOrder({ ...form, voucher_code: voucher?.code });
+            const res = await createOrder({ ...form, voucher_codes: appliedVouchers.map(v => v.code) });
       await refreshCart();
             navigate('/order-success', { state: { orderId: res.data.orderId } });
     } catch (err) {
@@ -207,29 +241,10 @@ const Checkout = () => {
                 rows={2} />
             </div>
 
-            <div style={{ marginBottom: 24 }}>
-              <label style={{ fontWeight: 600, fontSize: 14, textTransform: 'uppercase', letterSpacing: 0.5, display: 'block', marginBottom: 8 }}>Mã giảm giá</label>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <input
-                  placeholder="Nhập mã voucher..."
-                  value={voucherCode}
-                  onChange={e => { setVoucherCode(e.target.value.toUpperCase()); setVoucher(null); setVoucherError(''); }}
-                  style={{ flex: 1 }}
-                />
-                <button type="button" className="btn btn-outline" onClick={handleApplyVoucher} disabled={voucherLoading}>
-                  {voucherLoading ? '...' : 'Áp dụng'}
-                </button>
-              </div>
-              {voucherError && <div style={{ color: '#c62828', fontSize: 14, marginTop: 6 }}>⚠️ {voucherError}</div>}
-              {voucher && (
-                <div style={{ background: '#E8F5E9', color: '#2E7D32', padding: '10px 14px', borderRadius: 8, marginTop: 8, fontSize: 15 }}>
-                  ✅ {voucher.description || `Áp dụng thành công: ${voucher.code}`}
-                </div>
-              )}
-            </div>
+           
 
             <div style={{ padding: 16, background: '#f9f9f9', borderRadius: 12, marginBottom: 24, fontSize: 15 }}>
-              <div style={{ fontWeight: 600, marginBottom: 8 }}>💳 Phương thức thanh toán</div>
+              <div style={{ fontWeight: 600, marginBottom: 8 }}> Phương thức thanh toán</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#555' }}>
                 <input type="radio" checked readOnly /> Thanh toán khi nhận hàng (COD)
               </div>
@@ -248,12 +263,119 @@ const Checkout = () => {
               <img src={item.product_image} alt={item.product_name}
                 style={{ width: 56, height: 56, objectFit: 'cover', borderRadius: 8, background: '#f0f0f0' }}
                 onError={e => { e.target.src = 'https://via.placeholder.com/56?text=?'; }} />
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 14, fontWeight: 600 }}>{item.name}</div>
-{item.size && <div style={{ fontSize: 13, color: '#888' }}>Size: {item.size}</div>}              </div>
+                            <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 14, fontWeight: 600 }}>{item.product_name}</div>
+                <div style={{ fontSize: 13, color: '#888', marginTop: 2 }}>
+                  {item.size && <span>Size: {item.size}</span>}
+                  {item.size && <span> · </span>}
+                  <span>SL: {item.quantity}</span>
+                </div>
+              </div>
               <div style={{ fontWeight: 600, fontSize: 15, whiteSpace: 'nowrap' }}>{formatPrice(item.product_price * item.quantity)}</div>
             </div>
           ))}
+                     <div
+            className="voucher-picker"
+            onMouseEnter={openVoucherDropdown}
+            onMouseLeave={closeVoucherDropdownDelayed}
+          >
+            <style>{`
+              .voucher-picker { position: relative; margin-bottom: 20px; }
+              .voucher-picker__label {
+                font-weight: 600; font-size: 13px; text-transform: uppercase;
+                letter-spacing: 0.6px; display: block; margin-bottom: 8px; color: #111;
+              }
+              .voucher-box {
+                display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+                min-height: 44px; padding: 8px 12px; border: 1px solid #111;
+                border-radius: 10px; background: #fff; cursor: pointer;
+              }
+              .voucher-box__placeholder { font-size: 14px; color: #999; }
+              .voucher-chip {
+                display: flex; align-items: center; gap: 6px; background: #111; color: #fff;
+                font-size: 13px; font-weight: 600; padding: 4px 8px 4px 10px; border-radius: 999px;
+              }
+              .voucher-chip__remove {
+                background: none; border: none; color: #fff; cursor: pointer; font-size: 13px;
+                line-height: 1; padding: 0; opacity: 0.8;
+              }
+              .voucher-chip__remove:hover { opacity: 1; }
+              .voucher-dropdown {
+                position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 20;
+                background: #fff; border: 1px solid #111; border-radius: 10px;
+                max-height: 260px; overflow-y: auto; box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+              }
+              .voucher-option {
+                display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px;
+                cursor: pointer; border-bottom: 1px solid #eee; transition: background .15s ease, color .15s ease;
+              }
+              .voucher-option:last-child { border-bottom: none; }
+              .voucher-option:hover:not(.voucher-option--disabled):not(.voucher-option--selected) { background: #f2f2f2; }
+                            .voucher-option--selected { background: #fff; color: #111; border-color: #111; box-shadow: inset 0 0 0 1px #111; }
+              .voucher-option--selected:hover { background: #f2f2f2; }
+              .voucher-option--disabled { cursor: not-allowed; color: #999; }
+              .voucher-option__code { font-weight: 700; font-size: 14px; letter-spacing: 0.5px; }
+              .voucher-option__desc { font-size: 12.5px; margin-top: 2px; opacity: 0.85; }
+              .voucher-option__note { font-size: 11.5px; margin-top: 4px; font-style: italic; opacity: 0.75; }
+              .voucher-picker__error { font-size: 13px; margin-top: 8px; color: #111; }
+                            .voucher-picker__empty { padding: 10px 14px; font-size: 13px; color: #888; }
+            `}</style>
+            <label className="voucher-picker__label">Mã giảm giá {voucherLoading && '(đang kiểm tra...)'}</label>
+
+            <div className="voucher-box" onClick={() => setShowVoucherDropdown(v => !v)}>
+              {selectedCodes.length === 0 ? (
+                <span className="voucher-box__placeholder">Di chuột vào để chọn mã giảm giá...</span>
+              ) : (
+                selectedCodes.map(code => (
+                  <span key={code} className="voucher-chip">
+                    {code}
+                    <button
+                      type="button"
+                      className="voucher-chip__remove"
+                      onClick={(e) => { e.stopPropagation(); toggleVoucher(code); }}
+                    >✕</button>
+                  </span>
+                ))
+              )}
+            </div>
+
+            {showVoucherDropdown && (
+              availableVouchers.length === 0 ? (
+                <div className="voucher-dropdown">
+                  <div className="voucher-picker__empty">Hiện chưa có mã giảm giá khả dụng</div>
+                </div>
+              ) : (
+                <div className="voucher-dropdown">
+                  {availableVouchers.map(v => {
+                    const eligible = total > 0 && total >= v.min_order_amount;
+                    const selected = selectedCodes.includes(v.code);
+                    return (
+                      <div
+                        key={v.code}
+                        className={`voucher-option${selected ? ' voucher-option--selected' : ''}${!eligible ? ' voucher-option--disabled' : ''}`}
+                        onClick={() => eligible && toggleVoucher(v.code)}
+                      >
+                        <div style={{ flex: 1 }}>
+                          <div className="voucher-option__code">{v.code}</div>
+                          <div className="voucher-option__desc">
+                            {v.description || (v.type === 'freeship' ? 'Miễn phí vận chuyển' : `Giảm ${v.value}%`)}
+                          </div>
+                          {!eligible && (
+                            <div className="voucher-option__note">
+                              Áp dụng cho đơn từ {formatPrice(v.min_order_amount)}
+                            </div>
+                          )}
+                        </div>
+                        {selected && <span>✓</span>}
+                      </div>
+                    );
+                  })}
+                </div>
+              )
+            )}
+            {voucherError && <div className="voucher-picker__error">⚠ {voucherError}</div>}
+          </div>
+
           <div style={{ borderTop: '2px solid var(--border)', paddingTop: 16, marginTop: 8 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontSize: 15 }}>
               <span>Tạm tính</span><span>{formatPrice(total)}</span>
@@ -269,12 +391,12 @@ const Checkout = () => {
                 <span>{formatPrice(SHIPPING_FEE)}</span>
               )}
             </div>
-            {voucher && voucher.type === 'percent' && (
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontSize: 15, color: '#2E7D32' }}>
-                <span>Giảm {voucher.value}%</span>
-                <span>-{formatPrice(percentDiscount)}</span>
+                        {appliedVouchers.filter(v => v.type === 'percent').map(v => (
+              <div key={v.code} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontSize: 15, color: '#111' }}>
+                <span>{v.code}</span>
+                <span>-{formatPrice(v.discount)}</span>
               </div>
-            )}
+            ))}
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 19, fontWeight: 600 }}>
               <span>Tổng cộng</span>
               <span style={{ color: 'var(--accent)' }}>{formatPrice(grandTotal)}</span>

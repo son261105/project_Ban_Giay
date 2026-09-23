@@ -1,38 +1,75 @@
 const pool = require('../config/database');
 
-// Validate voucher (khách dùng)
+const checkOne = (v, order_amount) => {
+  const today = new Date().toISOString().split('T')[0];
+  if (!v.is_active) return { ok: false, message: `${v.code}: Voucher đã bị vô hiệu hóa` };
+  if (today < v.start_date) return { ok: false, message: `${v.code}: Voucher chưa đến ngày sử dụng` };
+  if (today > v.end_date) return { ok: false, message: `${v.code}: Voucher đã hết hạn` };
+  if (v.max_uses !== null && v.used_count >= v.max_uses) return { ok: false, message: `${v.code}: Voucher đã hết lượt sử dụng` };
+  if (order_amount < v.min_order_amount) return { ok: false, message: `${v.code}: Đơn hàng tối thiểu ${new Intl.NumberFormat('vi-VN').format(v.min_order_amount)}đ` };
+
+  let discount = 0;
+  if (v.type === 'percent') discount = Math.round(order_amount * v.value / 100);
+  if (v.type === 'freeship') discount = 35000;
+
+  return { ok: true, voucher: { id: v.id, code: v.code, type: v.type, value: parseFloat(v.value), discount, description: v.description } };};
+
 const validateVoucher = async (req, res) => {
-  const { code, order_amount } = req.body;
-  if (!code) return res.status(400).json({ success: false, message: 'Vui lòng nhập mã voucher' });
+  const { code, codes, order_amount } = req.body;
+  const codeList = (Array.isArray(codes) ? codes : (code ? [code] : []))
+    .map(c => String(c).trim().toUpperCase())
+    .filter(Boolean);
+
+  if (codeList.length === 0) return res.status(400).json({ success: false, message: 'Vui lòng chọn ít nhất một mã voucher' });
 
   try {
-    const [rows] = await pool.query('SELECT * FROM vouchers WHERE code = ?', [code.toUpperCase()]);
-    if (rows.length === 0) return res.status(404).json({ success: false, message: 'Mã voucher không tồn tại' });
+    const [rows] = await pool.query('SELECT * FROM vouchers WHERE code IN (?)', [codeList]);
+    const found = new Map(rows.map(v => [v.code, v]));
 
-    const v = rows[0];
-    const today = new Date().toISOString().split('T')[0];
+    if (!Array.isArray(codes)) {
+      const single = codeList[0];
+      const v = found.get(single);
+      if (!v) return res.status(404).json({ success: false, message: 'Mã voucher không tồn tại' });
+      const result = checkOne(v, order_amount);
+      if (!result.ok) return res.status(400).json({ success: false, message: result.message });
+      return res.json({ success: true, voucher: result.voucher });
+    }
 
-    if (!v.is_active) return res.status(400).json({ success: false, message: 'Voucher đã bị vô hiệu hóa' });
-    if (today < v.start_date) return res.status(400).json({ success: false, message: 'Voucher chưa đến ngày sử dụng' });
-    if (today > v.end_date) return res.status(400).json({ success: false, message: 'Voucher đã hết hạn' });
-    if (v.max_uses !== null && v.used_count >= v.max_uses) return res.status(400).json({ success: false, message: 'Voucher đã hết lượt sử dụng' });
-    if (order_amount < v.min_order_amount) return res.status(400).json({ success: false, message: `Đơn hàng tối thiểu ${new Intl.NumberFormat('vi-VN').format(v.min_order_amount)}đ` });
+    const valid = [];
+    const invalid = [];
+    for (const c of codeList) {
+      const v = found.get(c);
+      if (!v) { invalid.push({ code: c, message: `${c}: Mã voucher không tồn tại` }); continue; }
+      const result = checkOne(v, order_amount);
+      if (result.ok) valid.push(result.voucher); else invalid.push({ code: c, message: result.message });
+    }
 
-    let discount = 0;
-        if (v.type === 'percent') discount = Math.round(order_amount * v.value / 100);
-    if (v.type === 'freeship') discount = 35000;
+    let freeshipCounted = false;
+    let totalDiscount = 0;
+    for (const v of valid) {
+      if (v.type === 'freeship') {
+        if (freeshipCounted) { v.discount = 0; v.note = 'Đã áp dụng miễn phí ship từ mã khác'; continue; }
+        freeshipCounted = true;
+      }
+      totalDiscount += v.discount;
+    }
+    totalDiscount = Math.min(totalDiscount, order_amount);
 
-    res.json({ success: true, voucher: { id: v.id, code: v.code, type: v.type, value: v.value, discount, description: v.description } });
+    res.json({ success: true, vouchers: valid, invalid, totalDiscount });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
-// Tăng used_count sau khi đặt hàng thành công
 const useVoucher = async (req, res) => {
-  const { code } = req.body;
+  const { code, codes } = req.body;
+  const codeList = (Array.isArray(codes) ? codes : (code ? [code] : []))
+    .map(c => String(c).trim().toUpperCase())
+    .filter(Boolean);
   try {
-    await pool.query('UPDATE vouchers SET used_count = used_count + 1 WHERE code = ?', [code.toUpperCase()]);
+    if (codeList.length > 0) {
+      await pool.query('UPDATE vouchers SET used_count = used_count + 1 WHERE code IN (?)', [codeList]);
+    }
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -51,7 +88,8 @@ const getPublicVouchers = async (req, res) => {
          AND (max_uses IS NULL OR used_count < max_uses)
        ORDER BY created_at DESC`
     );
-    res.json({ success: true, vouchers: rows });
+        const clean = rows.map(v => ({ ...v, value: parseFloat(v.value), min_order_amount: parseFloat(v.min_order_amount) }));
+    res.json({ success: true, vouchers: clean });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -61,7 +99,8 @@ const getPublicVouchers = async (req, res) => {
 const getAllVouchers = async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT * FROM vouchers ORDER BY created_at DESC');
-    res.json({ success: true, vouchers: rows });
+        const clean = rows.map(v => ({ ...v, value: parseFloat(v.value), min_order_amount: parseFloat(v.min_order_amount) }));
+    res.json({ success: true, vouchers: clean });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
