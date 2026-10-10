@@ -5,8 +5,13 @@ const { pool } = require('../config/database');
 const { sendOtpEmail } = require('../utils/mailer');
 require('dotenv').config();
 
-const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+const EMAIL_REGEX = /^(?!\.)(?!.*\.\.)[a-z0-9.]{6,30}(?<!\.)@gmail\.com$/;
 const PHONE_REGEX = /^0(3|5|7|8|9)[0-9]{8}$/;
+const OTP_TTL_MS = 5 * 60 * 1000;        // mã có hiệu lực 5 phút
+const RESEND_COOLDOWN_MS = 60 * 1000;    // 60 giây sau mới được gửi lại
+const MAX_OTP_ATTEMPTS = 5;              // nhập sai tối đa 5 lần
+const otpAttempts = new Map();           // đếm số lần nhập sai theo email
+const NAME_REGEX = /^\p{L}+(?: \p{L}+)*$/u;
 
 const register = async (req, res) => {
   try {
@@ -23,21 +28,32 @@ const register = async (req, res) => {
 
 const requestRegisterOtp = async (req, res) => {
   try {
-    const { name, email, phone, password } = req.body;
+        const { phone, password } = req.body;
+    const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : '';
+    const name = typeof req.body.name === 'string' ? req.body.name.trim().replace(/\s+/g, ' ') : '';
     if (!name || !email || !phone || !password) {
       return res.status(400).json({ success: false, message: 'Vui lòng điền đầy đủ thông tin.' });
     }
-    if (name.length > 50) {
-      return res.status(400).json({ success: false, message: 'Họ tên không được vượt quá 50 ký tự.' });
+    if (name.length < 2) {
+      return res.status(400).json({ success: false, message: 'Họ tên phải có ít nhất 2 ký tự.' });
     }
-    if (!EMAIL_REGEX.test(email)) {
-      return res.status(400).json({ success: false, message: 'Email phải đúng định dạng Gmail (vd: ten@gmail.com).' });
+        if (name.length > 30) {
+      return res.status(400).json({ success: false, message: 'Họ tên không được vượt quá 30 ký tự.' });
+    }
+    if (!NAME_REGEX.test(name)) {
+      return res.status(400).json({ success: false, message: 'Họ tên chỉ được chứa chữ cái và khoảng trắng.' });
+    }
+        if (!EMAIL_REGEX.test(email)) {
+      return res.status(400).json({ success: false, message: 'Email phải là Gmail hợp lệ: tên 6-30 ký tự, chỉ gồm chữ cái, số và dấu chấm (vd: ten@gmail.com).' });
     }
     if (!PHONE_REGEX.test(phone)) {
       return res.status(400).json({ success: false, message: 'Số điện thoại phải gồm 10 số và đúng định dạng Việt Nam.' });
     }
         if (password.length < 8 || password.length > 64) {
       return res.status(400).json({ success: false, message: 'Mật khẩu phải từ 8 đến 64 ký tự.' });
+    }
+        if (/[^\x00-\x7F]/.test(password)) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu không được chứa dấu tiếng Việt hoặc ký tự có dấu.' });
     }
 
     const [existing] = await pool.query('SELECT id FROM users WHERE email = ?', [email]);
@@ -49,7 +65,17 @@ const requestRegisterOtp = async (req, res) => {
     if (existingPhone.length > 0) {
       return res.status(409).json({ success: false, message: 'Số điện thoại này đã được đăng ký.' });
     }
-
+        const [recent] = await pool.query(
+      'SELECT expires_at FROM otp_verifications WHERE email = ? ORDER BY created_at DESC LIMIT 1',
+      [email]
+    );
+    if (recent.length > 0) {
+      const sentAt = new Date(recent[0].expires_at).getTime() - OTP_TTL_MS;
+      const wait = Math.ceil((sentAt + RESEND_COOLDOWN_MS - Date.now()) / 1000);
+      if (wait > 0) {
+        return res.status(429).json({ success: false, message: `Vui lòng chờ ${wait} giây rồi gửi lại mã.`, retryAfterSeconds: wait });
+      }
+    }
     const hash = await bcrypt.hash(password, 10);
     const otpCode = String(crypto.randomInt(100000, 999999));
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
@@ -61,7 +87,7 @@ const requestRegisterOtp = async (req, res) => {
     );
 
     await sendOtpEmail(email, otpCode);
-
+    otpAttempts.delete(email);
     res.json({ success: true, message: 'Đã gửi mã xác thực đến email của bạn.', expiresInSeconds: 300 });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Lỗi server: ' + err.message });
@@ -72,17 +98,34 @@ const verifyRegisterOtp = async (req, res) => {
   try {
     const { email, otp } = req.body;
     if (!email || !otp) return res.status(400).json({ success: false, message: 'Vui lòng nhập mã xác thực.' });
+    if (!/^[0-9]{6}$/.test(String(otp))) {
+      return res.status(400).json({ success: false, message: 'Mã xác thực phải gồm đúng 6 chữ số.' });
+    }
 
     const [rows] = await pool.query(
-      'SELECT * FROM otp_verifications WHERE email = ? AND otp_code = ? ORDER BY created_at DESC LIMIT 1',
-      [email, otp]
+      'SELECT * FROM otp_verifications WHERE email = ? ORDER BY created_at DESC LIMIT 1',
+      [email]
     );
-    if (rows.length === 0) return res.status(400).json({ success: false, message: 'Mã xác thực không đúng.' });
+    if (rows.length === 0) {
+      return res.status(400).json({ success: false, message: 'Không tìm thấy mã xác thực. Vui lòng gửi lại mã.' });
+    }
 
     const record = rows[0];
     if (new Date(record.expires_at) < new Date()) {
       return res.status(400).json({ success: false, message: 'Mã xác thực đã hết hạn. Vui lòng gửi lại mã.' });
     }
+
+    if (record.otp_code !== String(otp)) {
+      const attempts = (otpAttempts.get(email) || 0) + 1;
+      if (attempts >= MAX_OTP_ATTEMPTS) {
+        otpAttempts.delete(email);
+        await pool.query('DELETE FROM otp_verifications WHERE email = ?', [email]);
+        return res.status(429).json({ success: false, message: `Bạn đã nhập sai ${MAX_OTP_ATTEMPTS} lần. Mã đã bị hủy, vui lòng gửi lại mã mới.` });
+      }
+      otpAttempts.set(email, attempts);
+      return res.status(400).json({ success: false, message: `Mã xác thực không đúng. Bạn còn ${MAX_OTP_ATTEMPTS - attempts} lần thử.` });
+    }
+    otpAttempts.delete(email);
 
     const [existingUser] = await pool.query('SELECT id FROM users WHERE email = ?', [email]);
     if (existingUser.length > 0) {
