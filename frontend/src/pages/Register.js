@@ -7,6 +7,16 @@ const NAME_REGEX = /^\p{L}+(?: \p{L}+)*$/u;
 const normalizeName = (s) => s.trim().replace(/\s+/g, ' ');
 const PHONE_REGEX = /^0(3|5|7|8|9)[0-9]{8}$/;
 
+const SPECIAL_REGEX = /[!-/:-@[-`{-~]/;
+const PASSWORD_RULES = [
+  { label: 'Từ 8 đến 64 ký tự', test: (p) => p.length >= 8 && p.length <= 64 },
+  { label: 'Có ít nhất 1 chữ hoa ', test: (p) => /[A-Z]/.test(p) },
+  { label: 'Có ít nhất 1 chữ thường ', test: (p) => /[a-z]/.test(p) },
+  { label: 'Có ít nhất 1 chữ số ', test: (p) => /[0-9]/.test(p) },
+  { label: 'Có ít nhất 1 ký tự đặc biệt', test: (p) => SPECIAL_REGEX.test(p) },
+  { label: 'Không chứa dấu tiếng Việt', test: (p) => p.length > 0 && !/[^\x00-\x7F]/.test(p) },
+];
+
 const getPhoneError = (p) => {
   if (!p) return '';
   if (p.startsWith('+')) return 'Số điện thoại phải bắt đầu bằng số 0';
@@ -54,6 +64,8 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [pwActive, setPwActive] = useState(false);
+  const [confirmActive, setConfirmActive] = useState(false);
   const [otp, setOtp] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -62,6 +74,7 @@ const Register = () => {
   const { loginUser } = useAuth();
   const navigate = useNavigate();
   const otpRefs = useRef([]);
+  const pwStrong = PASSWORD_RULES.every(r => r.test(form.password));
 
   useEffect(() => {
     if (step !== 'otp' || secondsLeft <= 0) return;
@@ -99,6 +112,10 @@ const Register = () => {
     if (form.password.length < 8) { setError('Mật khẩu phải có ít nhất 8 ký tự'); return; }
     if (form.password.length > 64) { setError('Mật khẩu không được vượt quá 64 ký tự'); return; }
     if (/[^\x00-\x7F]/.test(form.password)) { setError('Mật khẩu không được chứa dấu tiếng Việt hoặc ký tự có dấu'); return; }
+    if (!/[A-Z]/.test(form.password)) { setError('Mật khẩu phải có ít nhất 1 chữ hoa'); return; }
+    if (!/[a-z]/.test(form.password)) { setError('Mật khẩu phải có ít nhất 1 chữ thường'); return; }
+    if (!/[0-9]/.test(form.password)) { setError('Mật khẩu phải có ít nhất 1 chữ số'); return; }
+    if (!SPECIAL_REGEX.test(form.password)) { setError('Mật khẩu phải có ít nhất 1 ký tự đặc biệt'); return; }
     if (!confirmPassword) { setError('Vui lòng nhập lại mật khẩu'); return; }
     if (form.password !== confirmPassword) { setError('Mật khẩu nhập lại không khớp'); return; }
 
@@ -200,10 +217,11 @@ const Register = () => {
     else e.target.select();
   };
 
-  const eyeButtonStyle = {
+  const eyeButtonStyle = (visible) => ({
     position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
-    background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#555', display: 'flex'
-  };
+    background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#555', display: 'flex',
+    opacity: visible ? 1 : 0, pointerEvents: visible ? 'auto' : 'none', transition: 'opacity 0.15s'
+  });
 
   return (
     <div className="auth-page">
@@ -240,30 +258,52 @@ const Register = () => {
 
               <div className="form-group">
                 <label>Địa chỉ Email (Gmail) *</label>
-                <input type="text" placeholder="Nhập địa chỉ Gmail " value={form.email}
+                <input type="text" placeholder="Nhập địa chỉ Gmail" value={form.email}
                   onChange={e => setForm({ ...form, email: e.target.value })} required />
               </div>
 
               <div className="form-group">
                 <label>Mật khẩu *</label>
-                <div style={{ position: 'relative' }}>
+                <div style={{ position: 'relative' }}
+                  onMouseEnter={() => setPwActive(true)} onMouseLeave={() => setPwActive(false)}
+                  onFocus={() => setPwActive(true)} onBlur={() => setPwActive(false)}>
                   <button type="button" onClick={() => setShowPassword(!showPassword)}
                     title={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
-                    style={eyeButtonStyle}>
+                    style={eyeButtonStyle(pwActive)}>
                     {showPassword ? <EyeOffIcon /> : <EyeIcon />}
                   </button>
                   <input type={showPassword ? 'text' : 'password'} placeholder="Từ 8 đến 64 ký tự" value={form.password}
                     style={{ paddingRight: 44 }}
                     onChange={e => setForm({ ...form, password: e.target.value })} required />
                 </div>
+                                                {form.password.length > 0 && (
+                  <div style={{ marginTop: 8, fontSize: 13 }}>
+                    <div style={{ fontWeight: 600, color: pwStrong ? '#2e7d32' : '#c62828' }}>
+                      {pwStrong ? '✓ Mật khẩu đủ mạnh' : 'Mật khẩu chưa đủ mạnh '}
+                    </div>
+                    <div style={{ marginTop: 4, lineHeight: 1.7 }}>
+                                            {PASSWORD_RULES.slice(0, 5).map((r, idx) => {
+                        const ok = r.test(form.password);
+                        return (
+                          <span key={r.label} style={{ color: ok ? '#2e7d32' : '#c62828' }}>
+                            {idx > 0 && <span style={{ color: '#999' }}> - </span>}
+                            {ok ? '✓ ' : ''}{r.label}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="form-group">
                 <label>Nhập lại mật khẩu *</label>
-                <div style={{ position: 'relative' }}>
+                <div style={{ position: 'relative' }}
+                  onMouseEnter={() => setConfirmActive(true)} onMouseLeave={() => setConfirmActive(false)}
+                  onFocus={() => setConfirmActive(true)} onBlur={() => setConfirmActive(false)}>
                   <button type="button" onClick={() => setShowConfirm(!showConfirm)}
                     title={showConfirm ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
-                    style={eyeButtonStyle}>
+                    style={eyeButtonStyle(confirmActive)}>
                     {showConfirm ? <EyeOffIcon /> : <EyeIcon />}
                   </button>
                   <input type={showConfirm ? 'text' : 'password'} placeholder="Nhập lại mật khẩu" value={confirmPassword}
@@ -284,7 +324,7 @@ const Register = () => {
               Mã xác thực được gửi đến {form.email}<br />
               {secondsLeft > 0
                 ? <>Có hiệu lực trong {formatTime(secondsLeft)}</>
-                : <span style={{ color: '#c62828' }}>Mã đã hết hạn</span>}
+                : <span style={{ color: '#c62828' }}>Mã đã hết hạn<br />(Vui lòng ấn gửi lại mã để nhập mã mới)</span>}
             </p>
 
             <form onSubmit={handleVerifyOtp} noValidate>

@@ -12,6 +12,10 @@ const RESEND_COOLDOWN_MS = 60 * 1000;    // 60 giây sau mới được gửi l�
 const MAX_OTP_ATTEMPTS = 5;              // nhập sai tối đa 5 lần
 const otpAttempts = new Map();           // đếm số lần nhập sai theo email
 const NAME_REGEX = /^\p{L}+(?: \p{L}+)*$/u;
+const MAX_LOGIN_ATTEMPTS = 10;                // sai tối đa 10 lần
+const LOGIN_LOCK_MS = 5 * 60 * 1000;         // khóa 5 phút
+const loginAttempts = new Map();              // email -> { count, lockedUntil }
+const DUMMY_HASH = bcrypt.hashSync('dummy-password-for-timing', 10); // để thời gian phản hồi giống nhau
 
 const register = async (req, res) => {
   try {
@@ -52,8 +56,17 @@ const requestRegisterOtp = async (req, res) => {
         if (password.length < 8 || password.length > 64) {
       return res.status(400).json({ success: false, message: 'Mật khẩu phải từ 8 đến 64 ký tự.' });
     }
-        if (/[^\x00-\x7F]/.test(password)) {
-      return res.status(400).json({ success: false, message: 'Mật khẩu không được chứa dấu tiếng Việt hoặc ký tự có dấu.' });
+        if (!/[A-Z]/.test(password)) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu phải có ít nhất 1 chữ hoa.' });
+    }
+    if (!/[a-z]/.test(password)) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu phải có ít nhất 1 chữ thường.' });
+    }
+    if (!/[0-9]/.test(password)) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu phải có ít nhất 1 chữ số.' });
+    }
+    if (!/[!-\/:-@\[-`{-~]/.test(password)) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu phải có ít nhất 1 ký tự đặc biệt.' });
     }
 
     const [existing] = await pool.query('SELECT id FROM users WHERE email = ?', [email]);
@@ -153,15 +166,65 @@ const verifyRegisterOtp = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    if (!email || !password) return res.status(400).json({ success: false, message: 'Vui lòng nhập email và mật khẩu.' });
-    const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
-    if (users.length === 0) return res.status(401).json({ success: false, message: 'Email hoặc mật khẩu không đúng.' });
-        const user = users[0];
-    if (!await bcrypt.compare(password, user.password)) return res.status(401).json({ success: false, message: 'Email hoặc mật khẩu không đúng.' });
-    if (user.status === 'locked') return res.status(403).json({ success: false, message: 'Tài khoản của bạn đã bị khóa.' });
+    const rawEmail = req.body.email;
+    const password = req.body.password;
+    if (!rawEmail || !password) {
+      return res.status(400).json({ success: false, message: 'Vui lòng nhập email và mật khẩu.' });
+    }
+    if (typeof rawEmail !== 'string' || typeof password !== 'string') {
+      return res.status(400).json({ success: false, message: 'Dữ liệu không hợp lệ.' });
+    }
+    const email = rawEmail.trim().toLowerCase();
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Vui lòng nhập email và mật khẩu.' });
+    }
+
+    // Kiểm tra đang bị khóa do nhập sai nhiều lần
+    let entry = loginAttempts.get(email);
+    if (entry && entry.lockedUntil && entry.lockedUntil <= Date.now()) {
+      loginAttempts.delete(email);
+      entry = undefined;
+    }
+    if (entry && entry.lockedUntil) {
+      const minutes = Math.ceil((entry.lockedUntil - Date.now()) / 60000);
+            return res.status(429).json({ success: false, message: `Bạn đã nhập sai ${MAX_LOGIN_ATTEMPTS} lần. Vui lòng thử lại sau ${minutes} phút.` });
+    }
+
+    const registerFail = () => {
+      const count = (entry ? entry.count : 0) + 1;
+      if (count >= MAX_LOGIN_ATTEMPTS) {
+        loginAttempts.set(email, { count, lockedUntil: Date.now() + LOGIN_LOCK_MS });
+        return res.status(429).json({ success: false, message: `Bạn đã nhập sai ${MAX_LOGIN_ATTEMPTS} lần. Vui lòng thử lại sau ${Math.round(LOGIN_LOCK_MS / 60000)} phút.` });
+      }
+      loginAttempts.set(email, { count, lockedUntil: 0 });
+      return res.status(401).json({ success: false, message: `Email hoặc mật khẩu không đúng. Bạn còn ${MAX_LOGIN_ATTEMPTS - count} lần thử.` });
+    };
+
+    let user = null;
+    if (email.length <= 100) {
+      const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+      user = users[0] || null;
+    }
+
+    // Luôn chạy 1 lần so sánh bcrypt, kể cả khi email không tồn tại (để thời gian phản hồi giống nhau)
+    const match = await bcrypt.compare(password, user ? user.password : DUMMY_HASH);
+    if (!user || !match || password.length > 64) return registerFail();
+
+    if (user.status === 'locked') {
+      return res.status(403).json({ success: false, message: 'Tài khoản của bạn đã bị khóa.' });
+    }
+
+    loginAttempts.delete(email);
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
-    res.json({ success: true, message: 'Đăng nhập thành công!', token, user: { id: user.id, name: user.name, email: user.email, phone: user.phone, role: user.role } });  } catch (err) { res.status(500).json({ success: false, message: 'Lỗi server: ' + err.message }); }
+    res.json({
+      success: true,
+      message: 'Đăng nhập thành công!',
+      token,
+      user: { id: user.id, name: user.name, email: user.email, phone: user.phone, role: user.role }
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Lỗi server: ' + err.message });
+  }
 };
 
 const changePhone = async (req, res) => {
@@ -195,6 +258,21 @@ const changePassword = async (req, res) => {
     }
     if (newPassword.length < 8 || newPassword.length > 64) {
       return res.status(400).json({ success: false, message: 'Mật khẩu mới phải từ 8 đến 64 ký tự.' });
+    }
+        if (/[^\x00-\x7F]/.test(newPassword)) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu mới không được chứa dấu tiếng Việt hoặc ký tự có dấu.' });
+    }
+    if (!/[A-Z]/.test(newPassword)) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu mới phải có ít nhất 1 chữ hoa.' });
+    }
+    if (!/[a-z]/.test(newPassword)) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu mới phải có ít nhất 1 chữ thường.' });
+    }
+    if (!/[0-9]/.test(newPassword)) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu mới phải có ít nhất 1 chữ số.' });
+    }
+    if (!/[!-\/:-@\[-`{-~]/.test(newPassword)) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu mới phải có ít nhất 1 ký tự đặc biệt.' });
     }
     const [users] = await pool.query('SELECT * FROM users WHERE id = ?', [req.user.id]);
     const user = users[0];

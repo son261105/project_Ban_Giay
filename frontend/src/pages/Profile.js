@@ -2,6 +2,14 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { updateProfile, changePhone } from '../services/api';
 import axios from 'axios';
+const SPECIAL_REGEX = /[!-/:-@[-`{-~]/;
+const PASSWORD_RULES = [
+  { label: 'Từ 8 đến 64 ký tự', test: (p) => p.length >= 8 && p.length <= 64 },
+  { label: 'Có ít nhất 1 chữ hoa (A-Z)', test: (p) => /[A-Z]/.test(p) },
+  { label: 'Có ít nhất 1 chữ thường (a-z)', test: (p) => /[a-z]/.test(p) },
+  { label: 'Có ít nhất 1 chữ số (0-9)', test: (p) => /[0-9]/.test(p) },
+  { label: 'Có ít nhất 1 ký tự đặc biệt (vd: @ # $ % ! ?)', test: (p) => SPECIAL_REGEX.test(p) },
+];
 
 const Profile = () => {
   const { user, loginUser } = useAuth();
@@ -15,6 +23,8 @@ const Profile = () => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const lengthOk = newPassword.length >= 8 && newPassword.length <= 64 && !/[^\x00-\x7F]/.test(newPassword);
+  const pwStrong = lengthOk && PASSWORD_RULES.every(r => r.test(newPassword));
 
   const handleChangeName = async () => {
     if (!name.trim()) return setError('Tên không được để trống');
@@ -51,8 +61,13 @@ const Profile = () => {
       return setError('Vui lòng điền đầy đủ thông tin');
     if (newPassword !== confirmPassword)
       return setError('Mật khẩu mới không khớp');
-    if (newPassword.length < 8 || newPassword.length > 64)
-      return setError('Mật khẩu mới phải từ 8 đến 64 ký tự');
+        if (newPassword.length < 8) return setError('Mật khẩu mới phải có ít nhất 8 ký tự');
+    if (newPassword.length > 64) return setError('Mật khẩu mới không được vượt quá 64 ký tự');
+    if (/[^\x00-\x7F]/.test(newPassword)) return setError('Mật khẩu mới không được chứa dấu tiếng Việt hoặc ký tự có dấu');
+    if (!/[A-Z]/.test(newPassword)) return setError('Mật khẩu mới phải có ít nhất 1 chữ hoa');
+    if (!/[a-z]/.test(newPassword)) return setError('Mật khẩu mới phải có ít nhất 1 chữ thường');
+    if (!/[0-9]/.test(newPassword)) return setError('Mật khẩu mới phải có ít nhất 1 chữ số');
+    if (!SPECIAL_REGEX.test(newPassword)) return setError('Mật khẩu mới phải có ít nhất 1 ký tự đặc biệt');
     setLoading(true); setError(''); setMessage('');
     try {
       await axios.put('http://localhost:8000/api/auth/change-password', {
@@ -134,9 +149,28 @@ const Profile = () => {
             <label>Mật khẩu hiện tại</label>
             <input type="password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} placeholder="Nhập mật khẩu hiện tại" />
           </div>
-          <div className="form-group">
+                    <div className="form-group">
             <label>Mật khẩu mới</label>
-            <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="Từ 8 đến 64 ký tự" maxLength={64} />          </div>
+            <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="Từ 8 đến 64 ký tự" />
+            {newPassword.length > 0 && (
+              <div style={{ marginTop: 8, fontSize: 13 }}>
+                <div style={{ fontWeight: 600, color: pwStrong ? '#2e7d32' : '#c62828' }}>
+                  {pwStrong ? '✓ Mật khẩu đủ mạnh' : 'Mật khẩu chưa đủ mạnh (8-64 ký tự, không dấu), cần có:'}
+                </div>
+                <div style={{ marginTop: 4, lineHeight: 1.7 }}>
+                  {PASSWORD_RULES.map((r, idx) => {
+                    const ok = r.test(newPassword);
+                    return (
+                      <span key={r.label} style={{ color: ok ? '#2e7d32' : '#c62828' }}>
+                        {idx > 0 && <span style={{ color: '#999' }}> - </span>}
+                        {ok ? '✓ ' : ''}{r.label}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
           <div className="form-group">
             <label>Nhập lại mật khẩu mới</label>
             <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Nhập lại mật khẩu mới" />
