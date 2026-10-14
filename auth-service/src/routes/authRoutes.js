@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { authenticate, isAdmin } = require('../middleware/auth');
-const { register, login, verifyToken, getProfile, getAllUsers, deleteUser, requestRegisterOtp, verifyRegisterOtp, changePhone, changePassword, syncName, toggleUserStatus } = require('../controllers/authController');
+const { register, login, verifyToken, getProfile, getAllUsers, deleteUser, requestRegisterOtp, verifyRegisterOtp, changePhone, changePassword, syncName, toggleUserStatus, requestResetOtp, verifyResetOtp, resetPassword } = require('../controllers/authController');
 router.put('/change-phone', authenticate, changePhone);
 router.put('/change-password', authenticate, changePassword);
 router.put('/internal/:userId/sync-name', syncName);
@@ -9,6 +9,9 @@ router.post('/register', register);
 router.post('/register/request-otp', requestRegisterOtp);
 router.post('/register/verify-otp', verifyRegisterOtp);
 router.post('/login', login);
+router.post('/forgot-password/request-otp', requestResetOtp);
+router.post('/forgot-password/verify-otp', verifyResetOtp);
+router.post('/forgot-password/reset', resetPassword);
 router.get('/verify', authenticate, verifyToken);
 router.get('/profile', authenticate, getProfile);
 router.get('/users', authenticate, isAdmin, getAllUsers);

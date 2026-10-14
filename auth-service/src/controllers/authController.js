@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { pool } = require('../config/database');
-const { sendOtpEmail } = require('../utils/mailer');
+const { sendOtpEmail, sendResetOtpEmail } = require('../utils/mailer');
 require('dotenv').config();
 
 const EMAIL_REGEX = /^(?!\.)(?!.*\.\.)[a-z0-9.]{6,30}(?<!\.)@gmail\.com$/;
@@ -12,6 +12,10 @@ const RESEND_COOLDOWN_MS = 60 * 1000;    // 60 giây sau mới được gửi l�
 const MAX_OTP_ATTEMPTS = 5;              // nhập sai tối đa 5 lần
 const otpAttempts = new Map();           // đếm số lần nhập sai theo email
 const NAME_REGEX = /^\p{L}+(?: \p{L}+)*$/u;
+const MAX_RESET_ATTEMPTS = 5;                  // nhập sai OTP quên mật khẩu tối đa 5 lần
+const RESET_TOKEN_TTL_MS = 10 * 60 * 1000;     // phiên đặt mật khẩu mới có hiệu lực 10 phút
+const GMAIL_LOGIN_REGEX = /^[^\s@]+@gmail\.com$/;
+const cleanEmailInput = (v) => (typeof v === 'string' ? v.trim().toLowerCase() : '');
 const MAX_LOGIN_ATTEMPTS = 10;                // sai tối đa 10 lần
 const LOGIN_LOCK_MS = 5 * 60 * 1000;         // khóa 5 phút
 const loginAttempts = new Map();              // email -> { count, lockedUntil }
@@ -227,6 +231,167 @@ const login = async (req, res) => {
   }
 };
 
+// ===== QUÊN MẬT KHẨU (lưu trong database, bảng password_resets) =====
+
+// Bước 1: nhập email -> gửi mã OTP
+const requestResetOtp = async (req, res) => {
+  try {
+    const email = cleanEmailInput(req.body.email);
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Vui lòng nhập email.' });
+    }
+    if (/\s/.test(email)) {
+      return res.status(400).json({ success: false, message: 'Email không được chứa khoảng trắng.' });
+    }
+    if (email.length > 100 || !GMAIL_LOGIN_REGEX.test(email)) {
+      return res.status(400).json({ success: false, message: 'Email phải đúng định dạng Gmail (vd: ten@gmail.com).' });
+    }
+
+    const [users] = await pool.query('SELECT id, status FROM users WHERE email = ?', [email]);
+    if (users.length === 0) {
+      return res.status(404).json({ success: false, message: 'Email này chưa được đăng ký.' });
+    }
+    if (users[0].status === 'locked') {
+      return res.status(403).json({ success: false, message: 'Tài khoản của bạn đã bị khóa.' });
+    }
+
+    const now = Date.now();
+    // Dọn các yêu cầu đã hết hạn
+    await pool.query('DELETE FROM password_resets WHERE expires_at < ? AND token_expires_at < ?', [now, now]);
+
+    const [oldRows] = await pool.query('SELECT sent_at FROM password_resets WHERE email = ?', [email]);
+    if (oldRows.length > 0) {
+      const wait = Math.ceil((Number(oldRows[0].sent_at) + RESEND_COOLDOWN_MS - now) / 1000);
+      if (wait > 0) {
+        return res.status(429).json({ success: false, message: `Vui lòng chờ ${wait} giây rồi gửi lại mã.`, retryAfterSeconds: wait });
+      }
+    }
+
+    const code = String(crypto.randomInt(100000, 999999));
+    await pool.query('DELETE FROM password_resets WHERE email = ?', [email]);
+    await pool.query(
+      'INSERT INTO password_resets (email, otp_code, attempts, sent_at, expires_at, reset_token, token_expires_at) VALUES (?, ?, 0, ?, ?, NULL, 0)',
+      [email, code, now, now + OTP_TTL_MS]
+    );
+    try {
+      await sendResetOtpEmail(email, code);
+    } catch (mailErr) {
+      await pool.query('DELETE FROM password_resets WHERE email = ?', [email]);
+      throw mailErr;
+    }
+    res.json({ success: true, message: 'Đã gửi mã xác thực đến email của bạn.', expiresInSeconds: 300 });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Lỗi server: ' + err.message });
+  }
+};
+
+// Bước 2: nhập OTP -> nhận mã phiên để đặt mật khẩu mới
+const verifyResetOtp = async (req, res) => {
+  try {
+    const email = cleanEmailInput(req.body.email);
+    const otp = req.body.otp;
+    if (!email || !otp) {
+      return res.status(400).json({ success: false, message: 'Vui lòng nhập mã xác thực.' });
+    }
+    if (!/^[0-9]{6}$/.test(String(otp))) {
+      return res.status(400).json({ success: false, message: 'Mã xác thực phải gồm đúng 6 chữ số.' });
+    }
+
+    const [rows] = await pool.query('SELECT * FROM password_resets WHERE email = ?', [email]);
+    if (rows.length === 0) {
+      return res.status(400).json({ success: false, message: 'Không tìm thấy mã xác thực. Vui lòng gửi lại mã.' });
+    }
+    const entry = rows[0];
+    if (Number(entry.expires_at) < Date.now()) {
+      return res.status(400).json({ success: false, message: 'Mã xác thực đã hết hạn. Vui lòng gửi lại mã.' });
+    }
+
+    if (entry.otp_code !== String(otp)) {
+      const attempts = entry.attempts + 1;
+      if (attempts >= MAX_RESET_ATTEMPTS) {
+        await pool.query('DELETE FROM password_resets WHERE email = ?', [email]);
+        return res.status(429).json({ success: false, message: `Bạn đã nhập sai ${MAX_RESET_ATTEMPTS} lần. Mã đã bị hủy, vui lòng gửi lại mã mới.` });
+      }
+      await pool.query('UPDATE password_resets SET attempts = ? WHERE email = ?', [attempts, email]);
+      return res.status(400).json({ success: false, message: `Mã xác thực không đúng. Bạn còn ${MAX_RESET_ATTEMPTS - attempts} lần thử.` });
+    }
+
+    // Đúng mã: xóa mã OTP (chỉ dùng 1 lần) và cấp mã phiên
+    const token = crypto.randomBytes(32).toString('hex');
+    await pool.query(
+      'UPDATE password_resets SET otp_code = NULL, reset_token = ?, token_expires_at = ? WHERE email = ?',
+      [token, Date.now() + RESET_TOKEN_TTL_MS, email]
+    );
+    res.json({ success: true, message: 'Xác thực thành công.', resetToken: token });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Lỗi server: ' + err.message });
+  }
+};
+
+// Bước 3: nhập mật khẩu mới -> cập nhật database
+const resetPassword = async (req, res) => {
+  try {
+    const email = cleanEmailInput(req.body.email);
+    const { resetToken, newPassword } = req.body;
+    if (!email || !resetToken || !newPassword) {
+      return res.status(400).json({ success: false, message: 'Vui lòng điền đầy đủ thông tin.' });
+    }
+    if (typeof resetToken !== 'string' || typeof newPassword !== 'string') {
+      return res.status(400).json({ success: false, message: 'Dữ liệu không hợp lệ.' });
+    }
+
+    const [rows] = await pool.query('SELECT reset_token, token_expires_at FROM password_resets WHERE email = ?', [email]);
+    const entry = rows[0];
+    if (!entry || !entry.reset_token || entry.reset_token !== resetToken) {
+      return res.status(400).json({ success: false, sessionExpired: true, message: 'Phiên đặt lại mật khẩu không hợp lệ. Vui lòng thực hiện lại từ đầu.' });
+    }
+    if (Number(entry.token_expires_at) < Date.now()) {
+      await pool.query('DELETE FROM password_resets WHERE email = ?', [email]);
+      return res.status(400).json({ success: false, sessionExpired: true, message: 'Phiên đặt lại mật khẩu đã hết hạn. Vui lòng thực hiện lại từ đầu.' });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu mới phải có ít nhất 8 ký tự.' });
+    }
+    if (newPassword.length > 64) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu mới không được vượt quá 64 ký tự.' });
+    }
+    if (/[^\x00-\x7F]/.test(newPassword)) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu mới không được chứa dấu tiếng Việt hoặc ký tự có dấu.' });
+    }
+    if (!/[A-Z]/.test(newPassword)) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu mới phải có ít nhất 1 chữ hoa.' });
+    }
+    if (!/[a-z]/.test(newPassword)) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu mới phải có ít nhất 1 chữ thường.' });
+    }
+    if (!/[0-9]/.test(newPassword)) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu mới phải có ít nhất 1 chữ số.' });
+    }
+    if (!/[!-\/:-@\[-`{-~]/.test(newPassword)) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu mới phải có ít nhất 1 ký tự đặc biệt.' });
+    }
+
+    const [users] = await pool.query('SELECT id, password, status FROM users WHERE email = ?', [email]);
+    if (users.length === 0) {
+      return res.status(404).json({ success: false, message: 'Email này chưa được đăng ký.' });
+    }
+    if (users[0].status === 'locked') {
+      return res.status(403).json({ success: false, message: 'Tài khoản của bạn đã bị khóa.' });
+    }
+    if (await bcrypt.compare(newPassword, users[0].password)) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu mới không được trùng với mật khẩu hiện tại.' });
+    }
+
+    const newHash = await bcrypt.hash(newPassword, 10);
+    await pool.query('UPDATE users SET password = ? WHERE id = ?', [newHash, users[0].id]);
+    await pool.query('DELETE FROM password_resets WHERE email = ?', [email]);
+    loginAttempts.delete(email);
+    res.json({ success: true, message: 'Đặt lại mật khẩu thành công!' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Lỗi server: ' + err.message });
+  }
+};
 const changePhone = async (req, res) => {
   try {
     const { newPhone, currentPassword } = req.body;
@@ -339,4 +504,4 @@ const toggleUserStatus = async (req, res) => {
   } catch (err) { res.status(500).json({ success: false, message: 'Lỗi server: ' + err.message }); }
 };
 
-module.exports = { register, login, verifyToken, getProfile, getAllUsers, deleteUser, requestRegisterOtp, verifyRegisterOtp, changePhone, changePassword, syncName, toggleUserStatus };
+module.exports = { register, login, verifyToken, getProfile, getAllUsers, deleteUser, requestRegisterOtp, verifyRegisterOtp, changePhone, changePassword, syncName, toggleUserStatus, requestResetOtp, verifyResetOtp, resetPassword };

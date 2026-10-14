@@ -87,6 +87,9 @@ const Login = () => {
                 onChange={e => setForm({ ...form, password: e.target.value })} required />
             </div>
           </div>
+                    <div style={{ textAlign: 'right', marginBottom: 12 }}>
+            <Link to="/forgot-password" style={{ color: 'var(--accent)', fontWeight: 600, fontSize: 14 }}>Quên mật khẩu?</Link>
+          </div>
           <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '14px', fontSize: 16, marginTop: 8 }} disabled={loading}>
             {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
           </button>

@@ -25,4 +25,20 @@ const sendOtpEmail = async (toEmail, otp) => {
   });
 };
 
-module.exports = { sendOtpEmail };
+const sendResetOtpEmail = async (toEmail, otp) => {
+  await transporter.sendMail({
+    from: `"DS Sport" <${process.env.GMAIL_USER}>`,
+    to: toEmail,
+    subject: 'Mã xác thực đặt lại mật khẩu KICKZONE',
+    html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px;">
+        <h2>Đặt lại mật khẩu</h2>
+        <p>Mã xác thực của bạn là:</p>
+        <div style="font-size: 32px; font-weight: bold; letter-spacing: 6px; color: #FF4500;">${otp}</div>
+        <p>Mã có hiệu lực trong 5 phút. Vui lòng không chia sẻ mã này cho bất kỳ ai. Nếu bạn không yêu cầu đặt lại mật khẩu, hãy bỏ qua email này.</p>
+      </div>
+    `,
+  });
+};
+
+module.exports = { sendOtpEmail, sendResetOtpEmail };

@@ -34,6 +34,9 @@ api.interceptors.response.use(
 export const register = (data) => api.post('/auth/register', data);
 export const requestRegisterOtp = (data) => api.post('/auth/register/request-otp', data);
 export const verifyRegisterOtp = (data) => api.post('/auth/register/verify-otp', data);
+export const requestResetOtp = (data) => api.post('/auth/forgot-password/request-otp', data);
+export const verifyResetOtp = (data) => api.post('/auth/forgot-password/verify-otp', data);
+export const resetPassword = (data) => api.post('/auth/forgot-password/reset', data);
 export const login = (data) => api.post('/auth/login', data);
 export const getAuthProfile = () => api.get('/auth/profile');
 export const changePhone = (data) => api.put('/auth/change-phone', data);
