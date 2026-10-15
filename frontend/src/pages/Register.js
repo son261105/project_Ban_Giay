@@ -282,7 +282,7 @@ const Register = () => {
                       {pwStrong ? '✓ Mật khẩu đủ mạnh' : 'Mật khẩu chưa đủ mạnh '}
                     </div>
                     <div style={{ marginTop: 4, lineHeight: 1.7 }}>
-                                            {PASSWORD_RULES.slice(0, 5).map((r, idx) => {
+                                            {PASSWORD_RULES.map((r, idx) => {
                         const ok = r.test(form.password);
                         return (
                           <span key={r.label} style={{ color: ok ? '#2e7d32' : '#c62828' }}>
