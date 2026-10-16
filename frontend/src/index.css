@@ -578,3 +578,7 @@ div:hover > button {
 .product-rich-text li { margin-bottom: 6px; }
 .product-rich-text b, .product-rich-text strong { font-weight: 600; color: #111; }
 .product-rich-text img { max-width: 100%; border-radius: 10px; }
+nav a[href="/login"],
+nav a[href="/register"] {
+  font-weight: 400 !important;
+}

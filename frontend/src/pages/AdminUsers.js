@@ -61,7 +61,7 @@ const UserDetailModal = ({ user, onClose }) => {
       display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20
     }} onClick={onClose}>
       <div
-        style={{ background: 'white', borderRadius: 16, width: '100%', maxWidth: 560, maxHeight: '85vh', overflowY: 'auto', padding: 28 }}
+        style={{ background: 'white', borderRadius: 16, width: '100%', maxWidth: 700, maxHeight: '85vh', overflowY: 'auto', padding: 28 }}
         onClick={e => e.stopPropagation()}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -88,7 +88,7 @@ const UserDetailModal = ({ user, onClose }) => {
         <hr style={{ margin: '20px 0', border: 'none', borderTop: '1px solid var(--border)' }} />
 
         <h3 style={{ fontSize: 15, marginBottom: 14 }}>Thông tin tài khoản</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 60px' }}>
           <div>
             <div style={{ color: '#888', fontSize: 14 }}>Mã người dùng</div>
             <div style={{ fontWeight: 600 }}>KH{String(user.id).padStart(3, '0')}</div>
@@ -120,9 +120,9 @@ const UserDetailModal = ({ user, onClose }) => {
         {loadingSummary ? (
           <div style={{ color: '#888', fontSize: 15 }}>Đang tải...</div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 60px' }}>
             <div>
-              <div style={{ color: '#888', fontSize: 14 }}>Tổng số đơn hàng</div>
+              <div style={{ color: '#888', fontSize: 14 }}>Tổng số đơn hàng( Tính cả đơn hủy )</div>
               <div style={{ fontWeight: 600, fontSize: 19 }}>{summary.totalOrders} đơn</div>
             </div>
             <div>
@@ -140,27 +140,27 @@ const UserDetailModal = ({ user, onClose }) => {
         )}
         {!loadingSummary && summary.recentOrders.length > 0 && (
           <table style={{ width: '100%', fontSize: 15 }}>
-            <thead>
-              <tr style={{ color: '#888', textAlign: 'left' }}>
-                <th style={{ paddingBottom: 8 }}>Mã đơn</th>
-                <th style={{ paddingBottom: 8 }}>Ngày đặt</th>
-                <th style={{ paddingBottom: 8 }}>Tổng tiền</th>
-                <th style={{ paddingBottom: 8 }}>Trạng thái</th>
-              </tr>
-            </thead>
-            <tbody>
-              {summary.recentOrders.map(o => (
-                <tr key={o.id} style={{ borderTop: '1px solid var(--border)' }}>
-                  <td style={{ padding: '8px 0', color: '#1565C0', fontWeight: 600 }}>#DH{String(o.id).padStart(3, '0')}</td>
-                  <td style={{ padding: '8px 0' }}>{formatDate(o.created_at)}</td>
-                  <td style={{ padding: '8px 0' }}>{formatPrice(o.total_amount)}</td>
-                  <td style={{ padding: '8px 0' }}>
-                    <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{orderStatusLabels[o.status] || o.status}</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+  <thead>
+    <tr style={{ color: '#888', textAlign: 'left' }}>
+      <th>Mã đơn</th>
+      <th>Ngày đặt</th>
+      <th>Tổng tiền</th>
+      <th>Trạng thái</th>
+    </tr>
+  </thead>
+  <tbody>
+    {summary.recentOrders.map(o => (
+      <tr key={o.id}>
+        <td style={{ color: '#1565C0', fontWeight: 600 }}>#DH{String(o.id).padStart(3, '0')}</td>
+        <td>{formatDate(o.created_at)}</td>
+        <td>{formatPrice(o.total_amount)}</td>
+        <td>
+          <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{orderStatusLabels[o.status] || o.status}</span>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
         )}
 
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 24 }}>
