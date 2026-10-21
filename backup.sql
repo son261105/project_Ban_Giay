@@ -1,150 +1,35 @@
-CREATE DATABASE  IF NOT EXISTS `db_order` ;
-USE `db_order`;
+-- MySQL dump 10.13  Distrib 9.3.0, for Win64 (x86_64)
+--
+-- Host: localhost    Database: db_auth
+-- ------------------------------------------------------
+-- Server version	9.3.0
 
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-DROP TABLE IF EXISTS `order_items`;
+--
+-- Current Database: `db_auth`
+--
 
-CREATE TABLE `order_items` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `order_id` int NOT NULL,
-  `product_id` int NOT NULL,
-  `product_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `product_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `quantity` int NOT NULL,
-  `size` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `price` decimal(10,2) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `order_id` (`order_id`),
-  CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `db_auth` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
-
-LOCK TABLES `order_items` WRITE;
-
-INSERT INTO `order_items` VALUES (1,1,3,'Adidas Ultraboost 22','https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/fbaf991a78bc4896a3e9ad7800abcec6_9366/Ultraboost_22_Shoes_Black_GZ0127_01_standard.jpg',1,'44',3200000.00),(2,2,1,'Nike Air Max 270','https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/skwgyqrbfzhu6uyeh0gg/air-max-270-shoes-2V5C4p.png',2,'44',2500000.00),(3,3,1,'Nike Air Max 270','https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/skwgyqrbfzhu6uyeh0gg/air-max-270-shoes-2V5C4p.png',1,'41',2500000.00),(4,4,1,'Nike Air Max 270','https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/skwgyqrbfzhu6uyeh0gg/air-max-270-shoes-2V5C4p.png',1,'40',2500000.00),(5,4,1,'Nike Air Max 270','https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/skwgyqrbfzhu6uyeh0gg/air-max-270-shoes-2V5C4p.png',1,'42',2500000.00),(6,4,3,'Adidas Ultraboost 22','https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/fbaf991a78bc4896a3e9ad7800abcec6_9366/Ultraboost_22_Shoes_Black_GZ0127_01_standard.jpg',1,'41',3200000.00),(7,5,10,'Puma Suede Classic XXI','https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_600,h_600/global/374915/01/sv01/fnd/PNA/fmt/png/Suede-Classic-XXI-Sneakers',1,'40',1600000.00),(8,6,6,'Converse Chuck Taylor All Star','https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dwa2af1a7a/images/a_107/M9160_A_107X1.jpg',1,'39',1200000.00),(9,7,5,'Puma RS-X3','https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_600,h_600/global/380176/03/sv01/fnd/PNA/fmt/png/RS-X3-Twill-AirMesh-Sneakers',1,'42',1900000.00),(10,8,1,'Nike Air Max 270','https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/skwgyqrbfzhu6uyeh0gg/air-max-270-shoes-2V5C4p.png',2,'39',2500000.00),(11,8,3,'Adidas Ultraboost 22','https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/fbaf991a78bc4896a3e9ad7800abcec6_9366/Ultraboost_22_Shoes_Black_GZ0127_01_standard.jpg',1,'40',3200000.00),(12,9,10,'Puma Suede Classic XXI','https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_600,h_600/global/374915/01/sv01/fnd/PNA/fmt/png/Suede-Classic-XXI-Sneakers',1,'41',1600000.00),(13,10,12,'conver1970s','https://cf.shopee.vn/file/b2e447c0d28af870aae68d0ce6f173db',3,'42',3000000.00),(14,11,11,'Puma Serve Pro','https://cdn.vuahanghieu.com/unsafe/0x900/left/top/smart/filters:quality(90)/https://admin.vuahanghieu.com/upload/product/2022/11/giay-the-thao-puma-serve-pro-wide-mau-trang-size-40-638706127ba7a-30112022142818.jpg',2,'37',2000000.00),(15,11,12,'conver1970s','https://cf.shopee.vn/file/b2e447c0d28af870aae68d0ce6f173db',2,'42',3000000.00),(16,12,11,'Puma Serve Pro','https://cdn.vuahanghieu.com/unsafe/0x900/left/top/smart/filters:quality(90)/https://admin.vuahanghieu.com/upload/product/2022/11/giay-the-thao-puma-serve-pro-wide-mau-trang-size-40-638706127ba7a-30112022142818.jpg',2,'37',2000000.00),(17,12,12,'conver1970s','https://thfvnext.bing.com/th/id/OIP.YbfzwP_J58Yb5kGjXOH68wHaHa?w=199&h=199&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3',2,'41',3000000.00),(18,13,3,'Adidas Ultraboost 22','https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/fbaf991a78bc4896a3e9ad7800abcec6_9366/Ultraboost_22_Shoes_Black_GZ0127_01_standard.jpg',1,'41',3200000.00),(19,14,13,'Nike AF1','https://thfvnext.bing.com/th/id/OIP.rxwVxtaWWZ2bgy1kaotAYgHaHa?w=183&h=184&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3',1,'35',2000000.00),(20,15,13,'Nike AF1','https://thfvnext.bing.com/th/id/OIP.rxwVxtaWWZ2bgy1kaotAYgHaHa?w=183&h=184&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3',2,'36',2000000.00),(21,16,13,'Nike AF1','https://thfvnext.bing.com/th/id/OIP.rxwVxtaWWZ2bgy1kaotAYgHaHa?w=183&h=184&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3',3,'36',2000000.00),(22,17,13,'Nike AF1','https://thfvnext.bing.com/th/id/OIP.rxwVxtaWWZ2bgy1kaotAYgHaHa?w=183&h=184&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3',2,'36',2000000.00),(23,18,12,'conver1970s','https://thfvnext.bing.com/th/id/OIP.YbfzwP_J58Yb5kGjXOH68wHaHa?w=199&h=199&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3',1,'35',3000000.00),(24,19,12,'conver1970s','https://thfvnext.bing.com/th/id/OIP.YbfzwP_J58Yb5kGjXOH68wHaHa?w=199&h=199&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3',1,'35',3000000.00);
-
-UNLOCK TABLES;
-
-
-
-DROP TABLE IF EXISTS `order_status_history`;
-
-CREATE TABLE `order_status_history` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `order_id` int NOT NULL,
-  `status` enum('pending','confirmed','shipping','delivered','cancelled') COLLATE utf8mb4_unicode_ci NOT NULL,
-  `changed_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `order_id` (`order_id`),
-  CONSTRAINT `order_status_history_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-
-LOCK TABLES `order_status_history` WRITE;
-
-INSERT INTO `order_status_history` VALUES (1,18,'pending','2026-09-16 03:53:14'),(2,19,'pending','2026-09-16 03:54:32'),(3,18,'confirmed','2026-09-16 03:54:48'),(4,19,'cancelled','2026-09-16 03:55:24');
-
-UNLOCK TABLES;
-
-
-
-DROP TABLE IF EXISTS `orders`;
-
-CREATE TABLE `orders` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `user_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `user_email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `subtotal_amount` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `discount_amount` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `voucher_code` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `total_amount` decimal(10,2) NOT NULL,
-  `status` enum('pending','confirmed','shipping','delivered','cancelled') COLLATE utf8mb4_unicode_ci DEFAULT 'pending',
-  `shipping_address` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `phone` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `note` text COLLATE utf8mb4_unicode_ci,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-
-LOCK TABLES `orders` WRITE;
-
-INSERT INTO `orders` VALUES (1,4,'','abc@gmail.com',0.00,0.00,NULL,3200000.00,'delivered','hanoi','035395036','abcd','2026-06-05 02:31:32','2026-06-10 04:38:21'),(2,4,'','abc@gmail.com',0.00,0.00,NULL,5000000.00,'delivered','SN12,ĐƯỜNG LÊ TRỌNG TẤN,HÀ ĐÔNG,HÀ NỘI','0353950356','GIAO TẬN CỬA','2026-06-05 03:58:55','2026-06-10 04:38:18'),(3,4,'','abc@gmail.com',0.00,0.00,NULL,2500000.00,'delivered','SN12,Ha Dong ,HaNoi','0353950356','giao tan cua ','2026-06-10 04:38:02','2026-06-10 04:55:59'),(4,4,'','abc@gmail.com',0.00,0.00,NULL,8200000.00,'confirmed','HaNoi','0353950356','','2026-06-18 07:07:43','2026-06-18 07:08:01'),(5,4,'','abc@gmail.com',0.00,0.00,NULL,1600000.00,'confirmed','HaNoi','0353950356','','2026-06-18 07:08:40','2026-06-19 04:40:47'),(6,4,'','abc@gmail.com',0.00,0.00,NULL,1200000.00,'confirmed','HaNoi','0353950356','','2026-06-18 07:09:04','2026-06-19 04:40:42'),(7,4,'','abc@gmail.com',0.00,0.00,NULL,1900000.00,'confirmed','HaNoi','0353950356','','2026-06-18 07:09:26','2026-06-19 04:40:41'),(8,4,'','abc@gmail.com',0.00,0.00,NULL,8200000.00,'confirmed','Ha Noi ,Yen Nghia','0353950356','giao tận cửa','2026-06-19 04:40:01','2026-06-19 04:40:36'),(9,4,'','abc@gmail.com',0.00,0.00,NULL,1600000.00,'confirmed','HaNoi, văn quán , số nhà 19','0353950356','giao tận của ','2026-06-19 04:41:29','2026-06-19 05:43:40'),(10,4,'','abc@gmail.com',0.00,0.00,NULL,9000000.00,'confirmed','Sn19 , Phường Văn Quán , Quận Hà Nội','0353950356','giao tận cửa','2026-06-28 05:47:54','2026-06-30 15:09:34'),(11,4,'','abc@gmail.com',0.00,0.00,NULL,10000000.00,'confirmed','SN19, yên nghĩa , hà Đông','0353950356','abc','2026-06-30 15:08:56','2026-06-30 15:09:29'),(12,4,'','abc@gmail.com',0.00,0.00,NULL,10000000.00,'confirmed','SN19,dương nội , ha dong ha noi','0353950356','giao tận cửa','2026-06-30 16:45:04','2026-06-30 16:45:49'),(13,3,'','son261105@gmail.com',3200000.00,35000.00,'FREESHIP',3200000.00,'delivered','khu đô thị yên nghĩa số nhà 5A, Phường Yên Nghĩa, Thành phố Hà Nội','0353950356','abc','2026-09-12 10:32:54','2026-09-12 10:37:52'),(14,4,'','abc@gmail.com',2000000.00,0.00,NULL,2035000.00,'cancelled','số nhà 5B khu đô thị đô nghĩa, Phường Yên Nghĩa, Thành phố Hà Nội','0353950356','abc','2026-09-12 10:54:50','2026-09-12 11:05:48'),(15,4,'','abc@gmail.com',4000000.00,35000.00,'FREESHIP',4000000.00,'cancelled','số nhà 5A, Phường Dương Nội, Thành phố Hà Nội','0353950356','giao tận cửa','2026-09-12 11:14:41','2026-09-12 11:14:55'),(16,4,'','abc@gmail.com',6000000.00,0.00,NULL,6035000.00,'cancelled','nhà 5a, Phường Dương Nội, Thành phố Hà Nội','0353950356','1','2026-09-12 11:19:12','2026-09-12 11:19:17'),(17,7,'','truongdinhthuy00@gmail.com',4000000.00,0.00,NULL,4035000.00,'cancelled','số nhà 5A khu đô thị đô nghĩa, Phường Yên Nghĩa, Thành phố Hà Nội','0969628746','abc','2026-09-16 03:27:36','2026-09-16 03:30:05'),(18,7,'','truongdinhthuy00@gmail.com',3000000.00,0.00,NULL,3035000.00,'confirmed','số nhà 5A , khu đô thị đô nghĩa, Phường Yên Nghĩa, Thành phố Hà Nội','0969628746','để hàng vào trong nhà ','2026-09-16 03:53:14','2026-09-16 03:54:48'),(19,7,'','truongdinhthuy00@gmail.com',3000000.00,35000.00,'FREESHIP',3000000.00,'cancelled','Số nhà 5B khu đô thị đô nghĩa, Phường Yên Nghĩa, Thành phố Hà Nội','0969628746','để hàng vào trong nhà ','2026-09-16 03:54:32','2026-09-16 03:55:24');
-
-UNLOCK TABLES;
-
-CREATE DATABASE  IF NOT EXISTS `db_cart` ;
-USE `db_cart`;
-
-
-DROP TABLE IF EXISTS `cart_items`;
-
-CREATE TABLE `cart_items` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `product_id` int NOT NULL,
-  `product_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `product_price` decimal(10,2) DEFAULT NULL,
-  `product_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `brand_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `quantity` int NOT NULL DEFAULT '1',
-  `size` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uq_user_product_size` (`user_id`,`product_id`,`size`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-
-LOCK TABLES `cart_items` WRITE;
-
-INSERT INTO `cart_items` VALUES (38,8,12,'conver1970s',3000000.00,'https://thfvnext.bing.com/th/id/OIP.YbfzwP_J58Yb5kGjXOH68wHaHa?w=199&h=199&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3','Converse',1,'41','2026-09-14 09:41:38','2026-09-14 09:41:38'),(42,3,12,'conver1970s',3000000.00,'https://thfvnext.bing.com/th/id/OIP.YbfzwP_J58Yb5kGjXOH68wHaHa?w=199&h=199&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3','Converse',1,'35','2026-09-16 06:46:33','2026-09-16 06:46:33');
-
-UNLOCK TABLES;
-
-
-
-
-
-CREATE DATABASE  IF NOT EXISTS `voucher_db` ;
-USE `voucher_db`;
-
-DROP TABLE IF EXISTS `vouchers`;
-
-CREATE TABLE `vouchers` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `code` varchar(50) NOT NULL,
-  `type` enum('percent','freeship') NOT NULL,
-  `value` decimal(10,2) DEFAULT '0.00',
-  `min_order_amount` decimal(10,2) DEFAULT '0.00',
-  `max_uses` int DEFAULT NULL,
-  `used_count` int DEFAULT '0',
-  `start_date` date NOT NULL,
-  `end_date` date NOT NULL,
-  `is_active` tinyint(1) DEFAULT '1',
-  `description` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-LOCK TABLES `vouchers` WRITE;
-
-INSERT INTO `vouchers` VALUES (8,'FREESHIP','freeship',0.00,2000000.00,NULL,1,'2026-09-16','2026-09-30',1,'Free ship cho đơn hàng từ 3 triệu ','2026-09-16 03:47:51');
-
-UNLOCK TABLES;
-
-
-
-CREATE DATABASE  IF NOT EXISTS `db_auth` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `db_auth`;
 
+--
+-- Table structure for table `otp_verifications`
+--
 
 DROP TABLE IF EXISTS `otp_verifications`;
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `otp_verifications` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -155,7 +40,7 @@ CREATE TABLE `otp_verifications` (
   `expires_at` datetime NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -164,8 +49,37 @@ CREATE TABLE `otp_verifications` (
 
 LOCK TABLES `otp_verifications` WRITE;
 /*!40000 ALTER TABLE `otp_verifications` DISABLE KEYS */;
-INSERT INTO `otp_verifications` VALUES (5,'Trương Đình Sơn','son012308123@gmail.com','0986181225','$2a$10$vNBXukyMGqWDK.d82IJ98ubuGr0qnZohnC/Yg/5MORvLsCkDvgzbm','441306','2026-09-14 23:31:32','2026-09-14 16:26:32');
+INSERT INTO `otp_verifications` VALUES (5,'Trương Đình Sơn','son012308123@gmail.com','0986181225','$2a$10$vNBXukyMGqWDK.d82IJ98ubuGr0qnZohnC/Yg/5MORvLsCkDvgzbm','441306','2026-09-14 23:31:32','2026-09-14 16:26:32'),(8,'aaaaaaaaaapppppppppp','dson261105@gmail.com','0987678090','$2a$10$LLqxw1KyuywY0m8CaRujkeCiYMExwMg2WsYepEe7F0bIWBKDOlDZS','339174','2026-10-10 17:58:41','2026-10-10 10:53:41'),(11,'ádjkalshdjkashdjkahs','son261199@gmail.com','0987678090','$2a$10$FYz9Y0nLb4Yof7.gUy2E9eu.7a/LYEfXkrx6gMZ6ovUkLUHOzS2JW','209727','2026-10-10 18:01:57','2026-10-10 10:56:57'),(12,'Son','nguyenvanan@gmail.com','0976953280','$2a$10$J0fKGe0DQDmS504YK/UbCexGSAUFsPmI8w5mHk0lROFZt.mracevS','739661','2026-10-10 18:23:31','2026-10-10 11:18:30'),(13,'Son','sonpopo@gmail.com','0989909000','$2a$10$1Obo7aAMo8oEf.TxejwKheadOWD0/hCQFGuIk2I9IooK.rq8kjCTq','965802','2026-10-10 18:44:36','2026-10-10 11:39:35'),(15,'phạm','sonaaaaa@gmail.com','0909909999','$2a$10$kZj/JL0zMUx8tnMJI.h./ep.IbU1CRi09Q3h8Gb4Sk4yT9u4ZRFKK','347190','2026-10-10 19:06:08','2026-10-10 12:01:08'),(17,'aaaaaaa','sonaaaa@gmail.com','0976953281','$2a$10$gsqL2ygjhUxFjWZnUTxqHuonzyRnWGDa1xqM9IPecZ9IJlhokldFy','566442','2026-10-10 19:11:11','2026-10-10 12:06:11'),(18,'phạm','son2612010@gmail.com','0976953285','$2a$10$4Zj5cgP8ol9VwpHC2YKad.7uLdlzXHQ92YgJeXNYshwBVizKf0MT6','852211','2026-10-10 19:13:19','2026-10-10 12:08:18'),(19,'phạm','aaaaaaaaaa@gmail.com','0909909999','$2a$10$6UunY8UweeBw5RXFwD9oDuo24S6Ic/MxDmrXFXn8cID7hzd5mJOU2','403921','2026-10-10 19:18:57','2026-10-10 12:13:56'),(20,'phạm','alalalalal@gmail.com','0909090000','$2a$10$HJcfNbZaw7eNAsQyFud4GOtmqm8xyH5uk51L8gtHA.CalqK0wZab.','445812','2026-10-10 19:22:35','2026-10-10 12:17:35'),(27,'thu','hoai31646@gmail.com','0909909999','$2a$10$MvDqNrTjlzZbttWrt31ewOi5z0o4l/VCtZKJpCKHVS7WyjCOcB8Ie','937878','2026-10-14 08:42:46','2026-10-14 01:37:45');
 /*!40000 ALTER TABLE `otp_verifications` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `password_resets`
+--
+
+DROP TABLE IF EXISTS `password_resets`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `password_resets` (
+  `email` varchar(100) NOT NULL,
+  `otp_code` varchar(6) DEFAULT NULL,
+  `attempts` int NOT NULL DEFAULT '0',
+  `sent_at` bigint NOT NULL,
+  `expires_at` bigint NOT NULL,
+  `reset_token` varchar(64) DEFAULT NULL,
+  `token_expires_at` bigint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `password_resets`
+--
+
+LOCK TABLES `password_resets` WRITE;
+/*!40000 ALTER TABLE `password_resets` DISABLE KEYS */;
+INSERT INTO `password_resets` VALUES ('son261105@gmail.com','552563',0,1791941764021,1791942064021,NULL,0);
+/*!40000 ALTER TABLE `password_resets` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -187,7 +101,7 @@ CREATE TABLE `users` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -196,38 +110,56 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (3,'Truong Dinh Son','0353950356','son261105@gmail.com','$2a$10$.lqiu2KSGULvlUU0s1PU8uqV3.91YNJ5VA5huHDZB2SuX4vWwHXdW','admin','active','2026-06-05 02:17:18','2026-09-16 03:07:36'),(7,'Hoàng anh','0969628746','truongdinhthuy00@gmail.com','$2a$10$d00aWANNtMWaNbyb6hsuv.zkX7bN4pDlpfHYMW.p4gXBY38LmoBCi','user','active','2026-09-14 09:38:32','2026-09-16 04:19:00'),(9,'son dinh','0961812254','son13042006@gmail.com','$2a$10$r7owqiM.1bYhn6kueFwbieIXxCTIMiz6BkjpFh8Yl2AJBWmsrjgby','user','active','2026-09-14 09:56:55','2026-09-16 04:18:47');
+INSERT INTO `users` VALUES (3,'Truong Dinh Son','0353950356','son261105@gmail.com','$2a$10$UTKcHZesQD6aBGjsprWJfOZwJ1sdHFagOgOvt7RRkny9IaLP4DZOW','admin','active','2026-06-05 02:17:18','2026-10-14 01:33:13'),(7,'Hoàng anh','0969628746','truongdinhthuy00@gmail.com','$2a$10$d00aWANNtMWaNbyb6hsuv.zkX7bN4pDlpfHYMW.p4gXBY38LmoBCi','user','active','2026-09-14 09:38:32','2026-09-16 04:19:00'),(9,'son dinh','0961812254','son13042006@gmail.com','$2a$10$r7owqiM.1bYhn6kueFwbieIXxCTIMiz6BkjpFh8Yl2AJBWmsrjgby','user','active','2026-09-14 09:56:55','2026-09-16 04:18:47'),(10,'huy anh','0978890099','pthu33795@gmail.com','$2a$10$bDViCpjsKXCzmpi4YTNeDOTzD/ifcjiVMmKzf4sW2aCMbh/W6Kuzm','user','active','2026-10-11 08:20:13','2026-10-11 08:20:13'),(11,'lanhh','0909090090','thuphamk000@gmail.com','$2a$10$81FwBdWLjXrcPhy7IIClEOLEFwc8hZGsfCcco1ybmSqG/dE7.y75O','user','active','2026-10-11 09:10:46','2026-10-16 06:24:38');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2026-09-21 11:51:37
-CREATE DATABASE  IF NOT EXISTS `db_product` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `db_product`;
--- MySQL dump 10.13  Distrib 8.0.42, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: db_product
--- ------------------------------------------------------
--- Server version	9.3.0
+-- Current Database: `db_profile`
+--
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `db_profile` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+
+USE `db_profile`;
+
+--
+-- Table structure for table `profiles`
+--
+
+DROP TABLE IF EXISTS `profiles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `profiles` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` text COLLATE utf8mb4_unicode_ci,
+  `avatar_url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `profiles`
+--
+
+LOCK TABLES `profiles` WRITE;
+/*!40000 ALTER TABLE `profiles` DISABLE KEYS */;
+INSERT INTO `profiles` VALUES (1,1,'Admin','0900000000','Hà Nội',NULL,'2026-06-05 01:49:32','2026-06-05 01:49:32'),(2,2,'Nguyen Van A','0911111111','TP.HCM',NULL,'2026-06-05 01:49:32','2026-06-05 01:49:32'),(3,4,'pham van nam',NULL,NULL,NULL,'2026-09-11 09:56:44','2026-09-11 09:57:29'),(4,7,'Hoàng anh',NULL,NULL,NULL,'2026-09-16 02:09:19','2026-09-16 03:02:36'),(5,9,'son dinh',NULL,NULL,NULL,'2026-09-16 03:03:15','2026-09-16 03:03:15');
+/*!40000 ALTER TABLE `profiles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Current Database: `db_product`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `db_product` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+
+USE `db_product`;
 
 --
 -- Table structure for table `brands`
@@ -465,65 +397,194 @@ LOCK TABLES `suppliers` WRITE;
 INSERT INTO `suppliers` VALUES (1,'Nike Vietnam Distribution','supply@nikevn.com','02812345678','KCN Sóng Thần, Bình Dương','2026-06-05 01:50:17'),(2,'Adidas SEA Import','import@adidassea.com','02898765432','Quận 7, TP.HCM','2026-06-05 01:50:17'),(3,'Puma','Puma@gmail.com','012345678','Ha Noi','2026-06-05 02:20:38'),(4,'Vans','Vans@gmail.com','0123456789','Ba Đình ,Ha Nội','2026-06-19 04:07:46'),(5,'Converse','Converse@gmail.com','0978982880','Dương Nội,HaNoi','2026-06-19 04:08:26');
 /*!40000 ALTER TABLE `suppliers` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2026-09-21 11:51:37
-CREATE DATABASE  IF NOT EXISTS `db_profile` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `db_profile`;
--- MySQL dump 10.13  Distrib 8.0.42, for Win64 (x86_64)
---
--- Host: 127.0.0.1    Database: db_profile
--- ------------------------------------------------------
--- Server version	9.3.0
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `profiles`
+-- Current Database: `db_cart`
 --
 
-DROP TABLE IF EXISTS `profiles`;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `db_cart` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+
+USE `db_cart`;
+
+--
+-- Table structure for table `cart_items`
+--
+
+DROP TABLE IF EXISTS `cart_items`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `profiles` (
+CREATE TABLE `cart_items` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `phone` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `address` text COLLATE utf8mb4_unicode_ci,
-  `avatar_url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `product_id` int NOT NULL,
+  `product_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `product_price` decimal(10,2) DEFAULT NULL,
+  `product_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `brand_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `quantity` int NOT NULL DEFAULT '1',
+  `size` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  UNIQUE KEY `uq_user_product_size` (`user_id`,`product_id`,`size`)
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `profiles`
+-- Dumping data for table `cart_items`
 --
 
-LOCK TABLES `profiles` WRITE;
-/*!40000 ALTER TABLE `profiles` DISABLE KEYS */;
-INSERT INTO `profiles` VALUES (1,1,'Admin','0900000000','Hà Nội',NULL,'2026-06-05 01:49:32','2026-06-05 01:49:32'),(2,2,'Nguyen Van A','0911111111','TP.HCM',NULL,'2026-06-05 01:49:32','2026-06-05 01:49:32'),(3,4,'pham van nam',NULL,NULL,NULL,'2026-09-11 09:56:44','2026-09-11 09:57:29'),(4,7,'Hoàng anh',NULL,NULL,NULL,'2026-09-16 02:09:19','2026-09-16 03:02:36'),(5,9,'son dinh',NULL,NULL,NULL,'2026-09-16 03:03:15','2026-09-16 03:03:15');
-/*!40000 ALTER TABLE `profiles` ENABLE KEYS */;
+LOCK TABLES `cart_items` WRITE;
+/*!40000 ALTER TABLE `cart_items` DISABLE KEYS */;
+INSERT INTO `cart_items` VALUES (38,8,12,'conver1970s',3000000.00,'https://thfvnext.bing.com/th/id/OIP.YbfzwP_J58Yb5kGjXOH68wHaHa?w=199&h=199&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3','Converse',1,'41','2026-09-14 09:41:38','2026-09-14 09:41:38'),(42,3,12,'conver1970s',3000000.00,'https://thfvnext.bing.com/th/id/OIP.YbfzwP_J58Yb5kGjXOH68wHaHa?w=199&h=199&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3','Converse',1,'35','2026-09-16 06:46:33','2026-09-16 06:46:33');
+/*!40000 ALTER TABLE `cart_items` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Current Database: `db_order`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `db_order` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+
+USE `db_order`;
+
+--
+-- Table structure for table `order_items`
+--
+
+DROP TABLE IF EXISTS `order_items`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `order_items` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `order_id` int NOT NULL,
+  `product_id` int NOT NULL,
+  `product_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `product_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `quantity` int NOT NULL,
+  `size` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `order_id` (`order_id`),
+  CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `order_items`
+--
+
+LOCK TABLES `order_items` WRITE;
+/*!40000 ALTER TABLE `order_items` DISABLE KEYS */;
+INSERT INTO `order_items` VALUES (1,1,3,'Adidas Ultraboost 22','https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/fbaf991a78bc4896a3e9ad7800abcec6_9366/Ultraboost_22_Shoes_Black_GZ0127_01_standard.jpg',1,'44',3200000.00),(2,2,1,'Nike Air Max 270','https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/skwgyqrbfzhu6uyeh0gg/air-max-270-shoes-2V5C4p.png',2,'44',2500000.00),(3,3,1,'Nike Air Max 270','https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/skwgyqrbfzhu6uyeh0gg/air-max-270-shoes-2V5C4p.png',1,'41',2500000.00),(4,4,1,'Nike Air Max 270','https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/skwgyqrbfzhu6uyeh0gg/air-max-270-shoes-2V5C4p.png',1,'40',2500000.00),(5,4,1,'Nike Air Max 270','https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/skwgyqrbfzhu6uyeh0gg/air-max-270-shoes-2V5C4p.png',1,'42',2500000.00),(6,4,3,'Adidas Ultraboost 22','https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/fbaf991a78bc4896a3e9ad7800abcec6_9366/Ultraboost_22_Shoes_Black_GZ0127_01_standard.jpg',1,'41',3200000.00),(7,5,10,'Puma Suede Classic XXI','https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_600,h_600/global/374915/01/sv01/fnd/PNA/fmt/png/Suede-Classic-XXI-Sneakers',1,'40',1600000.00),(8,6,6,'Converse Chuck Taylor All Star','https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dwa2af1a7a/images/a_107/M9160_A_107X1.jpg',1,'39',1200000.00),(9,7,5,'Puma RS-X3','https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_600,h_600/global/380176/03/sv01/fnd/PNA/fmt/png/RS-X3-Twill-AirMesh-Sneakers',1,'42',1900000.00),(10,8,1,'Nike Air Max 270','https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/skwgyqrbfzhu6uyeh0gg/air-max-270-shoes-2V5C4p.png',2,'39',2500000.00),(11,8,3,'Adidas Ultraboost 22','https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/fbaf991a78bc4896a3e9ad7800abcec6_9366/Ultraboost_22_Shoes_Black_GZ0127_01_standard.jpg',1,'40',3200000.00),(12,9,10,'Puma Suede Classic XXI','https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_600,h_600/global/374915/01/sv01/fnd/PNA/fmt/png/Suede-Classic-XXI-Sneakers',1,'41',1600000.00),(13,10,12,'conver1970s','https://cf.shopee.vn/file/b2e447c0d28af870aae68d0ce6f173db',3,'42',3000000.00),(14,11,11,'Puma Serve Pro','https://cdn.vuahanghieu.com/unsafe/0x900/left/top/smart/filters:quality(90)/https://admin.vuahanghieu.com/upload/product/2022/11/giay-the-thao-puma-serve-pro-wide-mau-trang-size-40-638706127ba7a-30112022142818.jpg',2,'37',2000000.00),(15,11,12,'conver1970s','https://cf.shopee.vn/file/b2e447c0d28af870aae68d0ce6f173db',2,'42',3000000.00),(16,12,11,'Puma Serve Pro','https://cdn.vuahanghieu.com/unsafe/0x900/left/top/smart/filters:quality(90)/https://admin.vuahanghieu.com/upload/product/2022/11/giay-the-thao-puma-serve-pro-wide-mau-trang-size-40-638706127ba7a-30112022142818.jpg',2,'37',2000000.00),(17,12,12,'conver1970s','https://thfvnext.bing.com/th/id/OIP.YbfzwP_J58Yb5kGjXOH68wHaHa?w=199&h=199&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3',2,'41',3000000.00),(18,13,3,'Adidas Ultraboost 22','https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/fbaf991a78bc4896a3e9ad7800abcec6_9366/Ultraboost_22_Shoes_Black_GZ0127_01_standard.jpg',1,'41',3200000.00),(19,14,13,'Nike AF1','https://thfvnext.bing.com/th/id/OIP.rxwVxtaWWZ2bgy1kaotAYgHaHa?w=183&h=184&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3',1,'35',2000000.00),(20,15,13,'Nike AF1','https://thfvnext.bing.com/th/id/OIP.rxwVxtaWWZ2bgy1kaotAYgHaHa?w=183&h=184&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3',2,'36',2000000.00),(21,16,13,'Nike AF1','https://thfvnext.bing.com/th/id/OIP.rxwVxtaWWZ2bgy1kaotAYgHaHa?w=183&h=184&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3',3,'36',2000000.00),(22,17,13,'Nike AF1','https://thfvnext.bing.com/th/id/OIP.rxwVxtaWWZ2bgy1kaotAYgHaHa?w=183&h=184&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3',2,'36',2000000.00),(23,18,12,'conver1970s','https://thfvnext.bing.com/th/id/OIP.YbfzwP_J58Yb5kGjXOH68wHaHa?w=199&h=199&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3',1,'35',3000000.00),(24,19,12,'conver1970s','https://thfvnext.bing.com/th/id/OIP.YbfzwP_J58Yb5kGjXOH68wHaHa?w=199&h=199&c=7&r=0&o=7&cb=thfvnextfalcon3&dpr=1.3&pid=1.7&rm=3',1,'35',3000000.00);
+/*!40000 ALTER TABLE `order_items` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `order_status_history`
+--
+
+DROP TABLE IF EXISTS `order_status_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `order_status_history` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `order_id` int NOT NULL,
+  `status` enum('pending','confirmed','shipping','delivered','cancelled') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `changed_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `order_id` (`order_id`),
+  CONSTRAINT `order_status_history_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `order_status_history`
+--
+
+LOCK TABLES `order_status_history` WRITE;
+/*!40000 ALTER TABLE `order_status_history` DISABLE KEYS */;
+INSERT INTO `order_status_history` VALUES (1,18,'pending','2026-09-16 03:53:14'),(2,19,'pending','2026-09-16 03:54:32'),(3,18,'confirmed','2026-09-16 03:54:48'),(4,19,'cancelled','2026-09-16 03:55:24'),(5,18,'cancelled','2026-10-16 06:31:12'),(6,12,'delivered','2026-10-16 06:31:17'),(7,11,'cancelled','2026-10-16 06:31:18'),(8,10,'delivered','2026-10-16 06:31:19'),(9,10,'cancelled','2026-10-16 06:31:20'),(10,9,'cancelled','2026-10-16 06:31:21'),(11,8,'cancelled','2026-10-16 06:31:24'),(12,7,'cancelled','2026-10-16 06:31:25'),(13,6,'cancelled','2026-10-16 06:31:26'),(14,5,'cancelled','2026-10-16 06:31:27'),(15,4,'cancelled','2026-10-16 06:31:28');
+/*!40000 ALTER TABLE `order_status_history` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `orders`
+--
+
+DROP TABLE IF EXISTS `orders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `orders` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `user_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `subtotal_amount` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `discount_amount` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `voucher_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `total_amount` decimal(10,2) NOT NULL,
+  `status` enum('pending','confirmed','shipping','delivered','cancelled') COLLATE utf8mb4_unicode_ci DEFAULT 'pending',
+  `shipping_address` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `note` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `orders`
+--
+
+LOCK TABLES `orders` WRITE;
+/*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+INSERT INTO `orders` VALUES (1,4,'','abc@gmail.com',0.00,0.00,NULL,3200000.00,'delivered','hanoi','035395036','abcd','2026-06-05 02:31:32','2026-06-10 04:38:21'),(2,4,'','abc@gmail.com',0.00,0.00,NULL,5000000.00,'delivered','SN12,ĐƯỜNG LÊ TRỌNG TẤN,HÀ ĐÔNG,HÀ NỘI','0353950356','GIAO TẬN CỬA','2026-06-05 03:58:55','2026-06-10 04:38:18'),(3,4,'','abc@gmail.com',0.00,0.00,NULL,2500000.00,'delivered','SN12,Ha Dong ,HaNoi','0353950356','giao tan cua ','2026-06-10 04:38:02','2026-06-10 04:55:59'),(4,4,'','abc@gmail.com',0.00,0.00,NULL,8200000.00,'cancelled','HaNoi','0353950356','','2026-06-18 07:07:43','2026-10-16 06:31:28'),(5,4,'','abc@gmail.com',0.00,0.00,NULL,1600000.00,'cancelled','HaNoi','0353950356','','2026-06-18 07:08:40','2026-10-16 06:31:27'),(6,4,'','abc@gmail.com',0.00,0.00,NULL,1200000.00,'cancelled','HaNoi','0353950356','','2026-06-18 07:09:04','2026-10-16 06:31:26'),(7,4,'','abc@gmail.com',0.00,0.00,NULL,1900000.00,'cancelled','HaNoi','0353950356','','2026-06-18 07:09:26','2026-10-16 06:31:25'),(8,4,'','abc@gmail.com',0.00,0.00,NULL,8200000.00,'cancelled','Ha Noi ,Yen Nghia','0353950356','giao tận cửa','2026-06-19 04:40:01','2026-10-16 06:31:24'),(9,4,'','abc@gmail.com',0.00,0.00,NULL,1600000.00,'cancelled','HaNoi, văn quán , số nhà 19','0353950356','giao tận của ','2026-06-19 04:41:29','2026-10-16 06:31:21'),(10,4,'','abc@gmail.com',0.00,0.00,NULL,9000000.00,'cancelled','Sn19 , Phường Văn Quán , Quận Hà Nội','0353950356','giao tận cửa','2026-06-28 05:47:54','2026-10-16 06:31:20'),(11,4,'','abc@gmail.com',0.00,0.00,NULL,10000000.00,'cancelled','SN19, yên nghĩa , hà Đông','0353950356','abc','2026-06-30 15:08:56','2026-10-16 06:31:18'),(12,4,'','abc@gmail.com',0.00,0.00,NULL,10000000.00,'delivered','SN19,dương nội , ha dong ha noi','0353950356','giao tận cửa','2026-06-30 16:45:04','2026-10-16 06:31:17'),(13,3,'','son261105@gmail.com',3200000.00,35000.00,'FREESHIP',3200000.00,'delivered','khu đô thị yên nghĩa số nhà 5A, Phường Yên Nghĩa, Thành phố Hà Nội','0353950356','abc','2026-09-12 10:32:54','2026-09-12 10:37:52'),(14,4,'','abc@gmail.com',2000000.00,0.00,NULL,2035000.00,'cancelled','số nhà 5B khu đô thị đô nghĩa, Phường Yên Nghĩa, Thành phố Hà Nội','0353950356','abc','2026-09-12 10:54:50','2026-09-12 11:05:48'),(15,4,'','abc@gmail.com',4000000.00,35000.00,'FREESHIP',4000000.00,'cancelled','số nhà 5A, Phường Dương Nội, Thành phố Hà Nội','0353950356','giao tận cửa','2026-09-12 11:14:41','2026-09-12 11:14:55'),(16,4,'','abc@gmail.com',6000000.00,0.00,NULL,6035000.00,'cancelled','nhà 5a, Phường Dương Nội, Thành phố Hà Nội','0353950356','1','2026-09-12 11:19:12','2026-09-12 11:19:17'),(17,7,'','truongdinhthuy00@gmail.com',4000000.00,0.00,NULL,4035000.00,'cancelled','số nhà 5A khu đô thị đô nghĩa, Phường Yên Nghĩa, Thành phố Hà Nội','0969628746','abc','2026-09-16 03:27:36','2026-09-16 03:30:05'),(18,7,'','truongdinhthuy00@gmail.com',3000000.00,0.00,NULL,3035000.00,'cancelled','số nhà 5A , khu đô thị đô nghĩa, Phường Yên Nghĩa, Thành phố Hà Nội','0969628746','để hàng vào trong nhà ','2026-09-16 03:53:14','2026-10-16 06:31:12'),(19,7,'','truongdinhthuy00@gmail.com',3000000.00,35000.00,'FREESHIP',3000000.00,'cancelled','Số nhà 5B khu đô thị đô nghĩa, Phường Yên Nghĩa, Thành phố Hà Nội','0969628746','để hàng vào trong nhà ','2026-09-16 03:54:32','2026-09-16 03:55:24');
+/*!40000 ALTER TABLE `orders` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Current Database: `voucher_db`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `voucher_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+
+USE `voucher_db`;
+
+--
+-- Table structure for table `vouchers`
+--
+
+DROP TABLE IF EXISTS `vouchers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `vouchers` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `code` varchar(50) NOT NULL,
+  `type` enum('percent','freeship') NOT NULL,
+  `value` decimal(10,2) DEFAULT '0.00',
+  `min_order_amount` decimal(10,2) DEFAULT '0.00',
+  `max_uses` int DEFAULT NULL,
+  `used_count` int DEFAULT '0',
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `is_active` tinyint(1) DEFAULT '1',
+  `description` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code` (`code`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `vouchers`
+--
+
+LOCK TABLES `vouchers` WRITE;
+/*!40000 ALTER TABLE `vouchers` DISABLE KEYS */;
+INSERT INTO `vouchers` VALUES (8,'FREESHIP','freeship',0.00,2000000.00,NULL,1,'2026-10-16','2026-11-30',1,'Free ship cho đơn hàng từ 3 triệu ','2026-09-16 03:47:51');
+/*!40000 ALTER TABLE `vouchers` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -535,4 +596,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-09-21 11:51:37
+-- Dump completed on 2026-10-16 13:51:26
